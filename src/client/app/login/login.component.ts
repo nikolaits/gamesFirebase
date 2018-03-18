@@ -1,16 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { NameListService } from '../shared/name-list/name-list.service';
-
+import * as firebase from "firebase";
 /**
  * This class represents the lazy loaded HomeComponent.
  */
 @Component({
   moduleId: module.id,
   selector: 'sd-home',
-  templateUrl: 'home.component.html',
-  styleUrls: ['home.component.css'],
+  templateUrl: 'login.component.html',
+  styleUrls: ['login.component.css'],
 })
-export class HomeComponent implements OnInit {
+export class LoginComponent implements OnInit {
 
   newName = '';
   errorMessage: string;
@@ -22,7 +22,18 @@ export class HomeComponent implements OnInit {
    *
    * @param {NameListService} nameListService - The injected NameListService.
    */
-  constructor(public nameListService: NameListService) {}
+  constructor(public nameListService: NameListService) {
+    firebase.auth().createUserWithEmailAndPassword("test@test.com", "testtest")
+    .then(r=>{
+      console.log("REsult: ",r);
+
+    })
+    .catch(
+      (e=>{
+        console.log(e);
+      })
+    )
+  }
 
   /**
    * Get the names OnInit

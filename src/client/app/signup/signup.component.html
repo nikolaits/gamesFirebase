@@ -1,0 +1,36 @@
+<div class="container">
+    <div class="row">
+  
+      <div class="main">
+  
+        <h3>Please Sign Up</h3>
+        <div class="row">
+          
+        </div>
+        <div class="login-or">
+          <hr class="hr-or">
+          <span class="span-or"></span>
+        </div>
+  
+        <form role="form">
+          <div class="form-group">
+            <label for="inputUsernameEmail">email</label>
+            <input type="email" class="form-control" id="inputUsernameEmail">
+          </div>
+          <div class="form-group">
+            <label #inputPassword for="inputPassword">Password</label>
+            <input type="password" class="form-control" (keyup)="onKey($event)" pop id="inputPassword" data-content="Enter Password...">
+          </div>
+          <div class="form-group">
+                <label for="inputRepeatPassword">Repeat Password</label>
+                <input type="password" class="form-control" id="inputRepeatPassword">
+          </div>
+          <button type="submit" class="btn btn btn-primary">
+            Sign Up
+          </button>
+        </form>
+      
+      </div>
+      
+    </div>
+  </div>

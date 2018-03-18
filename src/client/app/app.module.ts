@@ -6,7 +6,8 @@ import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 
 import { AboutModule } from './about/about.module';
-import { HomeModule } from './home/home.module';
+import { LoginModule } from './login/login.module';
+import { SignupModule } from "./signup/signup.module"
 import { SharedModule } from './shared/shared.module';
 import { CoreModule } from './core/core.module';
 
@@ -14,7 +15,8 @@ import { CoreModule } from './core/core.module';
 @NgModule({
   imports: [BrowserModule, CoreModule,
     HttpClientModule, AppRoutingModule,
-    AboutModule, HomeModule,
+    AboutModule, LoginModule,
+    SignupModule,
     SharedModule.forRoot()],
   declarations: [AppComponent],
   providers: [{

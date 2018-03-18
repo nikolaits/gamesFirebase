@@ -41,7 +41,22 @@ export class ProjectConfig extends SeedConfig {
       ...this.ROLLUP_NAMED_EXPORTS,
       //{'node_modules/immutable/dist/immutable.js': [ 'Map' ]},
     ];
-
+    this.addPackageBundles({
+      name: 'firebase',
+      path: 'node_modules/firebase/',
+      packageMeta: {
+        main: 'firebase-browser.js',
+        defaultExtension: 'js'
+      }
+    });
+    this.addPackageBundles({
+      name: '@ng-bootstrap/@ng-bootstrap',
+      path: 'node_modules/@ng-bootstrap/bundles/',
+      packageMeta: {
+        main: 'ng-bootstrap.js',
+        defaultExtension: 'js'
+      }
+    });
     // Add packages (e.g. ng2-translate)
     // const additionalPackages: ExtendPackages[] = [{
     //   name: 'ng2-translate',
