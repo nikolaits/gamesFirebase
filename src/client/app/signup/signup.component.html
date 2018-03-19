@@ -17,9 +17,11 @@
             <label for="inputUsernameEmail">email</label>
             <input type="email" class="form-control" id="inputUsernameEmail">
           </div>
+          
           <div class="form-group">
             <label #inputPassword for="inputPassword">Password</label>
-            <input type="password" class="form-control" (keyup)="onKey($event)" pop id="inputPassword" data-content="Enter Password...">
+            <ng-template #popContent><div class="{{popoverClass}}">{{popoverData}}</div></ng-template>
+            <input type="password" class="form-control" (keyup)="onKey($event)" (click)="onClick($event)"  id="inputPassword" [ngbPopover]="popContent" popoverTitle="Password Strength">
           </div>
           <div class="form-group">
                 <label for="inputRepeatPassword">Repeat Password</label>
@@ -29,7 +31,10 @@
             Sign Up
           </button>
         </form>
-      
+        <ng-template #popContent>Hello, <b>test</b>!</ng-template>
+        <button type="button" class="btn btn-outline-secondary" [ngbPopover]="popContent" popoverTitle="Fancy content">
+          I've got markup and bindings in my popover!
+        </button>
       </div>
       
     </div>

@@ -50,8 +50,8 @@ export class ProjectConfig extends SeedConfig {
       }
     });
     this.addPackageBundles({
-      name: '@ng-bootstrap/@ng-bootstrap',
-      path: 'node_modules/@ng-bootstrap/bundles/',
+      name: '@ng-bootstrap/ng-bootstrap',
+      path: 'node_modules/@ng-bootstrap/ng-bootstrap/bundles/',
       packageMeta: {
         main: 'ng-bootstrap.js',
         defaultExtension: 'js'

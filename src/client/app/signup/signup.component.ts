@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { NameListService } from '../shared/name-list/name-list.service';
 import * as firebase from "firebase";
+import {NgbPopoverConfig} from '@ng-bootstrap/ng-bootstrap';
 /**
  * This class represents the lazy loaded HomeComponent.
  */
@@ -15,6 +16,8 @@ export class SignupComponent implements OnInit {
   newName = '';
   errorMessage: string;
   names: any[] = [];
+  popoverClass="";
+  popoverData="";
   @ViewChild('inputPassword') passwordLabel: ElementRef;
   //minimum 8 characters
   public bad = /(?=.{8,}).*/;
@@ -31,17 +34,18 @@ export class SignupComponent implements OnInit {
    *
    * @param {NameListService} nameListService - The injected NameListService.
    */
-  constructor(public nameListService: NameListService) {
-    firebase.auth().createUserWithEmailAndPassword("test@test.com", "testtest")
-    .then(r=>{
-      console.log("REsult: ",r);
+  constructor(public nameListService: NameListService, private config:NgbPopoverConfig) {
+    config.triggers="click";
+    // firebase.auth().createUserWithEmailAndPassword("test@test.com", "testtest")
+    // .then(r=>{
+    //   console.log("REsult: ",r);
 
-    })
-    .catch(
-      (e=>{
-        console.log(e);
-      })
-    )
+    // })
+    // .catch(
+    //   (e=>{
+    //     console.log(e);
+    //   })
+    // )
   }
 
   /**
@@ -55,29 +59,33 @@ export class SignupComponent implements OnInit {
     console.log("on keyup")
     var password = args.target;
     var pass = password.value;
-    var passLabel = this.passwordLabel.nativeElement;
     var stength = 'Weak';
     var pclass = 'danger';
     if (this.best.test(pass) == true) {
-        stength = 'Very Strong';
-        pclass = 'success';
+        this.popoverData = 'Very Strong';
+        this.popoverClass = 'success';
     } else if (this.better.test(pass) == true) {
-        stength = 'Strong';
-        pclass = 'warning';
+      this.popoverData = 'Strong';
+      this.popoverClass = 'warning';
     } else if (this.good.test(pass) == true) {
-        stength = 'Almost Strong';
-        pclass = 'warning';
+      this.popoverData = 'Almost Strong';
+      this.popoverClass = 'warning';
     } else if (this.bad.test(pass) == true) {
-        stength = 'Weak';
+      this.popoverData = 'Weak';
     } else {
-        stength = 'Very Weak';
+      this.popoverData = 'Very Weak';
     }
 
-    var popover = password.attr('data-content', stength).data('bs.popover');
-    popover.setContent();
-    popover.$tip.addClass(popover.options.placement).removeClass('danger success info warning primary').addClass(pclass);
+    // var popover = password.attr('data-content', stength).data('bs.popover');
+    // popover.setContent();
+    // popover.$tip.addClass(popover.options.placement).removeClass('danger success info warning primary').addClass(pclass);
   }
 
+  onClick(args:any){
+    this.config
+  }
+
+  
   /**
    * Handle the nameListService observable
    */

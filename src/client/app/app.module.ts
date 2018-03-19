@@ -10,14 +10,16 @@ import { LoginModule } from './login/login.module';
 import { SignupModule } from "./signup/signup.module"
 import { SharedModule } from './shared/shared.module';
 import { CoreModule } from './core/core.module';
-
+import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   imports: [BrowserModule, CoreModule,
     HttpClientModule, AppRoutingModule,
     AboutModule, LoginModule,
     SignupModule,
-    SharedModule.forRoot()],
+    SharedModule.forRoot(),
+  NgbModule.forRoot()
+],
   declarations: [AppComponent],
   providers: [{
     provide: APP_BASE_HREF,
