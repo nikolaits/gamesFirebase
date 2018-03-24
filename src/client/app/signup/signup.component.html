@@ -1,41 +1,73 @@
 <div class="container">
-    <div class="row">
-  
-      <div class="main">
-  
-        <h3>Please Sign Up</h3>
-        <div class="row">
-          
-        </div>
-        <div class="login-or">
-          <hr class="hr-or">
-          <span class="span-or"></span>
-        </div>
-  
-        <form role="form">
-          <div class="form-group">
-            <label for="inputUsernameEmail">email</label>
-            <input type="email" class="form-control" id="inputUsernameEmail">
+  <div class="row">
+
+    <div class="main">
+
+      <h3>Please Sign Up</h3>
+      <div class="row">
+
+      </div>
+      <div class="login-or">
+        <hr class="hr-or">
+        <span class="span-or"></span>
+        <!-- </div>
+        <input id="name" name="name" class="form-control"
+        required minlength="4" appForbiddenName="bob"
+        [(ngModel)]="name" #name="ngModel" >
+ 
+ <div *ngIf="name.invalid && (name.dirty || name.touched)"
+      class="alert alert-danger">
+ 
+   <div *ngIf="name.errors.required">
+     Name is required.
+   </div>
+   <div *ngIf="name.errors.minlength">
+     Name must be at least 4 characters long.
+   </div>
+   <div *ngIf="name.errors.forbiddenName">
+     Name cannot be Bob.
+   </div>
+ 
+ </div> -->
+        <form role="form" (ngSubmit)="onSubmit()" [formGroup]="signUpForm">
+          <div class="form-group" >
+            <label for="email">Email</label>
+            <!-- <input type="email" class="form-control" id="email" [(ngModel)]="model.email" formControlName="email" name="email" #email="ngModel"> -->
+            <input type="email" class="form-control" id="email" formControlName="email" name="email" >
+            <div *ngIf="email.invalid && (email.dirty || email.touched)" class="alert alert-danger">
+
+              <div *ngIf="email.errors.required">
+                Email is required.
+              </div>
+              <div *ngIf="email.errors.email">
+                Please enter valid email
+              </div>
+            </div>
           </div>
           
           <div class="form-group">
-            <label #inputPassword for="inputPassword">Password</label>
-            <ng-template #popContent><div class="{{popoverClass}}">{{popoverData}}</div></ng-template>
-            <input type="password" class="form-control" (keyup)="onKey($event)" (click)="onClick($event)"  id="inputPassword" [ngbPopover]="popContent" popoverTitle="Password Strength">
+            <label for="password">Password</label>
+            <input type="password" class="form-control" id="password" formControlName="password" name="password" >
+            <div *ngIf="password.invalid && (password.dirty || password.touched)" class="alert alert-danger">
+
+              <div *ngIf="password.errors.required">
+                Password is required.
+              </div>
+              <div *ngIf="password.errors">
+                Password should contains at least 6 symbols
+              </div>
+            </div>
           </div>
           <div class="form-group">
-                <label for="inputRepeatPassword">Repeat Password</label>
-                <input type="password" class="form-control" id="inputRepeatPassword">
+            <label for="repassword">Repeat Password</label>
+            <input type="password" class="form-control" id="repassword" formControlName="repassword" name="repassword">
           </div>
-          <button type="submit" class="btn btn btn-primary">
+          <button type="submit" [disabled]="!signUpForm.valid" class="btn btn btn-primary">
             Sign Up
           </button>
         </form>
-        <ng-template #popContent>Hello, <b>test</b>!</ng-template>
-        <button type="button" class="btn btn-outline-secondary" [ngbPopover]="popContent" popoverTitle="Fancy content">
-          I've got markup and bindings in my popover!
-        </button>
+
       </div>
-      
+
     </div>
   </div>

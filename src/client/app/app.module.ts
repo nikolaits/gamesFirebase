@@ -13,12 +13,12 @@ import { CoreModule } from './core/core.module';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
-  imports: [BrowserModule, CoreModule,
+  imports: [BrowserModule, CoreModule,NgbModule.forRoot(),
     HttpClientModule, AppRoutingModule,
     AboutModule, LoginModule,
     SignupModule,
     SharedModule.forRoot(),
-  NgbModule.forRoot()
+  
 ],
   declarations: [AppComponent],
   providers: [{

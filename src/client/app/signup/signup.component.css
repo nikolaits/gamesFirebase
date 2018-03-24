@@ -35,57 +35,57 @@ h3 {
   text-align: center;
   line-height: 300%;
 }
-.popover.primary {
+.passinfo.primary {
   border-color:#337ab7;
 }
-.popover.primary>.arrow {
+.passinfo.primary>.arrow {
   border-top-color:#337ab7;
 }
-.popover.primary>.popover-title {
+.passinfo.primary.popover-title {
   color:#fff;
   background-color:#337ab7;
   border-color:#337ab7;
 }
-.popover.success {
+.passinfo.success {
   border-color:#d6e9c6;
 }
-.popover.success>.arrow {
+.passinfo.success>.arrow {
   border-top-color:#d6e9c6;
 }
-.popover.success>.popover-title {
+.passinfo.success.popover-title {
   color:#3c763d;
   background-color:#dff0d8;
   border-color:#d6e9c6;
 }
-.popover.info {
+.passinfo.info {
   border-color:#bce8f1;
 }
-.popover.info>.arrow {
+.passinfo.info.arrow {
   border-top-color:#bce8f1;
 }
-.popover.info>.popover-title {
+.passinfo.info.popover-title {
   color:#31708f;
   background-color:#d9edf7;
   border-color:#bce8f1;
 }
-.popover.warning {
+.passinfo.warning {
   border-color:#faebcc;
 }
-.popover.warning>.arrow {
+.passinfo.warning.arrow {
   border-top-color:#faebcc;
 }
-.popover.warning>.popover-title {
+.passinfo.warning.popover-title {
   color:#8a6d3b;
   background-color:#fcf8e3;
   border-color:#faebcc;
 }
-.popover.danger {
+.passinfo.danger {
   border-color:#ebccd1;
 }
-.popover.danger>.arrow {
+.passinfo.danger.arrow {
   border-top-color:#ebccd1;
 }
-.popover.danger>.popover-title {
+.passinfo.danger.popover-title {
   color:#a94442;
   background-color:#f2dede;
   border-color:#ebccd1;
