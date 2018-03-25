@@ -16,19 +16,26 @@ import { FormControl, FormGroup, Validators, ValidatorFn, AbstractControl,NG_VAL
 // export class EqualValidator implements Validator {
 //   constructor( @Attribute('validateEqual') public validateEqual: string) {}
 
-//   validate(c: AbstractControl): { [key: string]: any } {
-//       // self value (e.g. retype password)
-//       let v = c.value;
+export function equalValueValidator(targetKey: string, toMatchKey: string): ValidatorFn {
+  return (group: FormGroup): {[key: string]: any} => {
+    const target = group.controls[targetKey];
+    const toMatch = group.controls[toMatchKey];
+    if (target.touched && toMatch.touched) {
+      const isMatch = target.value === toMatch.value;
+      // set equal value error on dirty controls
+      if (!isMatch && target.valid && toMatch.valid) {
+        toMatch.setErrors({equalValue: targetKey});
+        const message = targetKey + ' != ' + toMatchKey;
+        return {'equalValue': message};
+      }
+      if (isMatch && toMatch.hasError('equalValue')) {
+        toMatch.setErrors(null);
+      }
+    }
 
-//       // control value (e.g. password)
-//       let e = c.root.get(this.validateEqual);
-
-//       // value not equal
-//       if (e && v !== e.value) return {
-//           validateEqual: false
-//       }
-//       return null;
-//   }
+    return null;
+  };
+}
 // }
  class User{
    constructor(
@@ -71,7 +78,7 @@ export class SignupComponent implements OnInit {
    *
    * @param {NameListService} nameListService - The injected NameListService.
    */
-  constructor(public nameListService: NameListService, private config:NgbPopoverConfig, private authService:AuthService) {
+  constructor(public nameListService: NameListService, private config:NgbPopoverConfig, private authService:AuthService,) {
     config.triggers="click";
     // firebase.auth().createUserWithEmailAndPassword("test@test.com", "testtest")
     // .then(r=>{
@@ -89,7 +96,7 @@ export class SignupComponent implements OnInit {
    * Get the names OnInit
    */
   ngOnInit() {
-    this.signUpForm.errors.minLength
+    
     this.signUpForm = new FormGroup({
       'email': new FormControl(this.model.email, [
         Validators.required,
@@ -102,9 +109,9 @@ export class SignupComponent implements OnInit {
       ]),
       'repassword': new FormControl(this.model.repassword, [
         Validators.required,
-        // validatorEqul("password")
+        equalValueValidator('repassword', 'password')
       ]),
-    });
+    },);
   }
   get email() { return this.signUpForm.get('email'); }
   get password() { return this.signUpForm.get('password'); }
