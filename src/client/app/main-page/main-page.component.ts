@@ -8,10 +8,10 @@ import { AuthService } from '../shared/auth-service/auth.service';
 @Component({
   moduleId: module.id,
   selector: 'sd-home',
-  templateUrl: 'login.component.html',
-  styleUrls: ['login.component.css'],
+  templateUrl: 'main-page.component.html',
+  styleUrls: ['main-page.component.css'],
 })
-export class LoginComponent implements OnInit {
+export class MainPageComponent implements OnInit {
 
   newName = '';
   errorMessage: string;

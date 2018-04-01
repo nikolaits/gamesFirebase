@@ -28,6 +28,14 @@ export class AuthService {
     
 
   }
+  signin(email:string, password:string):firebase.Promise<any>{
+
+    return firebase.auth().signInWithEmailAndPassword(email, password);
+  }
+  signInGoogle(){
+    let provider = new firebase.auth.GoogleAuthProvider();
+    return firebase.auth().signInWithPopup(provider);
+  }
 
   /**
     * Handle HTTP error

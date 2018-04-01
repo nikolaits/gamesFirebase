@@ -1,14 +1,14 @@
 import { NgModule } from '@angular/core';
-import { LoginComponent } from './login.component';
-import { LoginRoutingModule } from './login-routing.module';
+import { MainPageComponent } from './main-page.component';
+import { MainPageRoutingModule } from './main-page-routing.module';
 import { SharedModule } from '../shared/shared.module';
 import { NameListService } from '../shared/name-list/name-list.service';
 import {AuthService} from "../shared/auth-service/auth.service";
 
 @NgModule({
-  imports: [LoginRoutingModule, SharedModule],
-  declarations: [LoginComponent],
-  exports: [LoginComponent],
+  imports: [MainPageRoutingModule, SharedModule],
+  declarations: [MainPageComponent],
+  exports: [MainPageComponent],
   providers: [NameListService, AuthService]
 })
-export class LoginModule { }
+export class MainPageModule { }

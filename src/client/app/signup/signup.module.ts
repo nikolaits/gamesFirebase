@@ -6,11 +6,12 @@ import { NameListService } from '../shared/name-list/name-list.service';
 import {NgbModule,NgbPopover} from '@ng-bootstrap/ng-bootstrap';
 import {AuthService} from "../shared/auth-service/auth.service";
 import { FormsModule, ReactiveFormsModule }   from '@angular/forms';
+import {EqualValidatorDirective} from "./equal-validator.directive"
 
 @NgModule({
   imports: [SignupRoutingModule, SharedModule, NgbModule, FormsModule, ReactiveFormsModule],
-  declarations: [SignupComponent],
-  exports: [SignupComponent, NgbModule],
+  declarations: [SignupComponent, EqualValidatorDirective],
+  exports: [SignupComponent, NgbModule,EqualValidatorDirective],
   providers: [NameListService, AuthService]
 })
 export class SignupModule {

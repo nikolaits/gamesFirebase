@@ -1,9 +1,11 @@
 import { Component, OnInit, ViewChild, ElementRef, Directive, forwardRef, Attribute } from '@angular/core';
+import { Router } from '@angular/router';
 import { NameListService } from '../shared/name-list/name-list.service';
 import { AuthService } from '../shared/auth-service/auth.service';
 import * as firebase from "firebase";
-import {NgbPopoverConfig} from '@ng-bootstrap/ng-bootstrap';
-import { FormControl, FormGroup, Validators, ValidatorFn, AbstractControl,NG_VALIDATORS, Validator }   from '@angular/forms';
+import { NgbPopoverConfig } from '@ng-bootstrap/ng-bootstrap';
+import { FormControl, FormGroup, Validators, ValidatorFn, AbstractControl, NG_VALIDATORS, Validator } from '@angular/forms';
+import { EqualValidatorDirective } from './equal-validator.directive';
 /**
  * This class represents the lazy loaded HomeComponent.
  */
@@ -16,34 +18,34 @@ import { FormControl, FormGroup, Validators, ValidatorFn, AbstractControl,NG_VAL
 // export class EqualValidator implements Validator {
 //   constructor( @Attribute('validateEqual') public validateEqual: string) {}
 
-export function equalValueValidator(targetKey: string, toMatchKey: string): ValidatorFn {
-  return (group: FormGroup): {[key: string]: any} => {
-    const target = group.controls[targetKey];
-    const toMatch = group.controls[toMatchKey];
-    if (target.touched && toMatch.touched) {
-      const isMatch = target.value === toMatch.value;
-      // set equal value error on dirty controls
-      if (!isMatch && target.valid && toMatch.valid) {
-        toMatch.setErrors({equalValue: targetKey});
-        const message = targetKey + ' != ' + toMatchKey;
-        return {'equalValue': message};
-      }
-      if (isMatch && toMatch.hasError('equalValue')) {
-        toMatch.setErrors(null);
-      }
-    }
+// export function equalValueValidator(targetKey: string, toMatchKey: string): ValidatorFn {
+//   return (group: FormGroup): { [key: string]: any } => {
+//     const target = group.controls[targetKey];
+//     const toMatch = group.controls[toMatchKey];
+//     if (target.touched && toMatch.touched) {
+//       const isMatch = target.value === toMatch.value;
+//       // set equal value error on dirty controls
+//       if (!isMatch && target.valid && toMatch.valid) {
+//         toMatch.setErrors({ equalValue: targetKey });
+//         const message = targetKey + ' != ' + toMatchKey;
+//         return { 'equalValue': message };
+//       }
+//       if (isMatch && toMatch.hasError('equalValue')) {
+//         toMatch.setErrors(null);
+//       }
+//     }
 
-    return null;
-  };
-}
+//     return null;
+//   };
 // }
- class User{
-   constructor(
-     public email:string,
-     public password:string,
-     public repassword:string
-   ){}
- }
+// }
+class User {
+  constructor(
+    public email: string,
+    public password: string,
+    public repassword: string
+  ) { }
+}
 
 
 @Component({
@@ -57,29 +59,18 @@ export class SignupComponent implements OnInit {
   name = '';
 
   model = new User("", "", "");
-  signUpForm:FormGroup;
+  signUpForm: FormGroup;
   errorMessage: string;
   names: any[] = [];
-  popoverClass="";
-  popoverData="";
-  @ViewChild('inputPassword') passwordLabel: ElementRef;
-  //minimum 8 characters
-  public bad = /(?=.{8,}).*/;
-  //Alpha Numeric plus minimum 8
-  public good = /^(?=\S*?[a-z])(?=\S*?[0-9])\S{8,}$/;
-  //Must contain at least one upper case letter, one lower case letter and (one number OR one special char).
-  public better = /^(?=\S*?[A-Z])(?=\S*?[a-z])((?=\S*?[0-9])|(?=\S*?[^\w\*]))\S{8,}$/;
-  //Must contain at least one upper case letter, one lower case letter and (one number AND one special char).
-  public best = /^(?=\S*?[A-Z])(?=\S*?[a-z])(?=\S*?[0-9])(?=\S*?[^\w\*])\S{8,}$/;
-
+  
   /**
    * Creates an instance of the HomeComponent with the injected
    * NameListService.
    *
    * @param {NameListService} nameListService - The injected NameListService.
    */
-  constructor(public nameListService: NameListService, private config:NgbPopoverConfig, private authService:AuthService,) {
-    config.triggers="click";
+  constructor(public nameListService: NameListService, private config: NgbPopoverConfig, private authService: AuthService, private router:Router ) {
+    config.triggers = "click";
     // firebase.auth().createUserWithEmailAndPassword("test@test.com", "testtest")
     // .then(r=>{
     //   console.log("REsult: ",r);
@@ -96,7 +87,7 @@ export class SignupComponent implements OnInit {
    * Get the names OnInit
    */
   ngOnInit() {
-    
+
     this.signUpForm = new FormGroup({
       'email': new FormControl(this.model.email, [
         Validators.required,
@@ -108,62 +99,78 @@ export class SignupComponent implements OnInit {
         Validators.minLength(6)
       ]),
       'repassword': new FormControl(this.model.repassword, [
-        Validators.required,
-        equalValueValidator('repassword', 'password')
+        Validators.required
       ]),
-    },);
+    }, );
   }
   get email() { return this.signUpForm.get('email'); }
   get password() { return this.signUpForm.get('password'); }
   get repassword() { return this.signUpForm.get('repassword'); }
-  onSubmit() { alert("button submit tap"); }
-  onKey(args:any){
-    console.log("on keyup")
-    var password = args.target;
-    var pass = password.value;
-    var stength = 'Weak';
-    var pclass = 'danger';
-    if (this.best.test(pass) == true) {
-        this.popoverData = 'Very Strong';
-        this.popoverClass = 'success';
-    } else if (this.better.test(pass) == true) {
-      this.popoverData = 'Strong';
-      this.popoverClass = 'warning';
-    } else if (this.good.test(pass) == true) {
-      this.popoverData = 'Almost Strong';
-      this.popoverClass = 'warning';
-    } else if (this.bad.test(pass) == true) {
-      this.popoverData = 'Weak';
-    } else {
-      this.popoverData = 'Very Weak';
-    }
-    // var popover = password.attr('data-content', stength).data('bs.popover');
-    // popover.setContent();
-    // popover.$tip.addClass(popover.options.placement).removeClass('danger success info warning primary').addClass(pclass);
+  onSubmit() {
+    let emailValue = this.email.value;
+    let passwordValue = this.password.value;
+    alert(`Email: ${emailValue} Password: ${passwordValue}`);
+    this.authService.signup(emailValue, passwordValue)
+        .then((r) => {
+          console.log("Result signup");
+          console.dir(r);
+          alert(`Please chexk your email.`);
+          this.router.navigate([""]);
+        })
+        .catch((e) => {
+          console.log("Error signup");
+          console.trace(e);
+          alert(`Error signup ${e}`);
+        })
   }
+  // onKey(args: any) {
 
-  onClick(args:any){
+  //   console.log("on keyup")
+  //   var password = args.target;
+  //   var pass = password.value;
+  //   var stength = 'Weak';
+  //   var pclass = 'danger';
+  //   if (this.best.test(pass) == true) {
+  //     this.popoverData = 'Very Strong';
+  //     this.popoverClass = 'success';
+  //   } else if (this.better.test(pass) == true) {
+  //     this.popoverData = 'Strong';
+  //     this.popoverClass = 'warning';
+  //   } else if (this.good.test(pass) == true) {
+  //     this.popoverData = 'Almost Strong';
+  //     this.popoverClass = 'warning';
+  //   } else if (this.bad.test(pass) == true) {
+  //     this.popoverData = 'Weak';
+  //   } else {
+  //     this.popoverData = 'Very Weak';
+  //   }
+  //   // var popover = password.attr('data-content', stength).data('bs.popover');
+  //   // popover.setContent();
+  //   // popover.$tip.addClass(popover.options.placement).removeClass('danger success info warning primary').addClass(pclass);
+  // }
+
+  onClick(args: any) {
     this.config
   }
-  signup(email:string, password:string, repassword:string){
-    if(password !== repassword){
-      alert("Password does not match");
-    }
-    else{
+  signup(email: string, password: string, repassword: string) {
+    // if (password !== repassword) {
+    //   alert("Password does not match");
+    // }
+    // else {
       this.authService.signup(email, password)
-      .then((r)=>{
-        console.log("Result signup");
-        console.dir(r);
-        alert(`Result signup ${r}`);
-      })
-      .catch((e)=>{
-        console.log("Error signup");
-        console.trace(e);
-        alert(`Error signup ${e}`);
-      })
-    }
+        .then((r) => {
+          console.log("Result signup");
+          console.dir(r);
+          alert(`Result signup ${r}`);
+        })
+        .catch((e) => {
+          console.log("Error signup");
+          console.trace(e);
+          alert(`Error signup ${e}`);
+        })
+    // }
   }
-  
+
   /**
    * Handle the nameListService observable
    */
