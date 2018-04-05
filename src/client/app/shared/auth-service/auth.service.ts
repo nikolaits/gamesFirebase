@@ -23,7 +23,7 @@ export class AuthService {
   //                   .catch(this.handleError);
   // }
   signup(email:string, password:string):firebase.Promise<any>{
-
+    // firebase.database.
     return firebase.auth().createUserWithEmailAndPassword(email, password);
     
 

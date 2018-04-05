@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { NameListService } from '../shared/name-list/name-list.service';
 import { AuthService } from '../shared/auth-service/auth.service';
+import { CookieService } from 'ng2-cookies';
+ 
 
 /**
  * This class represents the lazy loaded HomeComponent.
@@ -23,8 +25,10 @@ export class LoginComponent implements OnInit {
    *
    * @param {NameListService} nameListService - The injected NameListService.
    */
-  constructor(public nameListService: NameListService, private authService: AuthService) {
-    
+  constructor(public nameListService: NameListService, private authService: AuthService, private CookiesService:CookieService) {
+    // // this.CookiesService.set("test", "textValue");
+    // let test = this.CookiesService.get("test");
+    // console.log("CookiesService "+test);
   }
 
   /**
@@ -64,6 +68,7 @@ export class LoginComponent implements OnInit {
       console.log(token);
       console.log("User");
       console.log(user);
+      console.log("uid "+user.uid)
     })
     .catch((e)=>{
       console.log("Login Error");

@@ -156,6 +156,7 @@
     "core-js": "^2.5.3",
     "firebase": "^3.6.4",
     "intl": "^1.2.5",
+    "ng2-cookies": "^1.0.12",
     "ngx-bootstrap": "^2.0.2",
     "rxjs": "^5.5.3",
     "systemjs": "0.21.0",
