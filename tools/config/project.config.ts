@@ -65,6 +65,20 @@ export class ProjectConfig extends SeedConfig {
         defaultExtension: 'js'
       }
     });
+    // this.addPackageBundles({
+    //   name: 'angularfire2/auth',
+    //   path: 'node_modules/angularfire2/bundles/auth.umd.js',
+      
+    //   // name: 'angularfire2',
+    //   // path: 'node_modules/angularfire2/bundles/angularfire2.umd.js'
+    // });
+    // this.addPackageBundles({
+    //   name: 'angularfire2',
+    //   path: 'node_modules/angularfire2/bundles/core.umd.js',
+       
+    //   // name: 'angularfire2',
+    //   // path: 'node_modules/angularfire2/bundles/angularfire2.umd.js'
+    // });
     // Add packages (e.g. ng2-translate)
     // const additionalPackages: ExtendPackages[] = [{
     //   name: 'ng2-translate',

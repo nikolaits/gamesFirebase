@@ -2,6 +2,9 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import * as firebase from "firebase";
+import {AngularFireAuth, AngularFireAuthProvider} from "angularfire2/auth"
+import {FirebaseApp, FirebaseAppProvider} from "angularfire2"
+import { GoogleAuthProvider, GoogleAuthProvider_Instance } from '@firebase/auth-types';
 // import 'rxjs/add/operator/do';  // for debugging
 
 /**
@@ -11,7 +14,7 @@ import * as firebase from "firebase";
 export class AuthService {
 
   
-  constructor() {}
+  constructor(private authService:AngularFireAuth) {}
 
   /**
    * Returns an Observable for the HTTP GET request for the JSON resource.
@@ -24,17 +27,42 @@ export class AuthService {
   // }
   signup(email:string, password:string):firebase.Promise<any>{
     // firebase.database.
-    return firebase.auth().createUserWithEmailAndPassword(email, password);
+    return this.authService.auth.createUserWithEmailAndPassword(email, password);
+    //.auth().createUserWithEmailAndPassword(email, password);
     
 
   }
-  signin(email:string, password:string):firebase.Promise<any>{
-
-    return firebase.auth().signInWithEmailAndPassword(email, password);
+  signin(email:string, password:string):Promise<any>{
+    return this.authService.auth.setPersistence('local')
+    .then(function() {
+      return firebase.auth().signInWithEmailAndPassword(email, password);
+    })
+    .catch(function(error:any) {
+      // Handle Errors here.
+      this.handleError(error);
+    });
+    
   }
   signInGoogle(){
-    let provider = new firebase.auth.GoogleAuthProvider();
-    return firebase.auth().signInWithPopup(provider);
+    return this.authService.auth.setPersistence('local')
+    .then(function() {
+      let provider = new GoogleAuthProvider()
+      return this.authService.auth.signInWithPopup(provider);
+    })
+    .catch(function(error:any) {
+      // Handle Errors here.
+      this.handleError(error);
+    });
+    
+  }
+  isUserSignIn(){
+    let currentUser = this.authService.auth.currentUser;
+    console.log("currentUser");
+    console.log(currentUser);
+    if(currentUser){
+      return true;
+    }
+    return false;
   }
 
   /**

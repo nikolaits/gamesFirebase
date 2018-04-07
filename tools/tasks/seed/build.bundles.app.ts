@@ -9,7 +9,15 @@ const BUNDLER_OPTIONS = {
   mangle: false,
   sourceMaps: Config.PRESERVE_SOURCE_MAPS
 };
-
+/*
+{
+  map: {
+    'plugin-babel': 'path/to/systemjs-plugin-babel/plugin-babel.js',
+    'systemjs-babel-build': 'path/to/systemjs-plugin-babel/systemjs-babel-browser.js'
+  },
+  transpiler: 'plugin-babel'
+})
+*/
 /**
  * Executes the build process, bundling the JavaScript files using the SystemJS builder.
  */

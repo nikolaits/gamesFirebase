@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { NameListService } from '../shared/name-list/name-list.service';
 import { AuthService } from '../shared/auth-service/auth.service';
 import { CookieService } from 'ng2-cookies';
+import {Router} from "@angular/router"
  
 
 /**
@@ -25,7 +26,7 @@ export class LoginComponent implements OnInit {
    *
    * @param {NameListService} nameListService - The injected NameListService.
    */
-  constructor(public nameListService: NameListService, private authService: AuthService, private CookiesService:CookieService) {
+  constructor(public nameListService: NameListService, private authService: AuthService, private CookiesService:CookieService, private router:Router) {
     // // this.CookiesService.set("test", "textValue");
     // let test = this.CookiesService.get("test");
     // console.log("CookiesService "+test);
@@ -38,7 +39,17 @@ export class LoginComponent implements OnInit {
     
   }
 
-  onSubmit(email:string, password:string){
+  ngAfterViewInit(){
+    if(this.authService.isUserSignIn()){
+      console.log("user exists");
+      this.router.navigate(["main-page"]);
+    }
+    else{
+      console.log("does not exists");
+    }
+  }
+
+  onSubmit(email:string, password:string){ 
     this.authService.signin(email, password)
     .then((r)=>{
       console.log("Login result");

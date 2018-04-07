@@ -153,13 +153,15 @@
     "@angular/router": "^5.2.3",
     "@angular/service-worker": "^5.2.3",
     "@ng-bootstrap/ng-bootstrap": "^1.0.1",
+    "angularfire2": "^5.0.0-rc.6",
     "core-js": "^2.5.3",
-    "firebase": "^3.6.4",
+    "firebase": "^3.9.0",
     "intl": "^1.2.5",
     "ng2-cookies": "^1.0.12",
     "ngx-bootstrap": "^2.0.2",
     "rxjs": "^5.5.3",
     "systemjs": "0.21.0",
+    "systemjs-plugin-babel": "0.0.25",
     "zone.js": "0.8.20"
   }
 }
