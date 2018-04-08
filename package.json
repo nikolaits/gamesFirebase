@@ -154,7 +154,7 @@
     "@angular/service-worker": "^5.2.3",
     "@ng-bootstrap/ng-bootstrap": "^1.0.1",
     "core-js": "^2.5.3",
-    "firebase": "^3.6.4",
+    "firebase": "^4.2.0",
     "intl": "^1.2.5",
     "ng2-cookies": "^1.0.12",
     "ngx-bootstrap": "^2.0.2",

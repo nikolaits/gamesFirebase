@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import * as firebase from "firebase";
+import { CookieService } from 'ng2-cookies';
 // import 'rxjs/add/operator/do';  // for debugging
 
 /**
@@ -11,7 +12,7 @@ import * as firebase from "firebase";
 export class AuthService {
 
   
-  constructor() {}
+  constructor(private cookiesService:CookieService) {}
 
   /**
    * Returns an Observable for the HTTP GET request for the JSON resource.
@@ -22,19 +23,70 @@ export class AuthService {
   //   //              .do(data => console.log('server data:', data))  // debug
   //                   .catch(this.handleError);
   // }
+  isUserSignIn(){
+    console.log("in isUserSignIn")
+    let user = firebase.auth().currentUser;
+    
+    // let token = this.cookiesService.get("geitDevGamesToken");
+    // if(token){
+      // firebase.auth().signOut();
+      firebase.auth().onAuthStateChanged(function(user) {
+        if (user) {
+          // User is signed in.
+          console.log("in if")
+          console.log(user);
+        } else {
+          // No user is signed in.
+          console.log("No user is signed in.")
+        }
+      });
+    //   return firebase.auth().signInWithCustomToken(token);
+    // }
+
+    // return null
+  }
+  saveSignInToken(token:string){
+    console.log("in the saveSignInToken")
+    let date = new Date();
+    date.setDate(date.getDate() + 1);
+    console.log(`Token date ${date}`);
+    this.cookiesService.set("geitDevGamesToken", token, date);
+  }
   signup(email:string, password:string):firebase.Promise<any>{
     // firebase.database.
-    return firebase.auth().createUserWithEmailAndPassword(email, password);
+    return firebase.auth().setPersistence('local')
+    .then(function() {
+      return firebase.auth().createUserWithEmailAndPassword(email, password);
+    })
+    .catch(function(error) {
+      // Handle Errors here.
+      this.handleError(error)
+    });
     
-
   }
   signin(email:string, password:string):firebase.Promise<any>{
-
-    return firebase.auth().signInWithEmailAndPassword(email, password);
+    // firebase.auth().setPersistence()
+    return firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
+    .then(function() {
+      return firebase.auth().signInWithEmailAndPassword(email, password);
+    })
+    .catch(function(error) {
+      // Handle Errors here.
+      this.handleError(error)
+    });
+    
   }
   signInGoogle(){
     let provider = new firebase.auth.GoogleAuthProvider();
-    return firebase.auth().signInWithPopup(provider);
+    return firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
+    .then(function() {
+      return firebase.auth().signInWithPopup(provider);
+    })
+    .catch(function(error) {
+      // Handle Errors here.
+      this.handleError(error)
+    });
+    
   }
 
   /**

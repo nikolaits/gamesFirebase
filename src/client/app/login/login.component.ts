@@ -35,7 +35,22 @@ export class LoginComponent implements OnInit {
    * Get the names OnInit
    */
   ngOnInit() {
-    
+  //  let userPromise = 
+   this.authService.isUserSignIn();
+  //  if(userPromise !== null){
+  //    userPromise
+  //    .then((result)=>{
+  //     console.log("user token login");
+  //     console.log(result);
+  //    })
+  //    .catch((e)=>{
+  //       console.log("Login Error");
+  //       console.log(e);
+  //       alert(`Login Error ${e}`);
+  //     })
+  //  }else{
+  //    console.log("user token does not exists");
+  //  }
   }
 
   onSubmit(email:string, password:string){
@@ -66,6 +81,8 @@ export class LoginComponent implements OnInit {
       var user = result.user;
       console.log("Token");
       console.log(token);
+
+      this.authService.saveSignInToken(token);
       console.log("User");
       console.log(user);
       console.log("uid "+user.uid)
