@@ -23,23 +23,29 @@ export class AuthService {
   //   //              .do(data => console.log('server data:', data))  // debug
   //                   .catch(this.handleError);
   // }
-  isUserSignIn(){
+  isUserSignIn():Promise<any>{
     console.log("in isUserSignIn")
     let user = firebase.auth().currentUser;
     
     // let token = this.cookiesService.get("geitDevGamesToken");
     // if(token){
       // firebase.auth().signOut();
-      firebase.auth().onAuthStateChanged(function(user) {
-        if (user) {
-          // User is signed in.
-          console.log("in if")
-          console.log(user);
-        } else {
-          // No user is signed in.
-          console.log("No user is signed in.")
-        }
+      return new Promise((resolve, reject)=>{
+
+        firebase.auth().onAuthStateChanged((user) =>{
+          if (user) {
+            // User is signed in.
+            console.log("in if")
+            console.log(user);
+            resolve(user)
+          } else {
+            // No user is signed in.
+            console.log("No user is signed in.");
+            reject("No user is signed in.");
+          }
+        });
       });
+    
     //   return firebase.auth().signInWithCustomToken(token);
     // }
 

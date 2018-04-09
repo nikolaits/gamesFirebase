@@ -6,6 +6,7 @@ import * as firebase from "firebase";
 import { NgbPopoverConfig } from '@ng-bootstrap/ng-bootstrap';
 import { FormControl, FormGroup, Validators, ValidatorFn, AbstractControl, NG_VALIDATORS, Validator } from '@angular/forms';
 import { EqualValidatorDirective } from './equal-validator.directive';
+import { NavigationService } from '../shared/navigation-service/navigation.service';
 /**
  * This class represents the lazy loaded HomeComponent.
  */
@@ -69,7 +70,7 @@ export class SignupComponent implements OnInit {
    *
    * @param {NameListService} nameListService - The injected NameListService.
    */
-  constructor(public nameListService: NameListService, private config: NgbPopoverConfig, private authService: AuthService, private router:Router ) {
+  constructor(public nameListService: NameListService, private config: NgbPopoverConfig, private authService: AuthService, private navigation: NavigationService) {
     config.triggers = "click";
     // firebase.auth().createUserWithEmailAndPassword("test@test.com", "testtest")
     // .then(r=>{
@@ -115,7 +116,7 @@ export class SignupComponent implements OnInit {
           console.log("Result signup");
           console.dir(r);
           alert(`Please chexk your email.`);
-          this.router.navigate([""]);
+          this.navigation.goToSignIn();
         })
         .catch((e) => {
           console.log("Error signup");

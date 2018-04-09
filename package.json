@@ -157,6 +157,7 @@
     "firebase": "^4.2.0",
     "intl": "^1.2.5",
     "ng2-cookies": "^1.0.12",
+    "ng2-img-cropper": "^0.9.0",
     "ngx-bootstrap": "^2.0.2",
     "rxjs": "^5.5.3",
     "systemjs": "0.21.0",
