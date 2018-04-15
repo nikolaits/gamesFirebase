@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import * as firebase from "firebase";
 import { CookieService } from 'ng2-cookies';
+import {UserInitInfo} from "../../types/user_init_info.type"
 // import 'rxjs/add/operator/do';  // for debugging
 
 /**
@@ -11,7 +12,7 @@ import { CookieService } from 'ng2-cookies';
 @Injectable()
 export class UserService {
 
-  private user:firebase.User;
+  private _user:firebase.User;
   constructor(private cookiesService:CookieService) {
     this.user = firebase.auth().currentUser;
     console.log("UserService")
@@ -27,20 +28,94 @@ export class UserService {
   //   //              .do(data => console.log('server data:', data))  // debug
   //                   .catch(this.handleError);
   // }
-  hasUsername(){
-    if(this.user){
-      firebase
-      
-    }else{
-      return "no user found";
-    }
+  set user(tmpuser:firebase.User){
+    this._user = tmpuser;
+  }
+  get user():firebase.User{
+    return this._user;
+  }
+
+  getCurrentUser(){
+    this.user = firebase.auth().currentUser;
+    console.log(this.user)
+  }
+
+  hasUsername():Promise<any>{
+    console.log("hasUsername")
+    return new Promise((resolve, reject)=>{
+      if(this.user){
+        console.log("in if state");
+        console.log(`users/${this.user.uid}`)
+        console.log(firebase.auth().currentUser.uid);
+        firebase.database().ref(`users/${this.user.uid}`).once("value").then( snapshot => {
+          console.log("Result");
+          console.log(snapshot);
+          if (snapshot.val() && snapshot.val().username){
+              resolve(snapshot.val().username);
+          }
+          reject("no username");
+       });
+        
+      }else{
+        reject("no user found");
+      }
+    })
+  }
+  getUserUsernameAndProfilePicture():Promise<UserInitInfo>{
+    return new Promise((resolve, reject)=>{
+      if(this.user){
+        firebase.database().ref(`users/${this.user.uid}`).once("value").then( snapshot => {
+          if (snapshot.val() && snapshot.val().username){
+            let result:UserInitInfo = {username:snapshot.val().username, profile_picture:snapshot.val().profile_picture}
+            resolve(result);
+          }
+          reject("no info");
+       });
+        
+      }else{
+        reject("no user found");
+      }
+    })
+  }
+  isUsernameTaken(tmpUsername:string):Promise<any>{
+    console.log("isUsernameTaken");
+    console.log(tmpUsername);
+    var rootRef = firebase.database().ref("users");
+    let query = firebase;
+    let taken = false;
+    return new Promise((resolve, reject)=>{
+      rootRef.once("value")
+      .then((r)=>{
+        console.log("isUsernameTaken result");
+        let object = r.val();
+        if(r.val()){
+          console.log(r.val().keys);
+          for (var key in object) {
+            if (object.hasOwnProperty(key)) {
+                console.log(key + " -> " + object[key].username);
+                if(object[key].username === tmpUsername){
+                  console.log("taken");
+                  taken=true;
+                  reject("taken")
+                }
+            }
+        }
+        }
+        if(!taken){
+          console.log("free");
+          resolve("free");  
+        }      
+      })
+      .catch((e)=>{
+        reject(e);
+      })
+    })
   }
   writeUserName(name:string, imageUrl:string) {
     let userId = this.user.uid;
-    firebase.database().ref('users/' + userId).set({
+    return firebase.database().ref(`users/${userId}`).set({
       username: name,
-      // email: email,
-      // profile_picture : imageUrl
+      profile_picture : imageUrl
     });
   }
 

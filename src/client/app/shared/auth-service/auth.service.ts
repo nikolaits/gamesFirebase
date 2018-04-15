@@ -25,7 +25,7 @@ export class AuthService {
   // }
   isUserSignIn():Promise<any>{
     console.log("in isUserSignIn")
-    let user = firebase.auth().currentUser;
+    // let user = firebase.auth().currentUser;
     
     // let token = this.cookiesService.get("geitDevGamesToken");
     // if(token){
@@ -94,7 +94,9 @@ export class AuthService {
     });
     
   }
-
+  logOut(){
+    return firebase.auth().signOut();
+  }
   /**
     * Handle HTTP error
     */

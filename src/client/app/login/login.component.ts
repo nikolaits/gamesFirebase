@@ -89,7 +89,8 @@ export class LoginComponent implements OnInit {
       this.authService.saveSignInToken(token);
       console.log("User");
       console.log(user);
-      console.log("uid "+user.uid)
+      console.log("uid "+user.uid);
+      this.navigation.goToMainPage();
     })
     .catch((e)=>{
       console.log("Login Error");

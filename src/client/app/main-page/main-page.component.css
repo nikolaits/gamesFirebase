@@ -35,3 +35,6 @@ h3 {
   text-align: center;
   line-height: 300%;
 }
+.fade{
+  opacity: 1!important;
+}
