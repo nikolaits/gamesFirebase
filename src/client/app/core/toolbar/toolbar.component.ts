@@ -3,7 +3,8 @@ import { UserService } from '../../shared/user-service/user.service';
 import { UserInitInfo } from '../../types/user_init_info.type';
 import { AuthService } from '../../shared/auth-service/auth.service';
 import { NavigationService } from '../../shared/navigation-service/navigation.service';
-
+import { NgbModalOptions, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { UpdateComponent } from "../update/update.component"
 /**
  * This class represents the toolbar component.
  */
@@ -31,7 +32,7 @@ export class ToolbarComponent {
     return this._changeUserDisaplyedData;
 
   }
-  constructor(private userService:UserService, private authService:AuthService, private navigationService:NavigationService){}
+  constructor(private modalService: NgbModal, private userService:UserService, private authService:AuthService, private navigationService:NavigationService){}
   ngAfterViewInit(){
     console.log("take user")
     this.authService.isUserSignIn()
@@ -74,6 +75,21 @@ export class ToolbarComponent {
     .catch((e)=>{
       console.log("Can not logout");
       console.log(e);
+    })
+  }
+  unpdateInfo() {
+    console.log("firs tap");
+    console.log(this.modalService);
+    let options: NgbModalOptions = {
+      beforeDismiss: () => {  return false },
+      windowClass: "in"
+    }
+    
+    const modalRef = this.modalService.open(UpdateComponent, options);
+    modalRef.componentInstance.notification = 'Please enter your username';
+    modalRef.result.then((arg:string)=>{
+      console.log(arg);
+
     })
   }
 }

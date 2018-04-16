@@ -32,7 +32,6 @@
         <form role="form" (ngSubmit)="onSubmit()" [formGroup]="signUpForm">
           <div class="form-group" >
             <label for="email">Email</label>
-            <!-- <input type="email" class="form-control" id="email" [(ngModel)]="model.email" formControlName="email" name="email" #email="ngModel"> -->
             <input type="email" class="form-control" id="email" formControlName="email" name="email" >
             <div *ngIf="email.invalid && (email.dirty || email.touched)" class="alert alert-danger">
 

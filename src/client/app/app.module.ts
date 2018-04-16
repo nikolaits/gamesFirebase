@@ -13,6 +13,8 @@ import { SharedModule } from './shared/shared.module';
 import { CoreModule } from './core/core.module';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 
+import {EqualValidatorDirective} from "./signup/equal-validator.directive";
+
 @NgModule({
   imports: [BrowserModule, CoreModule,NgbModule.forRoot(),
     HttpClientModule, AppRoutingModule,
@@ -22,12 +24,13 @@ import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
     SharedModule.forRoot(),
   
 ],
-  declarations: [AppComponent],
+  declarations: [AppComponent, EqualValidatorDirective],
   providers: [{
     provide: APP_BASE_HREF,
     useValue: '<%= APP_BASE %>'
   }],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  exports:[EqualValidatorDirective]
 
 })
 export class AppModule { }

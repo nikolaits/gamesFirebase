@@ -118,7 +118,12 @@ export class UserService {
       profile_picture : imageUrl
     });
   }
-
+  updateUsername(name:string){
+    let userId = this.user.uid;
+    return firebase.database().ref(`users/${userId}`).update({
+      username: name,
+    });
+  }
   /**
     * Handle HTTP error
     */

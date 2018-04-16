@@ -12,8 +12,8 @@ import { CookieService } from 'ng2-cookies';
 
 @NgModule({
   imports: [SignupRoutingModule, SharedModule, NgbModule, FormsModule, ReactiveFormsModule],
-  declarations: [SignupComponent, EqualValidatorDirective],
-  exports: [SignupComponent, NgbModule,EqualValidatorDirective],
+  declarations: [SignupComponent],
+  exports: [SignupComponent, NgbModule],
   providers: []
 })
 export class SignupModule {

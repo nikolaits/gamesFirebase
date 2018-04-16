@@ -7,6 +7,7 @@ import { NgbPopoverConfig } from '@ng-bootstrap/ng-bootstrap';
 import { FormControl, FormGroup, Validators, ValidatorFn, AbstractControl, NG_VALIDATORS, Validator } from '@angular/forms';
 import { EqualValidatorDirective } from './equal-validator.directive';
 import { NavigationService } from '../shared/navigation-service/navigation.service';
+import { User } from "../types/user.type"
 /**
  * This class represents the lazy loaded HomeComponent.
  */
@@ -40,13 +41,7 @@ import { NavigationService } from '../shared/navigation-service/navigation.servi
 //   };
 // }
 // }
-class User {
-  constructor(
-    public email: string,
-    public password: string,
-    public repassword: string
-  ) { }
-}
+
 
 
 @Component({
