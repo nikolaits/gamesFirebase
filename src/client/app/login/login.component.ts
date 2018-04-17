@@ -2,7 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { NameListService } from '../shared/name-list/name-list.service';
 import { AuthService } from '../shared/auth-service/auth.service';
 import { NavigationService } from '../shared/navigation-service/navigation.service';
- 
+import { NgbModal, NgbModalOptions } from '@ng-bootstrap/ng-bootstrap';
+import {PasswordResetComponent} from "../core/password.reset.component/password.reset.component"
 
 /**
  * This class represents the lazy loaded HomeComponent.
@@ -25,7 +26,7 @@ export class LoginComponent implements OnInit {
    *
    * @param {NameListService} nameListService - The injected NameListService.
    */
-  constructor(public nameListService: NameListService, private authService: AuthService, private navigation:NavigationService) {}
+  constructor(public nameListService: NameListService,private modalService:NgbModal, private authService: AuthService, private navigation:NavigationService) {}
 
   /**
    * Get the names OnInit
@@ -34,8 +35,12 @@ export class LoginComponent implements OnInit {
   //  let userPromise = 
    this.authService.isUserSignIn()
    .then((r)=>{
+     console.log("authService");
+     console.log(r.emailVerified);
+    if(r.emailVerified){
      console.log("user exist");
       this.navigation.goToMainPage();
+    }
    })
    .catch((e)=>{
      console.log("no user found");
@@ -68,12 +73,16 @@ export class LoginComponent implements OnInit {
       }
       else{
         console.log("login");
+        var token = r.credential.accessToken;
+        this.authService.saveSignInToken(token);
+        this.navigation.goToMainPage();
       }
     })
     .catch((e)=>{
       console.log("Login Error");
       console.log(e);
-      alert(`Login Error ${e}`);
+      alert("Please check if you have entered correct email/password.")
+      // alert(`Login Error ${e}`);
     })
   }
   googleSignIn(){
@@ -90,6 +99,7 @@ export class LoginComponent implements OnInit {
       console.log("User");
       console.log(user);
       console.log("uid "+user.uid);
+      // user.
       this.navigation.goToMainPage();
     })
     .catch((e)=>{
@@ -97,6 +107,19 @@ export class LoginComponent implements OnInit {
       console.trace(e);
       
       alert(`Login Error ${e}`);
+    })
+  }
+  onPasswordReset(){
+    let options: NgbModalOptions = {
+      beforeDismiss: () => {  return true },
+      windowClass: "in"
+    }
+    
+    const modalRef = this.modalService.open(PasswordResetComponent, options);
+    modalRef.result.then((arg:string)=>{
+      if(arg === "sent"){
+        alert("Password reset email has been sent");
+      }
     })
   }
 }

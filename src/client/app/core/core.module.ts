@@ -5,6 +5,7 @@ import { NavbarComponent } from './navbar/navbar.component';
 import { throwIfAlreadyLoaded } from './module-import-guard';
 import { ToolbarComponent } from './toolbar/toolbar.component';
 import {UpdateComponent} from "./update/update.component";
+import {PasswordResetComponent} from "./password.reset.component/password.reset.component"
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import { EqualValidatorDirective } from '../signup/equal-validator.directive';
 import { CommonModule } from '@angular/common';  
@@ -12,10 +13,10 @@ import { BrowserModule } from '@angular/platform-browser';
 
 @NgModule({
   imports: [RouterModule, NgbModule.forRoot(), FormsModule, ReactiveFormsModule, BrowserModule],
-  declarations: [NavbarComponent, ToolbarComponent, UpdateComponent,],
+  declarations: [NavbarComponent, ToolbarComponent, UpdateComponent,PasswordResetComponent],
   exports: [RouterModule,
-    NavbarComponent, ToolbarComponent, UpdateComponent],
-  entryComponents:[UpdateComponent]
+    NavbarComponent, ToolbarComponent, UpdateComponent, PasswordResetComponent],
+  entryComponents:[UpdateComponent, PasswordResetComponent]
 })
 export class CoreModule {
 

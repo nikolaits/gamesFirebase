@@ -94,6 +94,9 @@ export class AuthService {
     });
     
   }
+  passwordResetRequest(email:string):firebase.Promise<any>{
+    return firebase.auth().sendPasswordResetEmail(email);
+  }
   logOut(){
     return firebase.auth().signOut();
   }

@@ -110,62 +110,18 @@ export class SignupComponent implements OnInit {
         .then((r) => {
           console.log("Result signup");
           console.dir(r);
+          console.log(r.user);
+          r.sendEmailVerification();
           alert(`Please chexk your email.`);
           this.navigation.goToSignIn();
         })
         .catch((e) => {
           console.log("Error signup");
           console.trace(e);
-          alert(`Error signup ${e}`);
+          // alert(`Error signup ${e}`);
         })
   }
-  // onKey(args: any) {
 
-  //   console.log("on keyup")
-  //   var password = args.target;
-  //   var pass = password.value;
-  //   var stength = 'Weak';
-  //   var pclass = 'danger';
-  //   if (this.best.test(pass) == true) {
-  //     this.popoverData = 'Very Strong';
-  //     this.popoverClass = 'success';
-  //   } else if (this.better.test(pass) == true) {
-  //     this.popoverData = 'Strong';
-  //     this.popoverClass = 'warning';
-  //   } else if (this.good.test(pass) == true) {
-  //     this.popoverData = 'Almost Strong';
-  //     this.popoverClass = 'warning';
-  //   } else if (this.bad.test(pass) == true) {
-  //     this.popoverData = 'Weak';
-  //   } else {
-  //     this.popoverData = 'Very Weak';
-  //   }
-  //   // var popover = password.attr('data-content', stength).data('bs.popover');
-  //   // popover.setContent();
-  //   // popover.$tip.addClass(popover.options.placement).removeClass('danger success info warning primary').addClass(pclass);
-  // }
-
-  onClick(args: any) {
-    this.config
-  }
-  signup(email: string, password: string, repassword: string) {
-    // if (password !== repassword) {
-    //   alert("Password does not match");
-    // }
-    // else {
-      this.authService.signup(email, password)
-        .then((r) => {
-          console.log("Result signup");
-          console.dir(r);
-          alert(`Result signup ${r}`);
-        })
-        .catch((e) => {
-          console.log("Error signup");
-          console.trace(e);
-          alert(`Error signup ${e}`);
-        })
-    // }
-  }
 
   /**
    * Handle the nameListService observable

@@ -78,18 +78,17 @@ export class ToolbarComponent {
     })
   }
   unpdateInfo() {
-    console.log("firs tap");
-    console.log(this.modalService);
     let options: NgbModalOptions = {
-      beforeDismiss: () => {  return false },
+      beforeDismiss: () => {  return true },
       windowClass: "in"
     }
     
     const modalRef = this.modalService.open(UpdateComponent, options);
     modalRef.componentInstance.notification = 'Please enter your username';
     modalRef.result.then((arg:string)=>{
-      console.log(arg);
-
+      if(arg === "usernameUpdated"){
+        this.displayData();
+      }
     })
   }
 }
