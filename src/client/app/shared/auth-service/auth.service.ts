@@ -78,7 +78,7 @@ export class AuthService {
     })
     .catch(function(error) {
       // Handle Errors here.
-      this.handleError(error)
+      return error;
     });
     
   }

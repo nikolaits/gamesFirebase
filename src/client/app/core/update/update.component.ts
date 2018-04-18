@@ -6,6 +6,7 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { EqualValidatorDirective } from '../../signup/equal-validator.directive';
 import { UserInitInfo } from '../../types/user_init_info.type';
 import { AuthService } from '../../shared/auth-service/auth.service';
+import {ImageCropper} from "ng2-img-cropper"
 /**
  * This class represents the toolbar component.
  */
@@ -23,7 +24,10 @@ export class UpdateComponent {
   oldPassword:string
   taken:boolean=false;
   disabledPasswordField:boolean = false;
-  constructor(public activeModal: NgbActiveModal, private userService: UserService, private authService:AuthService) { }
+  constructor(public activeModal: NgbActiveModal, private userService: UserService, private authService:AuthService) { 
+    console.log("ImageCropper");
+    console.log(ImageCropper);
+  }
   ngOnInit() {
     this.userService.getCurrentUser();
     let email = this.userService.user.email;

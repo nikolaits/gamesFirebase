@@ -513,12 +513,16 @@ export class SeedConfig {
       '@angular/router/testing':
         'node_modules/@angular/router/bundles/router-testing.umd.js',
       'rxjs/operators': 'node_modules/rxjs/operators/index.js',
+      'ng2-img-cropper':"node_modules/ng2-img-cropper/index.js",
+      'plugin-babel': 'node_modules/systemjs-plugin-babel/plugin-babel.js',
+      'systemjs-babel-build': 'node_modules/systemjs-plugin-babel/systemjs-babel-browser.js',
 
       'app/': `${this.APP_BASE}app/`,
       // For test config
       'dist/dev/': '/base/dist/dev/',
       '': 'node_modules/',
     },
+    transpiler: 'plugin-babel',
     packages: {
       [this.BOOTSTRAP_DIR]: {
         defaultExtension: 'js'

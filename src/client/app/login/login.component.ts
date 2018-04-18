@@ -67,13 +67,16 @@ export class LoginComponent implements OnInit {
     .then((r)=>{
       console.log("Login result");
       console.log(r);
-      console.log("emailVerified"+r.emailVerified);
-      if(!r.emailVerified){
-        alert("Please, visit your mail box and verify your email!");
+      console.log("emailVerified");
+      console.log(r.emailVerified);
+      if((r.code==="auth/user-not-found")||(r.code === "auth/invalid-email"))
+        alert("Please check if you have entered correct email/password.");
+       else if(!r.emailVerified){
+          alert("Please, visit your mail box and verify your email!");
       }
       else{
         console.log("login");
-        var token = r.credential.accessToken;
+        var token = r.refreshToken;
         this.authService.saveSignInToken(token);
         this.navigation.goToMainPage();
       }
@@ -81,7 +84,7 @@ export class LoginComponent implements OnInit {
     .catch((e)=>{
       console.log("Login Error");
       console.log(e);
-      alert("Please check if you have entered correct email/password.")
+      
       // alert(`Login Error ${e}`);
     })
   }
