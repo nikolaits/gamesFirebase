@@ -112,6 +112,25 @@ export class LoginComponent implements OnInit {
       alert(`Login Error ${e}`);
     })
   }
+
+  facebookSignIn(){
+    this.authService.signInFacebook()
+    .then((result)=>{
+      var token = result.credential.accessToken;
+      // The signed-in user info.
+      var user = result.user;
+
+      this.authService.saveSignInToken(token);
+      // user.
+      this.navigation.goToMainPage();
+    })
+    .catch((e)=>{
+      console.log("Login Error");
+      console.trace(e);
+      
+      alert(`Login Error ${e}`);
+    })
+  }
   onPasswordReset(){
     let options: NgbModalOptions = {
       beforeDismiss: () => {  return true },

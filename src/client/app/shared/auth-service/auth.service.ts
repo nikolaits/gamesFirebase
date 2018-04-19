@@ -94,6 +94,18 @@ export class AuthService {
     });
     
   }
+  signInFacebook(){
+    let provider = new firebase.auth.FacebookAuthProvider();
+    return firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
+    .then(function() {
+      return firebase.auth().signInWithPopup(provider);
+    })
+    .catch(function(error) {
+      // Handle Errors here.
+      this.handleError(error)
+    });
+    
+  }
   passwordResetRequest(email:string):firebase.Promise<any>{
     return firebase.auth().sendPasswordResetEmail(email);
   }
