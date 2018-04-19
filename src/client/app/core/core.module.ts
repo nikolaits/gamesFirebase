@@ -10,12 +10,13 @@ import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import { EqualValidatorDirective } from '../signup/equal-validator.directive';
 import { CommonModule } from '@angular/common';  
 import { BrowserModule } from '@angular/platform-browser';
+import {ImageCropperComponent} from "ngx-img-cropper"
 
 @NgModule({
   imports: [RouterModule, NgbModule.forRoot(), FormsModule, ReactiveFormsModule, BrowserModule],
-  declarations: [NavbarComponent, ToolbarComponent, UpdateComponent,PasswordResetComponent],
+  declarations: [NavbarComponent, ToolbarComponent, UpdateComponent,PasswordResetComponent, ImageCropperComponent],
   exports: [RouterModule,
-    NavbarComponent, ToolbarComponent, UpdateComponent, PasswordResetComponent],
+    NavbarComponent, ToolbarComponent, UpdateComponent, PasswordResetComponent, ImageCropperComponent],
   entryComponents:[UpdateComponent, PasswordResetComponent]
 })
 export class CoreModule {

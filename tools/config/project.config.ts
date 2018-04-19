@@ -66,8 +66,8 @@ export class ProjectConfig extends SeedConfig {
       }
     });
     this.addPackageBundles({
-      name: 'ng2-img-cropper',
-      path: 'node_modules/ng2-img-cropper/',
+      name: 'ngx-img-cropper',
+      path: 'node_modules/ngx-img-cropper/',
       packageMeta: {
         main: 'index.js',
         defaultExtension: 'js'

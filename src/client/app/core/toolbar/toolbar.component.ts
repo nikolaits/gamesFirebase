@@ -77,7 +77,8 @@ export class ToolbarComponent {
       console.log(e);
     })
   }
-  unpdateInfo() {
+  updateInfo() {
+    this.isCollapsed = true;
     let options: NgbModalOptions = {
       beforeDismiss: () => {  return true },
       windowClass: "in"
@@ -85,10 +86,23 @@ export class ToolbarComponent {
     
     const modalRef = this.modalService.open(UpdateComponent, options);
     modalRef.componentInstance.notification = 'Please enter your username';
-    modalRef.result.then((arg:string)=>{
-      if(arg === "usernameUpdated"){
-        this.displayData();
+    modalRef.componentInstance.change.subscribe((arg:any)=>{
+      switch (arg.message) {
+        case "usernameUpdated":
+            this.username = arg.result;
+          break;
+        case "profilePictureUpdated":
+            this.imageUrl = arg.result;
+          break;
+      
+      
+        default:
+          break;
       }
+
+    })
+    modalRef.result.then((arg:string)=>{
+      console.log(arg);
     })
   }
 }
