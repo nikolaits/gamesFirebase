@@ -28,7 +28,7 @@ export class ProjectConfig extends SeedConfig {
 
     // Add `local` third-party libraries to be injected/bundled.
     this.APP_ASSETS = [
-      // {src: `${this.APP_SRC}/your-path-to-lib/libs/jquery-ui.js`, inject: true, vendor: false}
+      {src: `${this.APP_SRC}/games_lib/libs/phaser.min.js`, inject: true, vendor: false}
       // {src: `${this.CSS_SRC}/path-to-lib/test-lib.css`, inject: true, vendor: false},
     ];
 
@@ -43,20 +43,20 @@ export class ProjectConfig extends SeedConfig {
     ];
     this.addPackageBundles({
       name: 'firebase',
-      path: 'node_modules/firebase/',
+      path: 'node_modules/firebase',
       packageMeta: {
-        main: 'firebase-browser.js',
+        main: 'firebase.js',
         defaultExtension: 'js'
       }
     });
-    this.addPackageBundles({
-      name: '@ng-bootstrap/ng-bootstrap',
-      path: 'node_modules/@ng-bootstrap/ng-bootstrap/bundles/',
-      packageMeta: {
-        main: 'ng-bootstrap.js',
-        defaultExtension: 'js'
-      }
-    });
+    // this.addPackageBundles({
+    //   name: '@ng-bootstrap/ng-bootstrap',
+    //   path: 'node_modules/@ng-bootstrap/ng-bootstrap/bundles/',
+    //   packageMeta: {
+    //     main: 'ng-bootstrap.js',
+    //     defaultExtension: 'js'
+    //   }
+    // });
     this.addPackageBundles({
       name: 'ng2-cookies',
       path: 'node_modules/ng2-cookies/',

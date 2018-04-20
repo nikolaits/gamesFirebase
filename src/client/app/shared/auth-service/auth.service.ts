@@ -58,7 +58,7 @@ export class AuthService {
     console.log(`Token date ${date}`);
     this.cookiesService.set("geitDevGamesToken", token, date);
   }
-  signup(email:string, password:string):firebase.Promise<any>{
+  signup(email:string, password:string):Promise<any>{
     // firebase.database.
     return firebase.auth().setPersistence('local')
     .then(function() {
@@ -70,7 +70,7 @@ export class AuthService {
     });
     
   }
-  signin(email:string, password:string):firebase.Promise<any>{
+  signin(email:string, password:string):Promise<any>{
     // firebase.auth().setPersistence()
     return firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
     .then(function() {
@@ -106,7 +106,7 @@ export class AuthService {
     });
     
   }
-  passwordResetRequest(email:string):firebase.Promise<any>{
+  passwordResetRequest(email:string):Promise<any>{
     return firebase.auth().sendPasswordResetEmail(email);
   }
   logOut(){

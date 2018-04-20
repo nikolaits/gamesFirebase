@@ -4,7 +4,7 @@ import { AuthService } from '../shared/auth-service/auth.service';
 import { UserService } from '../shared/user-service/user.service';
 import { NgbModal, NgbActiveModal, NgbModalOptions } from '@ng-bootstrap/ng-bootstrap';
 import { UserInitInfo } from '../types/user_init_info.type';
-
+import * as firebase from "firebase";
 
 @Component({
   selector: 'ngbd-modal-content',
@@ -113,7 +113,6 @@ export class MainPageComponent implements OnInit {
   constructor(private modalService: NgbModal, private authService: AuthService, private userService: UserService) {
 
   }
-
   /**
    * Get the names OnInit
    */
@@ -159,43 +158,45 @@ export class MainPageComponent implements OnInit {
       this.changeDisplayedData=true;
     })
   }
+readfilestorage(){
+  
+}
+  // onSubmit(email: string, password: string) {
+  //   this.authService.signin(email, password)
+  //     .then((r) => {
+  //       console.log("Login result");
+  //       console.log(r);
+  //       console.log("emailVerified" + r.emailVerified);
+  //       if (!r.emailVerified) {
+  //         alert("Please, visit your mail box and verify your email!");
+  //       }
+  //       else {
+  //         console.log("login");
+  //       }
+  //     })
+  //     .catch((e) => {
+  //       console.log("Login Error");
+  //       console.log(e);
+  //       alert(`Login Error ${e}`);
+  //     })
+  // }
+  // googleSignIn() {
+  //   console.log("googleSignIn");
+  //   this.authService.signInGoogle()
+  //     .then((result) => {
+  //       var token = result.credential.accessToken;
+  //       // The signed-in user info.
+  //       var user = result.user;
+  //       console.log("Token");
+  //       console.log(token);
+  //       console.log("User");
+  //       console.log(user);
+  //     })
+  //     .catch((e) => {
+  //       console.log("Login Error");
+  //       console.trace(e);
 
-  onSubmit(email: string, password: string) {
-    this.authService.signin(email, password)
-      .then((r) => {
-        console.log("Login result");
-        console.log(r);
-        console.log("emailVerified" + r.emailVerified);
-        if (!r.emailVerified) {
-          alert("Please, visit your mail box and verify your email!");
-        }
-        else {
-          console.log("login");
-        }
-      })
-      .catch((e) => {
-        console.log("Login Error");
-        console.log(e);
-        alert(`Login Error ${e}`);
-      })
-  }
-  googleSignIn() {
-    console.log("googleSignIn");
-    this.authService.signInGoogle()
-      .then((result) => {
-        var token = result.credential.accessToken;
-        // The signed-in user info.
-        var user = result.user;
-        console.log("Token");
-        console.log(token);
-        console.log("User");
-        console.log(user);
-      })
-      .catch((e) => {
-        console.log("Login Error");
-        console.trace(e);
-
-        alert(`Login Error ${e}`);
-      })
-  }
+  //       alert(`Login Error ${e}`);
+  //     })
+  // }
 }

@@ -5,6 +5,7 @@ import { AuthService } from '../../shared/auth-service/auth.service';
 import { NavigationService } from '../../shared/navigation-service/navigation.service';
 import { NgbModalOptions, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { UpdateComponent } from "../update/update.component"
+import  * as firebase from "firebase";
 /**
  * This class represents the toolbar component.
  */

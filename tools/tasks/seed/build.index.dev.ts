@@ -60,8 +60,8 @@ function mapPath(dep: any) {
     envPath = join(Config.APP_DEST, envPath.replace(Config.APP_SRC, ''));
   } else if (envPath.startsWith(Config.APP_SRC) && envPath.endsWith('.scss')) {
     envPath = envPath
-      .replace(Config.ASSETS_SRC, Config.CSS_DEST)
-      .replace('.scss', '.css');
+      .replace(Config.ASSETS_SRC, Config.CSS_DEST, Config.GAMEs_SRC)
+      .replace('.scss', '.css', '.js');
   }
   return envPath;
 }

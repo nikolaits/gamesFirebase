@@ -201,6 +201,8 @@ export class SeedConfig {
    * @type {string}
    */
   ASSETS_SRC = `${this.APP_SRC}/assets`;
+  
+  GAMEs_SRC = `${this.APP_SRC}/games`;
 
   /**
    * The folder of the applications css files.
@@ -527,7 +529,11 @@ export class SeedConfig {
       [this.BOOTSTRAP_DIR]: {
         defaultExtension: 'js'
       }
+    },
+    map: {
+      '@ng-bootstrap/ng-bootstrap': 'node_modules/@ng-bootstrap/ng-bootstrap/bundles/ng-bootstrap.js',
     }
+    
   };
 
   /**
@@ -546,7 +552,8 @@ export class SeedConfig {
     base: this.PROJECT_ROOT,
     packageConfigPaths: [
       join('node_modules', '*', 'package.json'),
-      join('node_modules', '@angular', '*', 'package.json')
+      join('node_modules', '@angular', '*', 'package.json'),
+      join('node_modules', '@ngx-bootstrap/ngx-bootstrap', '*', 'package.json')
       // for other modules like @ngx-translate the package.json path needs to updated here
       // otherwise npm run build.prod would fail
       // join('node_modules', '@ngx-translate', '*', 'package.json')
@@ -614,7 +621,11 @@ export class SeedConfig {
         main: 'Rx.js',
         defaultExtension: 'js'
       }
+    },
+    map: {
+      '@ng-bootstrap/ng-bootstrap': 'node_modules/@ng-bootstrap/ng-bootstrap/bundles/ng-bootstrap.js',
     }
+    
   };
 
   /**
