@@ -126,7 +126,7 @@ export class MainPageComponent implements OnInit {
    * Get the names OnInit
    */
   ngOnInit() {
-
+    console.log("main component ngOnInit");
   }
   ngAfterViewInit() {
     this.authService.isUserSignIn()
@@ -238,21 +238,21 @@ export class MainPageComponent implements OnInit {
       .then((args) => {
         if (args === "exist") {
           console.log("script is removed");
-          // this.addJSFile("assets/games/asteroids/src/game.js");
+          // this.addJSFile("assets/gamesTest/asteroids/src/game.js");
           this.startGame(gamename,1, game);
         }
       })
       .catch((err) => {
         console.log("Error removejscssfile")
         console.log(err);
-        this.addJSFile("assets/games/"+gamename+"/src/"+gamename+".js");
+        this.addJSFile("assets/gamesTest/"+gamename+"/src/"+gamename+".js");
         this.startGame(gamename,1000, game);
       })
   }
   startGame(gamename:string, delay:number, game:Game){
     setTimeout(() => {
       try {
-        window['start_'+gamename](game.windowWidth, game.windowHeight, gamename, null, "assets/games/"+gamename+"/",
+        window['start_'+gamename](game.windowWidth, game.windowHeight, gamename, null, "assets/gamesTest/"+gamename+"/",
           (status: string, score: number, game_xp: number, game_id: number, new_game_id: number, unlocklevel: boolean) => {
             console.log('game start 1');
             console.log(score);

@@ -1,0 +1,6 @@
+[submodule "src/client/assets/games/gamesTest"]
+	path = src/client/assets/games/gamesTest
+	url = https://github.com/nikolaits/gamesTest
+[submodule "src/client/assets/gamesTest"]
+	path = src/client/assets/gamesTest
+	url = https://github.com/nikolaits/gamesTest
