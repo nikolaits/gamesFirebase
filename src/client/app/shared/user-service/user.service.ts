@@ -39,7 +39,24 @@ export class UserService {
     this.user = firebase.auth().currentUser;
     console.log(this.user)
   }
-
+  isUserAdmin(){
+    return new Promise((resolve, reject)=>{
+      if(this.user){
+        firebase.database().ref(`users/${this.user.uid}`).once("value").then( snapshot => {
+          console.log("isUserAdmin");
+          console.log(snapshot.val().isAdmin);
+          if (snapshot.val() && snapshot.val().isAdmin){
+            
+              resolve(snapshot.val().isAdmin);
+          }
+          reject(false);
+       });
+        
+      }else{
+        reject("no user found");
+      }
+    })
+  }
   hasUsername():Promise<any>{
     console.log("hasUsername")
     return new Promise((resolve, reject)=>{

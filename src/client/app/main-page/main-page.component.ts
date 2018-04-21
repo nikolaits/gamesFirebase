@@ -151,7 +151,7 @@ export class MainPageComponent implements OnInit {
         console.log(e);
       });
 
-
+      this.detectGamesContentChange();
   }
   activeGames() {
     this.gamesService.getCurrentUser();
@@ -190,6 +190,20 @@ export class MainPageComponent implements OnInit {
   onRateChange(args: any, game: string) {
     console.log("Rate change");
     console.log(args, game);
+    this.games.forEach((element:Game)=>{
+      if(element.name === game){
+        this.gamesService.setupusergamerate(game, element.userRate, args)
+        .then((r)=>{
+          console.log("Userrate has been change");
+          console.log(r);
+        })
+        .catch((e)=>{
+          console.log("Error onRateChange");
+          console.log(e)
+        })
+      }
+
+    })
 
   }
   onVisibilityChange(gamename: string) {
@@ -292,6 +306,30 @@ export class MainPageComponent implements OnInit {
     })
 
   }
+  detectGamesContentChange(){
+    firebase.database().ref("games/").on('value', (snapshot) => {
+      // Do whatever
+      // console.log("gsmes info chnaged");
+      // console.log(snapshot.val());
+      let object = snapshot.val();
+      this.games.forEach(element => {
+        let ratesNumber = 0;
+        let avrgRate = 0;
+        let rates = object[element.name].usersRating;
+            if(rates){
+              for (var ratekey in rates) {
+                avrgRate += rates[ratekey].rate;
+                ratesNumber += 1;
+              }
+            }
+            else{
+              ratesNumber = 1;
+            }
+            element.avrgRate = avrgRate / ratesNumber;
+      });
+  });
+  }
+
   // onSubmit(email: string, password: string) {
   //   this.authService.signin(email, password)
   //     .then((r) => {

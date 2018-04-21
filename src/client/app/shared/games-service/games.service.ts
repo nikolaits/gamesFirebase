@@ -135,12 +135,18 @@ export class GamesService {
         })
     })
   }
-  writeUserName(name: string, imageUrl: string) {
+  setupusergamerate(gamename: string, currentuserrate: number, newuserrate:number) {
     let userId = this.user.uid;
-    return firebase.database().ref(`users/${userId}`).set({
-      username: name,
-      profile_picture: imageUrl
-    });
+    if(currentuserrate === 0){
+      return firebase.database().ref(`games/${gamename}/usersRating/${userId}`).set({
+        rate: newuserrate
+      });
+    }
+    else{
+      return firebase.database().ref(`games/${gamename}/usersRating/${userId}`).update({
+        rate: newuserrate
+      });
+    }
   }
   updateUserImage(imageUrl: string) {
     let userId = this.user.uid;
