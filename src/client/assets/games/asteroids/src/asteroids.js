@@ -6,9 +6,11 @@ var platform_tools;
 var user_data;
 var gameID = 2;
 var g_score;
+var assets_path=""
 
-function start_asteroids(windowwidth, windowheight, container, args, callback) {
+function start_asteroids(windowwidth, windowheight, container, args, assetsPath, callback) {
     platform_tools = callback;
+    assets_path = assetsPath;
     // args - level, username, mode, 3 objects with 3 games(id and names)
     user_data = args;
 
@@ -31,9 +33,13 @@ function destroy_asteroids(){
     game.state.remove('Game');
     game.state.remove('GameOver');
     game.destroy();
-    Asteroids = undefined;
+    Asteroids.Preloader = null;
 
 }
+ 
+
+
+
 
 
 Asteroids.Preloader = function () { };
@@ -45,10 +51,19 @@ Asteroids.Preloader.prototype = {
     },
 
     preload: function () {
-         this.load.path = 'games/asteroids/assets/sprites/';
+        //  this.load.path = 'assets/games/asteroids/assets/sprites/';
+        this.game.load.image("asteroid", assets_path+"assets/sprites/asteroid.png");
+         this.game.load.image("asteroid2", assets_path+"assets/sprites/asteroid2.png");
+         this.game.load.image("earth", assets_path+"assets/sprites/earth.png");
+         this.game.load.image("live", assets_path+"assets/sprites/live.png");
+         this.game.load.image("menu_bc", assets_path+"assets/sprites/menu_bc.png");
+         this.game.load.image("projectile", assets_path+"assets/sprites/projectile.png");
+         this.game.load.image("ship", assets_path+"assets/sprites/ship.png");
+         this.game.load.image("space", assets_path+"asteroids/assets/sprites/space.png");
+         this.game.load.image("start", assets_path+"asteroids/assets/sprites/start.png");
          this.game.canvas.id = 'asteroid';
 
-        this.load.images(['ship', 'projectile', 'asteroid', 'asteroid2', 'earth', 'space', 'live', 'start', 'menu_bc']);
+        // this.load.images(['ship', 'projectile', 'asteroid', 'asteroid2', 'earth', 'space', 'live', 'start', 'menu_bc']);
 
     },
 

@@ -252,7 +252,7 @@ export class MainPageComponent implements OnInit {
   startGame(gamename:string, delay:number, game:Game){
     setTimeout(() => {
       try {
-        window['start_'+gamename](game.windowWidth, game.windowHeight, gamename, null,
+        window['start_'+gamename](game.windowWidth, game.windowHeight, gamename, null, "assets/games/"+gamename+"/",
           (status: string, score: number, game_xp: number, game_id: number, new_game_id: number, unlocklevel: boolean) => {
             console.log('game start 1');
             console.log(score);
