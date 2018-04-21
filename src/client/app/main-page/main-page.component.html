@@ -1,46 +1,36 @@
-<sd-toolbar [changeUserDisaplyedData]="changeDisplayedData" ></sd-toolbar>
+<sd-toolbar [changeUserDisaplyedData]="changeDisplayedData"></sd-toolbar>
 <sd-navbar></sd-navbar>
-<!-- <button (click)="openModal()">Click me!</button> -->
-<!-- <div class="container">
-  <div class="row">
-
-    <div class="main">
-
-      <h3>Main Page, or <a href="../signup">Sign Up</a></h3>
-      <div class="row">
-        <div class="col-xs-6 col-sm-6 col-md-6">
-          <a href="#" class="btn btn-lg btn-primary btn-block">Facebook</a>
-        </div>
-        <div class="col-xs-6 col-sm-6 col-md-6">
-          <a href="#" (click)="googleSignIn()" class="btn btn-lg btn-info btn-block">Google</a>
-        </div>
-      </div>
-      <div class="login-or">
-        <hr class="hr-or">
-        <span class="span-or">or</span>
-      </div>
-
-      <form role="form" (ngSubmit)="onSubmit(email.value, password.value)">
-        <div class="form-group">
-          <label for="inputUsernameEmail">Username or email</label>
-          <input type="text" #email class="form-control" id="inputUsernameEmail">
-        </div>
-        <div class="form-group">
-          <a class="pull-right" href="#">Forgot password?</a>
-          <label for="inputPassword">Password</label>
-          <input type="password" #password class="form-control" id="inputPassword">
-        </div>
-        <div class="checkbox pull-right">
-          <label>
-            <input type="checkbox">
-            Remember me </label>
-        </div>
-        <button type="submit" class="btn btn btn-primary">
-          Log In
-        </button>
-      </form>
-    
-    </div>
-    
+<div class="container">
+  <div *ngFor="let game of games" class="buttons">
+    <button type="button" class="btn btn-outline-primary" [ngClass]="{'active':!game.isCollapsed}" (click)="onVisibilityChange(game.name)"
+      [attr.aria-expanded]="!game.isCollapsed" aria-controls="collapseExample">
+      {{game.name}}
+    </button>
   </div>
-</div> -->
+  <div class="games" *ngFor="let game of games">
+    <div id="collapseExample" [ngbCollapse]="game.isCollapsed">
+      <div class="card">
+        <h2>{{prettifyHeader(game.name)}}</h2>
+        <br>
+        <hr>
+        <div class="card-body">
+          <div  class="canvasStyle" [style.width.px]="containerWidth" [style.height.px]="containerHeight" id="{{game.name}}">
+            
+          </div>
+          <br>
+          <hr>
+          <p>Game Rating</p>
+
+          <ngb-rating #rateElement [(rate)]="game.userRate" (rateChange)="onRateChange(rateElement.rate, game.name)">
+            <ng-template let-fill="fill" let-index="index">
+              <span class="star" [class.filled]="fill === 100" [class.bad]="index < 3">&#9733;</span>
+            </ng-template>
+          </ngb-rating>
+          <hr>
+          <pre>Average rate: <b>{{game.avrgRate}}</b></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

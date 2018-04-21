@@ -7,7 +7,7 @@
     {
       "name": "appshell",
       "resources": {
-        "files": ["/assets/**/*", "!/ngsw-worker.js"],
+        "files": ["/assets/**/*", "!/ngsw-worker.js", "/games/**/*"],
         "versionedFiles": ["/**/*.html", "/**/*.js", "/**/*.css"],
         "urls": []
       }
