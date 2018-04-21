@@ -126,7 +126,7 @@ export class MainPageComponent implements OnInit {
    * Get the names OnInit
    */
   ngOnInit() {
-    console.log("main component ngOnInit");
+    console.log("main component ngOnInit2");
   }
   ngAfterViewInit() {
     this.authService.isUserSignIn()
