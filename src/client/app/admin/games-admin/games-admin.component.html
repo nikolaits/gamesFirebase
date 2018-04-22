@@ -1,7 +1,14 @@
 <sd-toolbar [changeUserDisaplyedData]="changeDisplayedData"></sd-toolbar>
 <sd-navbar></sd-navbar>
+<div>
+  <button type="button" class="btn btn-outline-primary create" (click)="createNewGame()">
+    Create new game
+  </button>
+</div>
 <div class="container">
+
   <div id="test"></div>
+
   <div *ngFor="let game of games" class="buttons">
     <button type="button" class="btn btn-outline-primary" [ngClass]="{'active':!game.isCollapsed}" (click)="onVisibilityChange(game.name)"
       [attr.aria-expanded]="!game.isCollapsed" aria-controls="collapseExample">
@@ -15,14 +22,16 @@
         <br>
         <hr>
         <div class="card-body">
-          <div  class="canvasStyle" [style.width.px]="containerWidth" [style.height.px]="containerHeight" id="{{'container_'+game.name}}">
-            
+          <div class="canvasStyle" [style.width.px]="containerWidth" [style.height.px]="containerHeight" id="{{game.name}}">
+            <button type="button" class="btn btn-outline-primary" (click)="updateGameInfo(game.name)">
+              Update game info
+            </button>
           </div>
           <br>
           <hr>
           <p>Game Rating</p>
 
-          <ngb-rating #rateElement [(rate)]="game.userRate" (rateChange)="onRateChange(rateElement.rate, game.name)">
+          <ngb-rating #rateElement [(rate)]="game.avrgRate" readonly="true">
             <ng-template let-fill="fill" let-index="index">
               <span class="star" [class.filled]="fill === 100" [class.bad]="index < 3">&#9733;</span>
             </ng-template>

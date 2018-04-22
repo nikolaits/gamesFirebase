@@ -11,6 +11,7 @@ import { SignupModule } from "./signup/signup.module"
 import { MainPageModule } from "./main-page/main-page.module"
 import { SharedModule } from './shared/shared.module';
 import { CoreModule } from './core/core.module';
+import {GamesAdminModule} from "./admin/games-admin/games-admin.module"
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 
 import {EqualValidatorDirective} from "./signup/equal-validator.directive";
@@ -21,6 +22,8 @@ import {EqualValidatorDirective} from "./signup/equal-validator.directive";
     AboutModule, LoginModule,
     SignupModule,
     MainPageModule,
+    MainPageModule,
+    GamesAdminModule,    
     SharedModule.forRoot(),
   
 ],

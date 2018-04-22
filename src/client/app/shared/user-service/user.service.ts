@@ -13,6 +13,7 @@ import {UserInitInfo} from "../../types/user_init_info.type"
 export class UserService {
 
   private _user:firebase.User;
+  public username:string = "";
   constructor(private cookiesService:CookieService) {
     this.user = firebase.auth().currentUser;
     console.log("UserService")
@@ -132,7 +133,8 @@ export class UserService {
     let userId = this.user.uid;
     return firebase.database().ref(`users/${userId}`).set({
       username: name,
-      profile_picture : imageUrl
+      profile_picture : imageUrl,
+      isAdmin:false
     });
   }
   updateUserImage(imageUrl:string){

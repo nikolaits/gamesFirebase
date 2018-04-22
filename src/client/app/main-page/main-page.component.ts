@@ -8,6 +8,9 @@ import * as firebase from "firebase";
 import { GamesService } from '../shared/games-service/games.service';
 import { Game } from "../types/game.type"
 
+class GameArgs {
+  constructor(public challenges: any, public friends: any, public savedGame: any) { }
+}
 @Component({
   selector: 'ngbd-modal-content',
   styles: [".modal-header{background-color: 000;}   "],
@@ -40,7 +43,6 @@ export class NgbdModalContent {
   public isEmpty = false;
   public btnDisabled = true;
   public taken = false;
-
   ngOnInit() {
 
   }
@@ -92,6 +94,7 @@ export class NgbdModalContent {
   }
 }
 declare let window: any;
+declare let jQuery: any;
 // declare let game: any;
 /**
  * This class represents the lazy loaded HomeComponent.
@@ -110,6 +113,8 @@ export class MainPageComponent implements OnInit {
   containerWidth = 0;
   containerHeight = 0;
   games: Game[] = [];
+
+  public selectedGame = "";
   public changeDisplayedData: boolean = false;
   @ViewChild('wrapper') wrapper: any;
   firstLoad = true;
@@ -129,6 +134,21 @@ export class MainPageComponent implements OnInit {
     console.log("main component ngOnInit2");
   }
   ngAfterViewInit() {
+    //   jQuery("#test").kendoGrid({
+    //     dataSource: {
+    //         data: [
+    //             {name: "Name1", score: 2},
+    //             {name: "Name2", score: 22},
+    //             {name: "Name3", score: 12}
+    //         ],
+    //         sort: {
+    //             field: "score",
+    //             dir: "desc"
+    //         },
+    //         pageSize: 20
+    //     },        
+    //     scrollable: false
+    // });
     this.authService.isUserSignIn()
       .then((r: firebase.User) => {
         console.log("user exist");
@@ -151,7 +171,7 @@ export class MainPageComponent implements OnInit {
         console.log(e);
       });
 
-      this.detectGamesContentChange();
+    // this.detectGamesContentChange();
   }
   activeGames() {
     this.gamesService.getCurrentUser();
@@ -190,17 +210,17 @@ export class MainPageComponent implements OnInit {
   onRateChange(args: any, game: string) {
     console.log("Rate change");
     console.log(args, game);
-    this.games.forEach((element:Game)=>{
-      if(element.name === game){
+    this.games.forEach((element: Game) => {
+      if (element.name === game) {
         this.gamesService.setupusergamerate(game, element.userRate, args)
-        .then((r)=>{
-          console.log("Userrate has been change");
-          console.log(r);
-        })
-        .catch((e)=>{
-          console.log("Error onRateChange");
-          console.log(e)
-        })
+          .then((r) => {
+            console.log("Userrate has been change");
+            console.log(r);
+          })
+          .catch((e) => {
+            console.log("Error onRateChange");
+            console.log(e)
+          })
       }
 
     })
@@ -219,57 +239,101 @@ export class MainPageComponent implements OnInit {
     //   }, 500);
 
     // }
-    
-      
 
-    let selectedGame = null;
+    if (this.selectedGame !== "") {
+      this.destroyGame(this.selectedGame);
+    }
+    this.selectedGame = gamename;
+
+    let selectedGame: Game = null;
     this.games.forEach((element) => {
       if (gamename === element.name) {
         element.isCollapsed = false;
-        selectedGame= element;
+        selectedGame = element;
       }
       else {
         element.isCollapsed = true;
       }
 
     })
-    this.containerWidth = 400;
-    this.containerHeight = 600;
-    console.log("Selectedgame "+gamename);
-    if(gamename === "asteroids")
-      this.preloadInitGame(gamename, selectedGame);
-    else{
-      this.destroyGame("asteroids");
-    }
-    
+    this.containerWidth = selectedGame.windowWidth;
+    this.containerHeight = selectedGame.windowHeight;
+    console.log("Selectedgame " + gamename);
+    this.userService.getUserUsernameAndProfilePicture()
+      .then((rusult: UserInitInfo) => {
+        this.gamesService.doesUserLiveScoreExists(gamename, rusult.username)
+          .then((r) => {
+            if(r ==="exists"){
+              this.preloadInitGame(gamename, selectedGame);
+            }
+            else if(r === "norecord"){
+              this.gamesService.createUserLiveScore(gamename, rusult.username)
+              .then((r)=>{
+                this.preloadInitGame(gamename, selectedGame);
+              })
+              .catch((errCreate)=>{
+                console.log("errCreate");
+                console.log(errCreate)
+              })
+            }
+            
+          })
+          .catch((e) => {
+            console.log(e)
+          })
+      })
+      .catch((err) => {
+        console.log("Error");
+        console.log(err);
+      })
+
+
+
+
 
   }
-  destroyGame(gamename:string){
-    window['destroy_'+gamename]();
+  destroyGame(gamename: string) {
+    window['destroy_' + gamename]();
   }
-  preloadInitGame(gamename:string, game:Game){
-    this.checkifjscssfileisloaded(gamename+'.js', "js")
+  preloadInitGame(gamename: string, game: Game) {
+    this.checkifjscssfileisloaded(gamename + '.js', "js")
       .then((args) => {
         if (args === "exist") {
           console.log("script is removed");
           // this.addJSFile("assets/gamesTest/asteroids/src/game.js");
-          this.startGame(gamename,1, game);
+          this.startGame(gamename, 1, game);
         }
       })
       .catch((err) => {
         console.log("Error removejscssfile")
         console.log(err);
-        this.addJSFile("assets/gamesTest/"+gamename+"/src/"+gamename+".js");
-        this.startGame(gamename,1000, game);
+        this.addJSFile("assets/gamesJavaScript/" + gamename + "/src/" + gamename + ".js");
+        this.startGame(gamename, 1000, game);
       })
   }
-  startGame(gamename:string, delay:number, game:Game){
+  startGame(gamename: string, delay: number, game: Game) {
     setTimeout(() => {
       try {
-        window['start_'+gamename](game.windowWidth, game.windowHeight, gamename, null, "assets/gamesTest/"+gamename+"/",
-          (status: string, score: number, game_xp: number, game_id: number, new_game_id: number, unlocklevel: boolean) => {
+        let gameArgs: GameArgs = new GameArgs(undefined, undefined, game.savedData);
+        console.log("gameArgs");
+        console.log(gameArgs);
+        window['start_' + gamename](game.windowWidth, game.windowHeight, "container_" + gamename, "assets/gamesJavaScript/" + gamename + "/", JSON.stringify(gameArgs), "",
+          (status: string, score: number, game_xp: number, game_id: number, gameArgs: any, unlocklevel: boolean) => {
             console.log('game start 1');
             console.log(score);
+            if (status === "Close") {
+              this.destroyGame(this.selectedGame);
+              this.selectedGame = "";
+            } else if (status === "SaveGame") {
+              this.gamesService.setupusersaveddata(this.selectedGame, game.savedData, gameArgs)
+                .then((r) => {
+                  console.log("game info is set")
+                })
+                .catch((e) => {
+                  console.log("Error (setupusersaveddata)");
+                  console.log(e);
+                })
+            }
           });
       } catch (error) {
         console.log("error");
@@ -306,29 +370,30 @@ export class MainPageComponent implements OnInit {
     })
 
   }
-  detectGamesContentChange(){
-    firebase.database().ref("games/").on('value', (snapshot) => {
-      // Do whatever
-      // console.log("gsmes info chnaged");
-      // console.log(snapshot.val());
-      let object = snapshot.val();
-      this.games.forEach(element => {
-        let ratesNumber = 0;
-        let avrgRate = 0;
-        let rates = object[element.name].usersRating;
-            if(rates){
-              for (var ratekey in rates) {
-                avrgRate += rates[ratekey].rate;
-                ratesNumber += 1;
-              }
-            }
-            else{
-              ratesNumber = 1;
-            }
-            element.avrgRate = avrgRate / ratesNumber;
-      });
-  });
-  }
+  // TO DO update the array
+  // detectGamesContentChange(){
+  //   firebase.database().ref("games/").on('value', (snapshot) => {
+  //     // Do whatever
+  //     // console.log("gsmes info chnaged");
+  //     // console.log(snapshot.val());
+  //     let object = snapshot.val();
+  //     this.games.forEach(element => {
+  //       let ratesNumber = 0;
+  //       let avrgRate = 0;
+  //       let rates = object[element.name].usersRating;
+  //           if(rates){
+  //             for (var ratekey in rates) {
+  //               avrgRate += rates[ratekey].rate;
+  //               ratesNumber += 1;
+  //             }
+  //           }
+  //           else{
+  //             ratesNumber = 1;
+  //           }
+  //           element.avrgRate = avrgRate / ratesNumber;
+  //     });
+  // });
+  // }
 
   // onSubmit(email: string, password: string) {
   //   this.authService.signin(email, password)

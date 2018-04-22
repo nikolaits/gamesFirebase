@@ -1,0 +1,37 @@
+.star {
+  font-size: 1.5rem;
+  color: #b0c4de;
+}
+.filled {
+  color: #1e90ff;
+}
+.bad {
+  color: #deb0b0;
+}
+.filled.bad {
+  color: #ff1e1e;
+}
+.buttons{
+  float: left;
+}
+.buttons button{
+  margin:2px 5px;
+}
+.games{
+  clear: both;
+}
+.active{
+  background-color: whitesmoke;
+  color: #106cc8;
+}
+.canvasStyle {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  display: block !important;
+}
+.create{
+  width: 96%;
+  margin:2px 2%;
+}

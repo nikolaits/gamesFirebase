@@ -5,6 +5,7 @@ export class Game{
         public avrgRate:number,
         public isCollapsed:boolean,
         public windowWidth:number,
-        public windowHeight:number
+        public windowHeight:number,
+        public savedData:any
     ){}
 }

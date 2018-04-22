@@ -1,0 +1,59 @@
+<div class="modal-header">
+    <h4 class="modal-title">Hi there!</h4>
+</div>
+<div class="modal-body">
+    <p>{{notification}}!</p>
+    <form role="form" (ngSubmit)="onSubmit()" [formGroup]="createGameForm">
+
+        <div class="form-group">
+            <label for="name">Name</label>
+            <input type="text" class="form-control" id="name" formControlName="name" name="name">
+            <div *ngIf="name.invalid && (name.dirty || name.touched)" class="alert alert-danger">
+
+                <div *ngIf="name.errors.required">
+                        Name is required.
+                </div>
+            </div>
+        </div>
+        <div *ngIf="taken" class="alert alert-danger">
+            <div *ngIf="taken">
+                    Name is already taken.
+            </div>
+
+        </div>
+
+        <div class="form-group">
+            <label for="windowWidth">Window Width</label>
+            <input type="number" class="form-control" id="windowWidth" formControlName="windowWidth" name="windowWidth">
+            <div *ngIf="windowWidth.invalid && (windowWidth.dirty || windowWidth.touched)" class="alert alert-danger">
+
+                <div *ngIf="windowWidth.errors.required">
+                    Window Width is required.
+                </div>
+                <div *ngIf="windowWidth.errors.pattern">
+                    Use only positive integer numbers
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+                <label for="windowHeight">Window Height</label>
+                <input type="number" class="form-control" id="windowHeight" formControlName="windowHeight" name="windowHeight">
+                <div *ngIf="windowHeight.invalid && (windowHeight.dirty || windowHeight.touched)" class="alert alert-danger">
+    
+                    <div *ngIf="windowHeight.errors.required">
+                        Window Height is required.
+                    </div>
+                    <div *ngIf="windowHeight.errors.pattern">
+                            Use only positive integer numbers
+                        </div>
+                </div>
+            </div>
+
+
+        <div class="modal-footer">
+            
+            <button type="submit" class="btn btn-outline-dark" [disabled]="!createGameForm.valid"  >{{buttonName}}</button>
+            <button type="button" class="btn btn-outline-dark"  (click)="close()">Close</button>
+        </div>
+    </form>
+</div>
