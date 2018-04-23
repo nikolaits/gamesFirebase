@@ -7,6 +7,7 @@ import { UserInitInfo } from '../types/user_init_info.type';
 import * as firebase from "firebase";
 import { GamesService } from '../shared/games-service/games.service';
 import { Game } from "../types/game.type"
+import { setInterval } from 'timers';
 
 class GameArgs {
   constructor(public challenges: any, public friends: any, public savedGame: any) { }
@@ -43,9 +44,7 @@ export class NgbdModalContent {
   public isEmpty = false;
   public btnDisabled = true;
   public taken = false;
-  ngOnInit() {
 
-  }
   public onTextChange(args: string) {
     this.error = false;
     this.isEmpty = false;
@@ -93,6 +92,8 @@ export class NgbdModalContent {
       })
   }
 }
+
+
 declare let window: any;
 declare let jQuery: any;
 // declare let game: any;
@@ -113,11 +114,17 @@ export class MainPageComponent implements OnInit {
   containerWidth = 0;
   containerHeight = 0;
   games: Game[] = [];
-
   public selectedGame = "";
   public changeDisplayedData: boolean = false;
+  public showHover:boolean = false;
+  private currentUsername = "";
+  private listenerLiveScore: any;
+  private gameRatingListener: any;
+  private settimeoutlistener: any;
+  private firstLoad = true;
+  private starttime = Date.now();
   @ViewChild('wrapper') wrapper: any;
-  firstLoad = true;
+
   /**
    * Creates an instance of the HomeComponent with the injected
    * NameListService.
@@ -134,21 +141,7 @@ export class MainPageComponent implements OnInit {
     console.log("main component ngOnInit2");
   }
   ngAfterViewInit() {
-    //   jQuery("#test").kendoGrid({
-    //     dataSource: {
-    //         data: [
-    //             {name: "Name1", score: 2},
-    //             {name: "Name2", score: 22},
-    //             {name: "Name3", score: 12}
-    //         ],
-    //         sort: {
-    //             field: "score",
-    //             dir: "desc"
-    //         },
-    //         pageSize: 20
-    //     },        
-    //     scrollable: false
-    // });
+
     this.authService.isUserSignIn()
       .then((r: firebase.User) => {
         console.log("user exist");
@@ -170,8 +163,6 @@ export class MainPageComponent implements OnInit {
         console.log("no user found");
         console.log(e);
       });
-
-    // this.detectGamesContentChange();
   }
   activeGames() {
     this.gamesService.getCurrentUser();
@@ -240,6 +231,10 @@ export class MainPageComponent implements OnInit {
 
     // }
 
+    this.showHover = true;
+    if(this.gameRatingListener){
+      this.removeGameRatingListener();
+    }
     if (this.selectedGame !== "") {
       this.destroyGame(this.selectedGame);
     }
@@ -261,22 +256,23 @@ export class MainPageComponent implements OnInit {
     console.log("Selectedgame " + gamename);
     this.userService.getUserUsernameAndProfilePicture()
       .then((rusult: UserInitInfo) => {
+        this.currentUsername = rusult.username;
         this.gamesService.doesUserLiveScoreExists(gamename, rusult.username)
           .then((r) => {
-            if(r ==="exists"){
+            if (r === "exists") {
               this.preloadInitGame(gamename, selectedGame);
             }
-            else if(r === "norecord"){
+            else if (r === "norecord") {
               this.gamesService.createUserLiveScore(gamename, rusult.username)
-              .then((r)=>{
-                this.preloadInitGame(gamename, selectedGame);
-              })
-              .catch((errCreate)=>{
-                console.log("errCreate");
-                console.log(errCreate)
-              })
+                .then((r) => {
+                  this.preloadInitGame(gamename, selectedGame);
+                })
+                .catch((errCreate) => {
+                  console.log("errCreate");
+                  console.log(errCreate)
+                })
             }
-            
+
           })
           .catch((e) => {
             console.log(e)
@@ -286,11 +282,27 @@ export class MainPageComponent implements OnInit {
         console.log("Error");
         console.log(err);
       })
+      this.gamesService.getgameratings(this.selectedGame)
+      .then((r)=>{
+        console.log("rating result");
+        console.log(r);
+        this.updateGameRate(r);
+      })
+      .catch((err)=>{
+        console.log("Rating get Error");
+      })
+      this.detectGamesRatingChange(this.selectedGame);
 
 
 
-
-
+  }
+  updateGameRate(r:any){
+    this.games.forEach((element)=>{
+      if(element.name === this.selectedGame){
+        element.avrgRate = r.avrgRate;
+        element.userRate = r.userRate;
+      }
+    })
   }
   destroyGame(gamename: string) {
     window['destroy_' + gamename]();
@@ -324,6 +336,7 @@ export class MainPageComponent implements OnInit {
             if (status === "Close") {
               this.destroyGame(this.selectedGame);
               this.selectedGame = "";
+              this.removeLiveScoreEventListener();
             } else if (status === "SaveGame") {
               this.gamesService.setupusersaveddata(this.selectedGame, game.savedData, gameArgs)
                 .then((r) => {
@@ -333,8 +346,14 @@ export class MainPageComponent implements OnInit {
                   console.log("Error (setupusersaveddata)");
                   console.log(e);
                 })
+            } else if (status == "LiveScore") {
+              console.log("LiveScore");
+              console.log(score);
+              this.gamesService.updateUserLiveScore(gamename, this.currentUsername, score);
             }
           });
+        this.detectGamesLiveScore(gamename);
+        this.showHover = false;
       } catch (error) {
         console.log("error");
         console.log(error);
@@ -371,30 +390,119 @@ export class MainPageComponent implements OnInit {
 
   }
   // TO DO update the array
-  // detectGamesContentChange(){
-  //   firebase.database().ref("games/").on('value', (snapshot) => {
-  //     // Do whatever
-  //     // console.log("gsmes info chnaged");
-  //     // console.log(snapshot.val());
-  //     let object = snapshot.val();
-  //     this.games.forEach(element => {
-  //       let ratesNumber = 0;
-  //       let avrgRate = 0;
-  //       let rates = object[element.name].usersRating;
-  //           if(rates){
-  //             for (var ratekey in rates) {
-  //               avrgRate += rates[ratekey].rate;
-  //               ratesNumber += 1;
-  //             }
-  //           }
-  //           else{
-  //             ratesNumber = 1;
-  //           }
-  //           element.avrgRate = avrgRate / ratesNumber;
-  //     });
-  // });
-  // }
+  detectGamesRatingChange(gamename: string) {
+    this.gameRatingListener = firebase.database().ref(`games/${gamename}/usersRating`).on('value', (usersRating) => {
+      if (usersRating.val()) {
+        let userRate = 0;
+        let ratesNumber = 0;
+        let avrgRate = 0;
+        let rates = usersRating.val();
+        if(rates){
+          for (var ratekey in rates) {
+            if (ratekey === this.gamesService.user.uid) {
+              userRate = rates[ratekey].rate;
+            }
+            avrgRate += rates[ratekey].rate;
+            ratesNumber += 1;
+          }
+          if(ratesNumber <1){
+            ratesNumber = 1;
+          }
+        }
+        else{
+          ratesNumber = 1;
+        }
+        console.log("User rate data");
+        console.log({userRate:userRate, avrgRate:avrgRate});
+        this.updateGameRate({userRate:userRate, avrgRate:(avrgRate/ratesNumber)});
+    }
+    });
+  }
+  removeGameRatingListener() {
+    // this.gameRatingListener.off();
+  }
 
+  detectGamesLiveScore(gamename: string) {
+    //  this.setintervallistener= setInterval(()=>{
+    // let endtime = Date.now();
+    // if((endtime - this.starttime)<30 * 1000){
+    //   jQuery("#livescore_"+gamename).kendoGrid({
+    //     dataSource: {
+    //       date:[],
+    //       sort: {
+    //         field: "score",
+    //         dir: "desc"
+    //       },
+    //       pageSize: 20
+    //     },
+    //     scrollable: false
+    //   });
+    // }
+    //   }, 1000);
+    let nothingToShow = true;
+    this.listenerLiveScore = firebase.database().ref(`games/${gamename}/livescores`).on('value', (snapshot) => {
+      // Do whatever
+      // console.log("gsmes info chnaged");
+      // console.log(snapshot.val());
+      this.starttime = Date.now();
+      var now = Date.now();
+      var cutoff = now - (30 * 1000);
+      let object = snapshot.val();
+      let data = [];
+
+      for (let key in object) {
+        if ((object[key].timestamp > cutoff)&&(key !=="admin")) {
+          nothingToShow = false;
+          if (this.settimeoutlistener) {
+
+            clearTimeout(this.settimeoutlistener);
+          }
+          data.push({ name: key, score: object[key].score })
+        }
+      }
+      this.showLiveRezultTable(data);
+      this.settimeoutlistener = setTimeout(() => {
+        this.showLiveRezultTable([]);
+      }, 5000);
+    });
+    if (nothingToShow) {
+      this.showLiveRezultTable([]);
+    }
+  }
+  removeLiveScoreEventListener() {
+    // this.listenerLiveScore.off();
+  }
+  showLiveRezultTable(result: any) {
+    if (result.length < 1) {
+      jQuery("#livescore_" + this.selectedGame).kendoGrid({
+        dataSource: {
+          data: [{
+            name:"",
+            score:"no results were found"
+          }],
+          sort: {
+            field: "score",
+            dir: "desc"
+          },
+          pageSize: 20
+        },
+        scrollable: false
+      });
+    }
+    else {
+      jQuery("#livescore_" + this.selectedGame).kendoGrid({
+        dataSource: {
+          data: result,
+          sort: {
+            field: "score",
+            dir: "desc"
+          },
+          pageSize: 20
+        },
+        scrollable: false
+      });
+    }
+  }
   // onSubmit(email: string, password: string) {
   //   this.authService.signin(email, password)
   //     .then((r) => {

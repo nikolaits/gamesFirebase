@@ -75,7 +75,7 @@ export class NgbdModalCreateGame {
             // this.saveUserData(result);
             this.gamesService.createNewGame(name, windowWidth, windowHeight)
               .then((r) => {
-                this.activeModal.close();
+                this.activeModal.close({newname:name});
               })
               .catch((err) => {
                 console.log("Error create game");
@@ -131,6 +131,11 @@ export class GamesAdminComponent implements OnInit {
   containerWidth = 0;
   containerHeight = 0;
   games: Game[] = [];
+  private gameRatingListener: any;
+  private newGame = "";
+  private listenerLiveScore: any;
+  private settimeoutlistener: any;
+  private selectedGameName:string = ""
   public changeDisplayedData: boolean = false;
   @ViewChild('wrapper') wrapper: any;
   firstLoad = true;
@@ -174,6 +179,10 @@ export class GamesAdminComponent implements OnInit {
             if (!r) {
               this.navigationService.goToMainPage();
             }
+            else{
+              this.getAllGames();
+              this.onNewGameAdded();
+            }
           })
           .catch((err) => {
             console.log("Error");
@@ -186,8 +195,14 @@ export class GamesAdminComponent implements OnInit {
         console.log(e);
       });
 
-    this.detectGamesContentChange();
+    // this.detectGamesContentChange();
   }
+  // getButtonTitle(args:boolean){
+  //   if(args){
+  //     return 
+  //   }
+  //   return args == true ?  : 'Activate'
+  // }
   getAllGames() {
     this.gamesService.getCurrentUser();
     this.gamesService.getAllGames()
@@ -214,9 +229,11 @@ export class GamesAdminComponent implements OnInit {
     modalRef.componentInstance.notification = 'Please enter your username';
     modalRef.componentInstance.updateMode = false;
     modalRef.componentInstance.game = null;
-    modalRef.result.then((arg: string) => {
+    modalRef.result.then((arg: any) => {
       console.log(arg);
-
+      if(arg){
+        this.newGame = arg.newname;
+      }
     })
   }
   updateGameInfo(name:string){
@@ -242,9 +259,11 @@ export class GamesAdminComponent implements OnInit {
   }
   onVisibilityChange(gamename: string) {
 
+    if(this.gameRatingListener){
+      this.removeGameRatingListener();
+    }
 
-
-
+    this.selectedGameName=gamename;
     let selectedGame = null;
     this.games.forEach((element) => {
       if (gamename === element.name) {
@@ -257,48 +276,202 @@ export class GamesAdminComponent implements OnInit {
 
     })
 
-
-
+    this.gamesService.getgameratings(this.selectedGameName)
+      .then((r)=>{
+        console.log("rating result");
+        console.log(r);
+        this.updateGameRate(r);
+      })
+      .catch((err)=>{
+        console.log("Rating get Error");
+      })
+      this.detectGamesRatingChange(this.selectedGameName);
+      if(this.listenerLiveScore)
+        this.removeLiveScoreEventListener();
+      this.detectGamesLiveScore(gamename);
   }
 
-
-
+  updateGameRate(r:any){
+    this.games.forEach((element)=>{
+      if(element.name === this.selectedGameName){
+        element.avrgRate = r.avrgRate;
+        element.userRate = r.userRate;
+      }
+    })
+  }
+  detectGamesRatingChange(gamename: string) {
+    this.gameRatingListener = firebase.database().ref(`games/${gamename}/usersRating`).on('value', (usersRating) => {
+      if (usersRating.val()) {
+        let userRate = 0;
+        let ratesNumber = 0;
+        let avrgRate = 0;
+        let rates = usersRating.val();
+        if(rates){
+          for (var ratekey in rates) {
+            if (ratekey === this.gamesService.user.uid) {
+              userRate = rates[ratekey].rate;
+            }
+            avrgRate += rates[ratekey].rate;
+            ratesNumber += 1;
+          }
+          if(ratesNumber <1){
+            ratesNumber = 1;
+          }
+        }
+        else{
+          ratesNumber = 1;
+        }
+        console.log("User rate data");
+        console.log({userRate:userRate, avrgRate:avrgRate});
+        this.updateGameRate({userRate:userRate, avrgRate:(avrgRate/ratesNumber)});
+    }
+    });
+  }
+  removeGameRatingListener() {
+    // this.gameRatingListener.off();
+  }
   prettifyHeader(name: string) {
     let newName = name.charAt(0).toUpperCase() + name.slice(1);
     return newName;
   }
+  onNewGameAdded(){
+    firebase.database().ref("games").on('child_added', (game) => {
+      console.log("on child added");
+      console.log(game.val());
+      this.games.push(new Game(this.newGame, 0, 0, true, game.val().windowWidth, game.val().windowHeight, undefined, false));
+    });
+  }
+  updateGameSattus(name:string){
+    this.games.forEach((element)=>{
+      if(element.name === name){
+        element.active = !element.active;
+        this.gamesService.updateGameStatus(name, element.active)
+        .then((r)=>{
+          let text = "Deactivated";
+          if(element.active){
+            text = "Activated"
+          }
+          alert(`${name} is ${text}`)
+        })
+      }
+    })
+  }
 
-
-  detectGamesContentChange() {
-    firebase.database().ref("games/").on('value', (games) => {
+  detectGamesLiveScore(gamename: string) {
+    //  this.setintervallistener= setInterval(()=>{
+    // let endtime = Date.now();
+    // if((endtime - this.starttime)<30 * 1000){
+    //   jQuery("#livescore_"+gamename).kendoGrid({
+    //     dataSource: {
+    //       date:[],
+    //       sort: {
+    //         field: "score",
+    //         dir: "desc"
+    //       },
+    //       pageSize: 20
+    //     },
+    //     scrollable: false
+    //   });
+    // }
+    //   }, 1000);
+    let nothingToShow = true;
+    this.listenerLiveScore = firebase.database().ref(`games/${gamename}/livescores`).on('value', (snapshot) => {
       // Do whatever
       // console.log("gsmes info chnaged");
       // console.log(snapshot.val());
-      if (games.val()) {
-        let gamesArray = [];
-        let object = games.val();
-        for (var key in object) {
-          let userRate = 0;
-          let ratesNumber = 0;
-          let avrgRate = 0;
-          console.log(key);
-          console.log(object[key].active);
-          let rates = object[key].usersRating;
-          if (rates) {
-            for (var ratekey in rates) {
-              avrgRate += rates[ratekey].rate;
-              ratesNumber += 1;
-            }
+      var now = Date.now();
+      var cutoff = now - (30 * 1000);
+      let object = snapshot.val();
+      let data = [];
+      let activeUsers = 0;
+      for (let key in object) {
+        if ((object[key].timestamp > cutoff)&&(key !=="admin")) {
+          nothingToShow = false;
+          activeUsers += 1;
+          if (this.settimeoutlistener) {
+
+            clearTimeout(this.settimeoutlistener);
           }
-          else {
-            ratesNumber = 1;
-          }
-          gamesArray.push(new Game(key, userRate, avrgRate / ratesNumber, true, object[key].windowWidth, object[key].windowHeight, undefined));
+          
         }
-        this.games = gamesArray;
       }
+      data.push({ name: "active users", number: activeUsers })
+      this.showLiveRezultTable(data);
+      this.settimeoutlistener = setTimeout(() => {
+        this.showLiveRezultTable([]);
+      }, 5000);
     });
+    if (nothingToShow) {
+      this.showLiveRezultTable([]);
+    }
   }
+  removeLiveScoreEventListener() {
+    // this.listenerLiveScore.off();
+  }
+  
+  showLiveRezultTable(result: any) {
+    if (result.length < 1) {
+      jQuery("#livedata_" + this.selectedGameName).kendoGrid({
+        dataSource: {
+          data: [{
+            name:"",
+            number:"no active users"
+          }],
+          sort: {
+            field: "number",
+            dir: "desc"
+          },
+          pageSize: 20
+        },
+        scrollable: false
+      });
+    }
+    else {
+      jQuery("#livedata_" + this.selectedGameName).kendoGrid({
+        dataSource: {
+          data: result,
+          sort: {
+            field: "score",
+            dir: "desc"
+          },
+          pageSize: 20
+        },
+        scrollable: false
+      });
+    }
+  }
+  
+
+  // detectGamesContentChange() {
+  //   firebase.database().ref("games/").on('value', (games) => {
+  //     // Do whatever
+  //     // console.log("gsmes info chnaged");
+  //     // console.log(snapshot.val());
+  //     if (games.val()) {
+  //       let gamesArray = [];
+  //       let object = games.val();
+  //       for (var key in object) {
+  //         let userRate = 0;
+  //         let ratesNumber = 0;
+  //         let avrgRate = 0;
+  //         console.log(key);
+  //         console.log(object[key].active);
+  //         let rates = object[key].usersRating;
+  //         if (rates) {
+  //           for (var ratekey in rates) {
+  //             avrgRate += rates[ratekey].rate;
+  //             ratesNumber += 1;
+  //           }
+  //         }
+  //         else {
+  //           ratesNumber = 1;
+  //         }
+  //         gamesArray.push(new Game(key, userRate, avrgRate / ratesNumber, true, object[key].windowWidth, object[key].windowHeight, undefined));
+  //       }
+  //       this.games = gamesArray;
+  //     }
+  //   });
+  // }
 
   // onSubmit(email: string, password: string) {
   //   this.authService.signin(email, password)

@@ -97,7 +97,7 @@ export class GamesService {
   getAllGames(): Promise<any> {
     console.log("hasUsername")
     return new Promise((resolve, reject) => {
-      firebase.database().ref(`games`).equalTo(true).once("value").then((games) => {
+      firebase.database().ref(`games`).once("value").then((games) => {
         console.log("Games redult");
         console.log(games.val());
         let gamesArray: Game[] = [];
@@ -129,7 +129,7 @@ export class GamesService {
               ratesNumber = 1;
             }
             
-            gamesArray.push(new Game(key, userRate, avrgRate / ratesNumber, true, object[key].windowWidth, object[key].windowHeight, savedData));
+            gamesArray.push(new Game(key, userRate, avrgRate / ratesNumber, true, object[key].windowWidth, object[key].windowHeight, savedData, object[key].active));
           }
           resolve(gamesArray);
         }
@@ -224,7 +224,7 @@ export class GamesService {
     // let userId = this.user.uid;
     return firebase.database().ref(`games/${gamename}/livescores/${username}`).set({
       score:0,
-      timestamp:new Date().getMilliseconds()
+      timestamp:Date.now()
     });
   }
 
@@ -232,7 +232,7 @@ export class GamesService {
     // let userId = this.user.uid;
     return firebase.database().ref(`games/${gamename}/livescores/${username}`).update({
       score:newscore,
-      timestamp:new Date().getMilliseconds()
+      timestamp:Date.now()
     });
   }
   createNewGame(gameName: string, windowWidth:number, windowHeight:number) {
@@ -244,7 +244,7 @@ export class GamesService {
       livescores:{
         admin:{
           score: -1,
-          timestamp: new Date().getMilliseconds()
+          timestamp: Date.now()
         }
       }
     });
@@ -270,6 +270,50 @@ export class GamesService {
       });
     }
   }
+  getgameratings(gamename:string):Promise<any>{
+      console.log("gate rating")
+      return new Promise((resolve, reject) => {
+        firebase.database().ref(`games/${gamename}/usersRating`).once("value").then((usersRating) => {
+          console.log("Games redult");
+          console.log(usersRating.val());
+  
+          if (usersRating.val()) {
+              let userRate = 0;
+              let ratesNumber = 0;
+              let avrgRate = 0;
+              let rates = usersRating.val();
+              if(rates){
+                for (var ratekey in rates) {
+                  if (ratekey === this.user.uid) {
+                    userRate = rates[ratekey].rate;
+                  }
+                  avrgRate += rates[ratekey].rate;
+                  ratesNumber += 1;
+                }
+                if(ratesNumber <1){
+                  ratesNumber = 1;
+                }
+              }
+              else{
+                ratesNumber = 1;
+              }
+              console.log("User rate data");
+              console.log({userRate:userRate, avrgRate:avrgRate});
+            resolve({userRate:userRate, avrgRate:(avrgRate/ratesNumber)});
+          }
+          else {
+            reject(null);
+          }
+        })
+        .catch((err) => {
+            console.log("Error(getGames)");
+            console.log(err);
+            reject(err);
+          })
+      })
+    
+
+  }
   setupusersaveddata(gamename: string, currentUserSavedData: any, newUserSavedData:any) {
     let userId = this.user.uid;
     if(currentUserSavedData){
@@ -293,6 +337,11 @@ export class GamesService {
     let userId = this.user.uid;
     return firebase.database().ref(`users/${userId}`).update({
       username: name,
+    });
+  }
+  updateGameStatus(name: string, value:boolean) {
+    return firebase.database().ref(`games/${name}`).update({
+      active: value,
     });
   }
   /**

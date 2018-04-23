@@ -1,11 +1,11 @@
 <sd-toolbar [changeUserDisaplyedData]="changeDisplayedData"></sd-toolbar>
 <sd-navbar></sd-navbar>
 <div class="container">
-  <div id="test"></div>
+  
   <div *ngFor="let game of games" class="buttons">
     <button type="button" class="btn btn-outline-primary" [ngClass]="{'active':!game.isCollapsed}" (click)="onVisibilityChange(game.name)"
       [attr.aria-expanded]="!game.isCollapsed" aria-controls="collapseExample">
-      {{game.name}}
+      {{prettifyHeader(game.name)}}
     </button>
   </div>
   <div class="games" *ngFor="let game of games">
@@ -18,6 +18,9 @@
           <div  class="canvasStyle" [style.width.px]="containerWidth" [style.height.px]="containerHeight" id="{{'container_'+game.name}}">
             
           </div>
+          
+          <p>Live Score</p>
+          <div id="{{'livescore_'+game.name}}"></div>
           <br>
           <hr>
           <p>Game Rating</p>
@@ -34,4 +37,7 @@
     </div>
   </div>
 
+</div>
+<div *ngIf="showHover" class="hoverContainer">
+  <div class="loader"></div>
 </div>
