@@ -21,6 +21,13 @@ h1 {
   margin-top: 12px;
   width: 24px;
 }
+.friends {
+  background: url("./assets/svg/friends.svg");
+  float: right;
+  height: 24px;
+  margin-top: 12px;
+  width: 24px;
+}
 .username {
   float: right;
   margin-left: 10px;

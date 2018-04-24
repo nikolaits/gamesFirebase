@@ -8,6 +8,7 @@ import * as firebase from "firebase";
 import { GamesService } from '../shared/games-service/games.service';
 import { Game } from "../types/game.type"
 import { setInterval } from 'timers';
+import { CookieService } from 'ng2-cookies';
 
 class GameArgs {
   constructor(public challenges: any, public friends: any, public savedGame: any) { }
@@ -117,6 +118,7 @@ export class MainPageComponent implements OnInit {
   public selectedGame = "";
   public changeDisplayedData: boolean = false;
   public showHover:boolean = false;
+  public showFriendList:boolean = false;
   private currentUsername = "";
   private listenerLiveScore: any;
   private gameRatingListener: any;
@@ -131,7 +133,7 @@ export class MainPageComponent implements OnInit {
    *
    * @param {NameListService} nameListService - The injected NameListService.
    */
-  constructor(private modalService: NgbModal, private authService: AuthService, private userService: UserService, private gamesService: GamesService) {
+  constructor(private modalService: NgbModal, private authService: AuthService, private userService: UserService, private gamesService: GamesService, private cookieService:CookieService) {
 
   }
   /**
@@ -141,7 +143,10 @@ export class MainPageComponent implements OnInit {
     console.log("main component ngOnInit2");
   }
   ngAfterViewInit() {
-
+    let cookieResult = this.cookieService.get("isFriendListOpened");
+    if(cookieResult === "yes"){
+      this.showFriendList = true;
+    }
     this.authService.isUserSignIn()
       .then((r: firebase.User) => {
         console.log("user exist");
@@ -502,6 +507,13 @@ export class MainPageComponent implements OnInit {
         scrollable: false
       });
     }
+  }
+  openFriendList(){
+    this.showFriendList = true;
+    
+  }
+  closeFriendList(){
+    this.showFriendList = false;
   }
   // onSubmit(email: string, password: string) {
   //   this.authService.signin(email, password)

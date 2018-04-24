@@ -2,4 +2,5 @@
   <a [routerLink]="['/main-page']" [routerLinkActive]="['router-link-active']" [routerLinkActiveOptions]="{exact:true}">HOME</a>
   <a [routerLink]="['/about']" [routerLinkActive]="['router-link-active']" [routerLinkActiveOptions]="{exact:true}">ABOUT</a>
   <a [routerLink]="['/game-admin']" *ngIf="isAdmin" [routerLinkActive]="['router-link-active']" [routerLinkActiveOptions]="{exact:true}">GAMES CONTROL</a>
+  <a [routerLink]="['/users-admin']" *ngIf="isAdmin" [routerLinkActive]="['router-link-active']" [routerLinkActiveOptions]="{exact:true}">USERS CONTROL</a>
 </nav>

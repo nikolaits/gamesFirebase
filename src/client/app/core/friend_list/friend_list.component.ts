@@ -12,22 +12,27 @@ import { CookieService } from 'ng2-cookies';
  */
 @Component({
   moduleId: module.id,
-  selector: 'sd-toolbar',
-  templateUrl: 'toolbar.component.html',
-  styleUrls: ['toolbar.component.css']
+  selector: 'friend-list',
+  templateUrl: 'friend_list.component.html',
+  styleUrls: ['friend_list.component.css']
 })
-export class ToolbarComponent {
+export class FriendListComponent {
   public imageUrl: string = "https://firebasestorage.googleapis.com/v0/b/gamesfirebase.appspot.com/o/def_profile_picture.png?alt=media&token=fb6c2ff5-8efc-4ae9-a477-85393611338b";
   public username: string = '';
   private _changeUserDisaplyedData = false;
   public isCollapsed = true;
-  @Output() open: EventEmitter<any> = new EventEmitter();
+  @Output() close: EventEmitter<any> = new EventEmitter();
   @Input() set changeUserDisaplyedData(value: boolean) {
 
     this._changeUserDisaplyedData = value;
     if(this._changeUserDisaplyedData){
       this.displayData();
     }
+
+  }
+  closeNav(){
+    this.cookiesService.set("isFriendListOpened", "no");
+    this.close.emit();
 
   }
   get changeUserDisaplyedData(): boolean {
@@ -107,10 +112,6 @@ export class ToolbarComponent {
     modalRef.result.then((arg:string)=>{
       console.log(arg);
     })
-  }
-  openFriendLis(){
-    this.cookiesService.set("isFriendListOpened", "yes");
-    this.open.emit();
   }
 }
 

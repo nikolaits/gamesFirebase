@@ -1,5 +1,6 @@
-<sd-toolbar [changeUserDisaplyedData]="changeDisplayedData"></sd-toolbar>
+<sd-toolbar (open)="openFriendList()" [changeUserDisaplyedData]="changeDisplayedData"></sd-toolbar>
 <sd-navbar></sd-navbar>
+
 <div class="container">
   
   <div *ngFor="let game of games" class="buttons">
@@ -38,6 +39,7 @@
   </div>
 
 </div>
+<friend-list *ngIf="showFriendList" (close)="closeFriendList()"></friend-list>
 <div *ngIf="showHover" class="hoverContainer">
   <div class="loader"></div>
 </div>

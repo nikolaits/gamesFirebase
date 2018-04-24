@@ -4,6 +4,7 @@ import { Observable } from 'rxjs/Observable';
 import * as firebase from "firebase";
 import { CookieService } from 'ng2-cookies';
 import {UserInitInfo} from "../../types/user_init_info.type"
+import { UserAdmin } from '../../types/user-admin.type';
 // import 'rxjs/add/operator/do';  // for debugging
 
 /**
@@ -94,6 +95,29 @@ export class UserService {
         reject("no user found");
       }
     })
+  }
+  getUsersData():Promise<any>{
+    return new Promise((resolve, reject)=>{
+        firebase.database().ref(`users`).once("value").then( snapshot => {
+          if (snapshot.val()){
+            let object = snapshot.val();
+            let data:UserAdmin[] = [];
+            for(var key in object){
+              if(key !== this.user.uid)
+                  data.push(new UserAdmin(key, object[key].profile_picture, object[key].username, object[key].isAdmin));
+            }
+            resolve(data);
+          }
+          reject("no info");
+       });
+        
+
+    })
+  }
+  updateUserRights(uid:string, value:boolean){
+    return firebase.database().ref(`users/${uid}`).update({
+      isAdmin : value
+    });
   }
   isUsernameTaken(tmpUsername:string):Promise<any>{
     console.log("isUsernameTaken");

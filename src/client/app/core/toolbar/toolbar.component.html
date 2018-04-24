@@ -1,7 +1,7 @@
 <h1>Games</h1>
 <div class="more" (click)="isCollapsed = !isCollapsed"
 [attr.aria-expanded]="!isCollapsed" aria-controls="collapseExample"></div>
-
+<div class="friends" (click)="openFriendLis()"></div>
 <img class="profile_picture" src="{{imageUrl}}" alt="profile_picture">
 <h1 class="username">Hi, {{username}}</h1>
 <div id="collapseExample" [ngbCollapse]="isCollapsed">

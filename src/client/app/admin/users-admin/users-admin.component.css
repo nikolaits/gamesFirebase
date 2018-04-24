@@ -1,0 +1,62 @@
+/* .star {
+  font-size: 1.5rem;
+  color: #b0c4de;
+}
+.filled {
+  color: #1e90ff;
+}
+.bad {
+  color: #deb0b0;
+}
+.filled.bad {
+  color: #ff1e1e;
+}
+.buttons{
+  float: left;
+}
+.buttons button{
+  margin:2px 5px;
+}
+.games{
+  clear: both;
+}
+.active{
+  background-color: whitesmoke;
+  color: #106cc8;
+}
+.canvasStyle {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  display: block !important;
+}
+.create{
+  width: 96%;
+  margin:2px 2%;
+} */
+
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  margin:2px 5px;
+  width: 100%;
+}
+
+td, th {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+}
+
+tr:nth-child(even) {
+  background-color: #dddddd;
+}
+
+.profile_picture{
+  border-radius: 100%;
+  float: right;
+  height: 24px;
+  margin-top: 12px;
+  width: 24px;
+}
