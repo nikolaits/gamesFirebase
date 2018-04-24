@@ -1,0 +1,51 @@
+<div class="modal-header">
+    <h1>Add Friend</h1>
+</div>
+<div class="modal-body">
+    <!-- <div *ngFor="let user of userslist">
+        <div class="[ form-group ]">
+            <input type="checkbox" checked="{{user.addFriend}}" (click)="selectionChange(user.username)" name="fancy-checkbox-primary" id="fancy-checkbox-primary" autocomplete="off" />
+            <div class="[ btn-group ]">
+                <label for="fancy-checkbox-primary" class="[ btn btn-primary ]">
+                    <span class="[ glyphicon glyphicon-ok ]"></span>
+                    <span> </span>
+                </label>
+                <label for="fancy-checkbox-primary" class="[ btn btn-default active ]">
+                    {{user.username}}
+                </label>
+            </div>
+        </div>
+    </div> -->
+    <!-- <div class="form-group">
+            <label for="options">Options:</label>
+            <div *ngFor="let option of userslist">
+                <label>
+                    <input type="checkbox"
+                           name="options"
+                           value="{{option.username}}"
+                           [(ngModel)]="option.addFriend"/>
+                    {{option.username}}
+                </label>
+            </div>
+        </div>
+     -->
+     <table>
+            <tr>
+              <th>Select</th>
+              <th>Username</th>
+            </tr>
+            <tr *ngFor="let user of userslist">
+              <td><input type="checkbox" 
+                value="{{user.username}}" [(ngModel)]="user.addFriend"/></td>
+              <td>{{user.username}}</td>
+            </tr>
+          </table>
+</div>
+<div class="modal-footer">
+    <button type="button" (click)="addFriendsButton()" class="btn btn btn-primary">
+        Add Friends
+    </button>
+    <button type="button" (click)="onModalClose()" class="btn btn ">
+        Close
+    </button>
+</div>

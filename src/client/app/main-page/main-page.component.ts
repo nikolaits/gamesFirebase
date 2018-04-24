@@ -9,6 +9,7 @@ import { GamesService } from '../shared/games-service/games.service';
 import { Game } from "../types/game.type"
 import { setInterval } from 'timers';
 import { CookieService } from 'ng2-cookies';
+import { Friend } from '../types/friend.type';
 
 class GameArgs {
   constructor(public challenges: any, public friends: any, public savedGame: any) { }
@@ -313,25 +314,38 @@ export class MainPageComponent implements OnInit {
     window['destroy_' + gamename]();
   }
   preloadInitGame(gamename: string, game: Game) {
+    let friendList:any[];
+    this.userService.getFriendsAccepted()
+    .then((r)=>{
+      friendList = r;
+      console.log("userlist");
+      console.log(JSON.stringify(friendList));
+    
     this.checkifjscssfileisloaded(gamename + '.js', "js")
       .then((args) => {
         if (args === "exist") {
           console.log("script is removed");
           // this.addJSFile("assets/gamesTest/asteroids/src/game.js");
-          this.startGame(gamename, 1, game);
+          this.startGame(gamename, 1, game, friendList);
         }
       })
       .catch((err) => {
         console.log("Error removejscssfile")
         console.log(err);
         this.addJSFile("assets/gamesJavaScript/" + gamename + "/src/" + gamename + ".js");
-        this.startGame(gamename, 1000, game);
+        this.startGame(gamename, 1000, game, friendList);
       })
+    })
+    .catch((err:any)=>{
+      console.log("No friends were found");
+      console.log(err);
+      this.startGame(gamename, 1000, game, undefined);
+    })
   }
-  startGame(gamename: string, delay: number, game: Game) {
+  startGame(gamename: string, delay: number, game: Game, friends:any[]) {
     setTimeout(() => {
       try {
-        let gameArgs: GameArgs = new GameArgs(undefined, undefined, game.savedData);
+        let gameArgs: GameArgs = new GameArgs(undefined, friends, game.savedData);
         console.log("gameArgs");
         console.log(gameArgs);
         window['start_' + gamename](game.windowWidth, game.windowHeight, "container_" + gamename, "assets/gamesJavaScript/" + gamename + "/", JSON.stringify(gameArgs), "",
@@ -345,6 +359,7 @@ export class MainPageComponent implements OnInit {
             } else if (status === "SaveGame") {
               this.gamesService.setupusersaveddata(this.selectedGame, game.savedData, gameArgs)
                 .then((r) => {
+                  game.savedData = this.selectedGame;
                   console.log("game info is set")
                 })
                 .catch((e) => {
@@ -478,23 +493,7 @@ export class MainPageComponent implements OnInit {
     // this.listenerLiveScore.off();
   }
   showLiveRezultTable(result: any) {
-    if (result.length < 1) {
-      jQuery("#livescore_" + this.selectedGame).kendoGrid({
-        dataSource: {
-          data: [{
-            name:"",
-            score:"no results were found"
-          }],
-          sort: {
-            field: "score",
-            dir: "desc"
-          },
-          pageSize: 20
-        },
-        scrollable: false
-      });
-    }
-    else {
+    
       jQuery("#livescore_" + this.selectedGame).kendoGrid({
         dataSource: {
           data: result,
@@ -504,9 +503,10 @@ export class MainPageComponent implements OnInit {
           },
           pageSize: 20
         },
-        scrollable: false
+        scrollable: false,
+        noRecords:true
       });
-    }
+    
   }
   openFriendList(){
     this.showFriendList = true;

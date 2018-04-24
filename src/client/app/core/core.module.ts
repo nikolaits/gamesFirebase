@@ -11,14 +11,15 @@ import { EqualValidatorDirective } from '../signup/equal-validator.directive';
 import { CommonModule } from '@angular/common';  
 import { BrowserModule } from '@angular/platform-browser';
 import {ImageCropperComponent} from "ngx-img-cropper";
-import { FriendListComponent }from "./friend_list/friend_list.component"
+import { FriendListComponent }from "./friend_list/friend_list.component";
+import {AddFriendComponent} from "./addfriend/addfriend.component";
 
 @NgModule({
   imports: [RouterModule, NgbModule.forRoot(), FormsModule, ReactiveFormsModule, BrowserModule],
-  declarations: [NavbarComponent, ToolbarComponent, UpdateComponent, FriendListComponent,PasswordResetComponent, ImageCropperComponent],
+  declarations: [NavbarComponent, ToolbarComponent, UpdateComponent, AddFriendComponent, FriendListComponent,PasswordResetComponent, ImageCropperComponent],
   exports: [RouterModule,
-    NavbarComponent, ToolbarComponent, UpdateComponent, FriendListComponent, PasswordResetComponent, ImageCropperComponent],
-  entryComponents:[UpdateComponent, PasswordResetComponent]
+    NavbarComponent, ToolbarComponent, UpdateComponent, AddFriendComponent, FriendListComponent, PasswordResetComponent, ImageCropperComponent],
+  entryComponents:[UpdateComponent, PasswordResetComponent, AddFriendComponent]
 })
 export class CoreModule {
 

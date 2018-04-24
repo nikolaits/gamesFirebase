@@ -27,6 +27,7 @@ h1 {
   height: 24px;
   margin-top: 12px;
   width: 24px;
+  fill:white;
 }
 .username {
   float: right;

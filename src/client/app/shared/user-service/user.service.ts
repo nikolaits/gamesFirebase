@@ -5,6 +5,8 @@ import * as firebase from "firebase";
 import { CookieService } from 'ng2-cookies';
 import {UserInitInfo} from "../../types/user_init_info.type"
 import { UserAdmin } from '../../types/user-admin.type';
+import { AddFriend } from '../../types/add_friend.type';
+import { Friend } from '../../types/friend.type';
 // import 'rxjs/add/operator/do';  // for debugging
 
 /**
@@ -114,6 +116,24 @@ export class UserService {
 
     })
   }
+  getUsersListData():Promise<any>{
+    return new Promise((resolve, reject)=>{
+        firebase.database().ref(`users`).once("value").then( snapshot => {
+          if (snapshot.val()){
+            let object = snapshot.val();
+            let data:AddFriend[] = [];
+            for(var key in object){
+              if(key !== this.user.uid)
+                  data.push(new AddFriend(false, object[key].username, key));
+            }
+            resolve(data);
+          }
+          reject("no info");
+       });
+        
+
+    })
+  }
   updateUserRights(uid:string, value:boolean){
     return firebase.database().ref(`users/${uid}`).update({
       isAdmin : value
@@ -160,6 +180,54 @@ export class UserService {
       profile_picture : imageUrl,
       isAdmin:false
     });
+  }
+  addFriendInTheList(frienuid:string, username:string) {
+    let userId = this.user.uid;
+    return firebase.database().ref(`users/${userId}/friends/${frienuid}`).set({
+        accepted:false,
+        username:username
+      
+    });
+  }
+  getFriends():Promise<any>{
+    let userId = this.user.uid;
+      return new Promise((resolve, reject)=>{
+        firebase.database().ref(`users/${userId}/friends/`).once("value").then( snapshot => {
+          console.log(snapshot.val())
+          if(snapshot.val()){
+            let object = snapshot.val();
+            let array = [];
+            for(let key in object){
+              array.push(new Friend(key, object[key].username, object[key].accepted));
+            }
+            resolve(array);
+          }
+          else{
+            reject(null);
+          }
+        })
+      }) 
+  }
+
+  getFriendsAccepted():Promise<any>{
+    let userId = this.user.uid;
+      return new Promise((resolve, reject)=>{
+        firebase.database().ref(`users/${userId}/friends`).orderByChild("accepted").equalTo(true).once("value").then( snapshot => {
+          console.log(snapshot.val())
+          if(snapshot.val()){
+            let object = snapshot.val();
+            let array = [];
+            for(let key in object){
+              array.push(new Friend(key, object[key].username, object[key].accepted));
+            }
+
+            resolve(array);
+          }
+          else{
+            reject(null);
+          }
+        })
+      }) 
   }
   updateUserImage(imageUrl:string){
     let userId = this.user.uid;

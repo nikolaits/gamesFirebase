@@ -7,6 +7,8 @@ import { NgbModalOptions, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { UpdateComponent } from "../update/update.component"
 import  * as firebase from "firebase";
 import { CookieService } from 'ng2-cookies';
+import {AddFriendComponent} from "../addfriend/addfriend.component";
+import { Friend } from '../../types/friend.type';
 /**
  * This class represents the toolbar component.
  */
@@ -17,99 +19,37 @@ import { CookieService } from 'ng2-cookies';
   styleUrls: ['friend_list.component.css']
 })
 export class FriendListComponent {
-  public imageUrl: string = "https://firebasestorage.googleapis.com/v0/b/gamesfirebase.appspot.com/o/def_profile_picture.png?alt=media&token=fb6c2ff5-8efc-4ae9-a477-85393611338b";
-  public username: string = '';
-  private _changeUserDisaplyedData = false;
-  public isCollapsed = true;
+  
   @Output() close: EventEmitter<any> = new EventEmitter();
-  @Input() set changeUserDisaplyedData(value: boolean) {
-
-    this._changeUserDisaplyedData = value;
-    if(this._changeUserDisaplyedData){
-      this.displayData();
-    }
-
-  }
+  public friendList:Friend[];
   closeNav(){
     this.cookiesService.set("isFriendListOpened", "no");
     this.close.emit();
 
   }
-  get changeUserDisaplyedData(): boolean {
-
-    return this._changeUserDisaplyedData;
-
-  }
   constructor(private modalService: NgbModal, private userService:UserService, private authService:AuthService, private navigationService:NavigationService, private cookiesService:CookieService){}
   ngAfterViewInit(){
-    console.log("take user")
-    this.authService.isUserSignIn()
-    .then((r:firebase.User)=>{
-      console.log("user exist");
-      this.userService.user = r;
-      this.displayData();
+    this.userService.getFriends()
+    .then((r)=>{
+      this.friendList = r;
+      console.log("userlist");
+      console.log(this.friendList);
     })
     .catch((e)=>{
-      console.log("no user found");
+      console.log("No friends were found");
       console.log(e);
     })
   }
-  private displayData(){
-    this.userService.hasUsername()
-      .then((r)=>{
-        console.log(r);
-        this.userService.getUserUsernameAndProfilePicture()
-        .then((info:UserInitInfo)=>{
-          console.log("userinfo")
-          console.log(info);
-          this.imageUrl = info.profile_picture;
-          this.username = info.username;
-        })
-        .catch((err)=>{
-          console.log("Error");
-          console.log(err);
-        })
-      })
-      .catch((e)=>{
-        console.log("Error:");
-        console.log(e);
-      })
-  }
-  public onLogOut(){
-    this.authService.logOut()
-    .then(()=>{
-      this.navigationService.goToSignIn();
-    })
-    .catch((e)=>{
-      console.log("Can not logout");
-      console.log(e);
-    })
-  }
-  updateInfo() {
-    this.isCollapsed = true;
+
+  addFriend() {
     let options: NgbModalOptions = {
       beforeDismiss: () => {  return true },
       windowClass: "in"
     }
     
-    const modalRef = this.modalService.open(UpdateComponent, options);
-    modalRef.componentInstance.notification = 'Please enter your username';
-    modalRef.componentInstance.change.subscribe((arg:any)=>{
-      switch (arg.message) {
-        case "usernameUpdated":
-            this.username = arg.result;
-          break;
-        case "profilePictureUpdated":
-            this.imageUrl = arg.result;
-          break;
-      
-      
-        default:
-          break;
-      }
-
-    })
-    modalRef.result.then((arg:string)=>{
+    const modalRef = this.modalService.open(AddFriendComponent, options);
+    
+    modalRef.result.then((arg:any)=>{
       console.log(arg);
     })
   }
