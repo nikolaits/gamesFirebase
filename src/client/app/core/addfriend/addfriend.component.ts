@@ -10,6 +10,7 @@ import * as firebase from "firebase";
 import { ImageCropperComponent, CropperSettings } from "ngx-img-cropper";
 import { AddFriend } from '../../types/add_friend.type';
 import { UserAdmin } from '../../types/user-admin.type';
+import { CookieService } from 'ng2-cookies';
 /**
  * This class represents the toolbar component.
  */
@@ -21,8 +22,9 @@ import { UserAdmin } from '../../types/user-admin.type';
 })
 export class AddFriendComponent {
   public saveUsername = false;
+  private username:string = "";
   public userslist: AddFriend[] = [];
-  constructor(public activeModal: NgbActiveModal, private userService: UserService, private authService: AuthService) {
+  constructor(public activeModal: NgbActiveModal, private userService: UserService, private authService: AuthService, private cookiesService:CookieService) {
 
   }
   ngOnInit() { }
@@ -30,6 +32,8 @@ export class AddFriendComponent {
     this.userService.getCurrentUser();
     let friendList: any[];
     let userlist:any[];
+    this.username = this.cookiesService.get("geitusername")
+    
     this.userService.getUsersListData()
       .then((r) => {
         userlist=r;
@@ -41,18 +45,26 @@ export class AddFriendComponent {
             console.log("userlist");
 
             userlist.forEach((element: any) => {
+              console.log("-----"+element.username);
+              let isUserFound = false;
               friendList.forEach(element2 => {
-                if (element.uid !== element2.uid)
-                  this.userslist.push(r);
+                console.log("-"+element2.username);
+                if (element.uid === element2.uid){
+                  isUserFound=true;
+                }
               });
+              if(!isUserFound){
+                this.userslist.push(element);
+              }
             });
 
 
 
           })
           .catch((err) => {
-            console.log("Error removejscssfile")
+            console.log("Error no friends")
             console.log(err);
+            this.userslist=userlist;
           })
       })
       .catch((e) => {
@@ -62,12 +74,21 @@ export class AddFriendComponent {
 
   }
   addFriendsButton() {
+    let uid = this.userService.user.uid;
     this.userslist.forEach((element) => {
       if (element.addFriend === true) {
         console.log(element.username);
-        this.userService.addFriendInTheList(element.uid, element.username);
+        this.userService.addFriendInTheList(element.uid, element.username,false, true, uid)
+        .then((r)=>{
+          this.userService.addFriendInTheList(uid, this.username, true, true, element.uid)
+        })
+        .catch((e)=>{
+          console.log("err");
+          console.log(e)
+        });
       }
     })
+    this.activeModal.close();
   }
   selectionChange(name: string) {
     this.userslist.forEach(element => {

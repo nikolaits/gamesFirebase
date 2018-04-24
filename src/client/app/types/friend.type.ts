@@ -1,3 +1,3 @@
 export class Friend{
-    constructor(public uid:string, public username:string, public accepted:boolean){}
+    constructor(public uid:string, public username:string, public accepted:boolean, public pending:boolean){}
 }

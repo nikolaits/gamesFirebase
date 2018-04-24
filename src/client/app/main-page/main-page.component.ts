@@ -146,7 +146,10 @@ export class MainPageComponent implements OnInit {
   ngAfterViewInit() {
     let cookieResult = this.cookieService.get("isFriendListOpened");
     if(cookieResult === "yes"){
-      this.showFriendList = true;
+      setTimeout(() => {
+        this.showFriendList = true;
+      }, 2000);
+      
     }
     this.authService.isUserSignIn()
       .then((r: firebase.User) => {
@@ -315,7 +318,7 @@ export class MainPageComponent implements OnInit {
   }
   preloadInitGame(gamename: string, game: Game) {
     let friendList:any[];
-    this.userService.getFriendsAccepted()
+    this.userService.getFriendsAcceptedNotPending()
     .then((r)=>{
       friendList = r;
       console.log("userlist");
@@ -357,9 +360,11 @@ export class MainPageComponent implements OnInit {
               this.selectedGame = "";
               this.removeLiveScoreEventListener();
             } else if (status === "SaveGame") {
+              this.cookieService.set("FlappyPlaneSaveGame", JSON.stringify(gameArgs));
               this.gamesService.setupusersaveddata(this.selectedGame, game.savedData, gameArgs)
                 .then((r) => {
-                  game.savedData = this.selectedGame;
+                  //Cookies.get("FlappyPlaneSaveGame")
+                  // this.selectedGame;
                   console.log("game info is set")
                 })
                 .catch((e) => {

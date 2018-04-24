@@ -72,6 +72,7 @@ export class UserService {
           console.log("Result");
           console.log(snapshot);
           if (snapshot.val() && snapshot.val().username){
+            this.cookiesService.set("geitusername", snapshot.val().username)
               resolve(snapshot.val().username);
           }
           reject("no username");
@@ -181,12 +182,29 @@ export class UserService {
       isAdmin:false
     });
   }
-  addFriendInTheList(frienuid:string, username:string) {
-    let userId = this.user.uid;
-    return firebase.database().ref(`users/${userId}/friends/${frienuid}`).set({
-        accepted:false,
+  addFriendInTheList(frienuid:string, username:string, accepted:boolean, pending:boolean, uid:string) {
+
+    return firebase.database().ref(`users/${uid}/friends/${frienuid}`).set({
+        pending:pending,
+        accepted:accepted,
         username:username
       
+    });
+  }
+  updateFriendInTheList(frienuid:string, accepted:boolean, pending:boolean, uid:string) {
+
+    return firebase.database().ref(`users/${uid}/friends/${frienuid}`).update({
+        pending:pending,
+        accepted:accepted
+      
+    });
+  }
+  deleteFriendInTheList(frienuid:string,  uid:string) {
+
+    return firebase.database().ref(`users/${uid}/friends/${frienuid}`).update({
+      accepted:null,
+      pending:null,
+      username:null
     });
   }
   getFriends():Promise<any>{
@@ -198,7 +216,7 @@ export class UserService {
             let object = snapshot.val();
             let array = [];
             for(let key in object){
-              array.push(new Friend(key, object[key].username, object[key].accepted));
+              array.push(new Friend(key, object[key].username, object[key].accepted, object[key].pending));
             }
             resolve(array);
           }
@@ -209,7 +227,7 @@ export class UserService {
       }) 
   }
 
-  getFriendsAccepted():Promise<any>{
+  getFriendsAcceptedNotPending():Promise<any>{
     let userId = this.user.uid;
       return new Promise((resolve, reject)=>{
         firebase.database().ref(`users/${userId}/friends`).orderByChild("accepted").equalTo(true).once("value").then( snapshot => {
@@ -218,7 +236,8 @@ export class UserService {
             let object = snapshot.val();
             let array = [];
             for(let key in object){
-              array.push(new Friend(key, object[key].username, object[key].accepted));
+              if(object[key].pending === false)
+                array.push(new Friend(key, object[key].username, object[key].accepted, object[key].pending));
             }
 
             resolve(array);

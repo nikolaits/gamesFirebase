@@ -1,7 +1,46 @@
-<div id="mySidenav"  class="sidenav">
+<div id="mySidenav" class="sidenav">
     <a href="javascript:void(0)" class="closebtn" (click)="closeNav()">&times;</a>
-    <a href="javascript:void(0)">About</a>
+    <!-- <a href="javascript:void(0)">About</a>
     <a href="javascript:void(0)">Services</a>
-    <a href="javascript:void(0)">Clients</a>
+    <a href="javascript:void(0)">Clients</a> -->
+    <hr>
+    <h2>Friends</h2>
+    <table *ngIf="friendList.length > 0">
+        <tr>
+            <th>Username</th>
+            <th></th>
+        </tr>
+        <tr *ngFor="let friend of friendList">
+            <td>{{friend.username}}</td>
+            <td>
+                <button type="button" class="btn btn-outline-primary" (click)="removeFriend(friend.uid)">
+                    remove
+                </button>
+            </td>
+        </tr>
+    </table>
+    <hr>
+    <h2>Pending approval</h2>
+    <table *ngIf="users.length > 0">
+        <tr>
+            <th>Username</th>
+            <th></th>
+            <th></th>
+        </tr>
+        <tr *ngFor="let user of users">
+            <td>{{user.username}}</td>
+            <td>
+                <button type="button" class="btn btn-outline-primary" (click)="approvalFriend(user.uid)">
+                    approval
+                </button>
+            </td>
+            <td>
+                <button type="button" class="btn btn-outline-primary" (click)="declineFriend(user.username)">
+                    decline
+                </button>
+            </td>
+        </tr>
+    </table>
+    <hr>
     <a href="javascript:void(0)" (click)="addFriend()">Add friend</a>
 </div>
