@@ -40,7 +40,36 @@ export class GamesService {
     this.user = firebase.auth().currentUser;
     console.log(this.user)
   }
-  
+  challengeFriend(myuid:string,useruid:string, gamename:string, score:number, username:string){
+
+    return firebase.database().ref(`${useruid}/challenges/${gamename}/${myuid}`).update({
+      score:score,
+      username:username
+    })
+  }
+  completeChallenge(username:string, newScore:number, oldScore:number, gamename:string, useruid:string){
+    return firebase.database().ref(`${useruid}/completeChallenges/${this.user.uid}`).update({
+      friendusername:username,
+      friendscore:newScore,
+      challengescore:oldScore,
+      gamename:gamename
+    })
+    .then((r)=>{
+      this.challengeFriend(useruid, this.user.uid, gamename, null, null);
+    })
+    .catch((e)=>{
+      console.log("Error completeChallenges");
+      console.log(e)
+    })
+  }
+  removeCompleteChallenge(uid:string){
+    return firebase.database().ref(`${this.user.uid}/completeChallenges/${uid}`).update({
+      friendusername:null,
+      friendscore:null,
+      challengescore:null,
+      gamename:null
+    })
+  }
 
   getGames(): Promise<any> {
     console.log("hasUsername")

@@ -3,7 +3,7 @@ import { UserService } from '../../shared/user-service/user.service';
 import { UserInitInfo } from '../../types/user_init_info.type';
 import { AuthService } from '../../shared/auth-service/auth.service';
 import { NavigationService } from '../../shared/navigation-service/navigation.service';
-import { NgbModalOptions, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModalOptions, NgbModal, NgbPopoverConfig } from '@ng-bootstrap/ng-bootstrap';
 import { UpdateComponent } from "../update/update.component"
 import  * as firebase from "firebase";
 import { CookieService } from 'ng2-cookies';
@@ -35,7 +35,10 @@ export class ToolbarComponent {
     return this._changeUserDisaplyedData;
 
   }
-  constructor(private modalService: NgbModal, private userService:UserService, private authService:AuthService, private navigationService:NavigationService, private cookiesService:CookieService){}
+  constructor(private modalService: NgbModal, private userService:UserService, private authService:AuthService, private navigationService:NavigationService, private cookiesService:CookieService,config: NgbPopoverConfig){
+    config.placement = 'right';
+    config.triggers = 'hover';
+  }
   ngAfterViewInit(){
     console.log("take user")
     this.authService.isUserSignIn()
