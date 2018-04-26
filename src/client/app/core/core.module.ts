@@ -6,7 +6,7 @@ import { throwIfAlreadyLoaded } from './module-import-guard';
 import { ToolbarComponent } from './toolbar/toolbar.component';
 import {UpdateComponent} from "./update/update.component";
 import {PasswordResetComponent} from "./password.reset.component/password.reset.component"
-import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
+import {NgbModule, NgbPopoverModule} from '@ng-bootstrap/ng-bootstrap';
 import { EqualValidatorDirective } from '../signup/equal-validator.directive';
 import { CommonModule } from '@angular/common';  
 import { BrowserModule } from '@angular/platform-browser';
@@ -15,7 +15,7 @@ import { FriendListComponent }from "./friend_list/friend_list.component";
 import {AddFriendComponent} from "./addfriend/addfriend.component";
 
 @NgModule({
-  imports: [RouterModule, NgbModule.forRoot(), FormsModule, ReactiveFormsModule, BrowserModule],
+  imports: [RouterModule, NgbModule.forRoot(), NgbPopoverModule, FormsModule, ReactiveFormsModule, BrowserModule],
   declarations: [NavbarComponent, ToolbarComponent, UpdateComponent, AddFriendComponent, FriendListComponent,PasswordResetComponent, ImageCropperComponent],
   exports: [RouterModule,
     NavbarComponent, ToolbarComponent, UpdateComponent, AddFriendComponent, FriendListComponent, PasswordResetComponent, ImageCropperComponent],

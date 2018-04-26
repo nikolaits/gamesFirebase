@@ -5,6 +5,8 @@ import * as firebase from "firebase";
 import { CookieService } from 'ng2-cookies';
 import { UserInitInfo } from "../../types/user_init_info.type"
 import { Game } from '../../types/game.type';
+import { Challenge } from '../../types/challenge.type';
+import { ChallengeComplete } from '../../types/challenge_complete.type';
 // import 'rxjs/add/operator/do';  // for debugging
 
 /**
@@ -40,34 +42,36 @@ export class GamesService {
     this.user = firebase.auth().currentUser;
     console.log(this.user)
   }
-  challengeFriend(myuid:string,useruid:string, gamename:string, score:number, username:string){
+  challengeFriend(myuid: string, useruid: string, gamename: string, score: number, username: string) {
 
-    return firebase.database().ref(`${useruid}/challenges/${gamename}/${myuid}`).update({
-      score:score,
-      username:username
+    return firebase.database().ref(`users/${useruid}/challenges/${gamename}/${myuid}`).update({
+      score: score,
+      username: username
     })
   }
-  completeChallenge(username:string, newScore:number, oldScore:number, gamename:string, useruid:string){
-    return firebase.database().ref(`${useruid}/completeChallenges/${this.user.uid}`).update({
-      friendusername:username,
-      friendscore:newScore,
-      challengescore:oldScore,
-      gamename:gamename
+  completeChallenge(username: string, newScore: number, oldScore: number, gamename: string, useruid: string) {
+    let timestamp = Date.now()
+    let res = ""+timestamp;
+    return firebase.database().ref(`users/${useruid}/completeChallenges/${res}`).update({
+      friendusername: username,
+      friendscore: newScore,
+      challengescore: oldScore,
+      gamename: gamename
     })
-    .then((r)=>{
-      this.challengeFriend(useruid, this.user.uid, gamename, null, null);
-    })
-    .catch((e)=>{
-      console.log("Error completeChallenges");
-      console.log(e)
-    })
+      .then((r) => {
+        this.challengeFriend(useruid, this.user.uid, gamename, null, null);
+      })
+      .catch((e) => {
+        console.log("Error completeChallenges");
+        console.log(e)
+      })
   }
-  removeCompleteChallenge(uid:string){
-    return firebase.database().ref(`${this.user.uid}/completeChallenges/${uid}`).update({
-      friendusername:null,
-      friendscore:null,
-      challengescore:null,
-      gamename:null
+  removeCompleteChallenge(timestamp: string) {
+    return firebase.database().ref(`users/${this.user.uid}/completeChallenges/${timestamp}`).update({
+      friendusername: null,
+      friendscore: null,
+      challengescore: null,
+      gamename: null
     })
   }
 
@@ -89,7 +93,7 @@ export class GamesService {
             console.log(object[key].active);
             let rates = object[key].usersRating;
             let savedData = undefined;
-            if(rates){
+            if (rates) {
               for (var ratekey in rates) {
                 if (ratekey === this.user.uid) {
                   userRate = rates[ratekey].rate;
@@ -98,14 +102,14 @@ export class GamesService {
                 ratesNumber += 1;
               }
             }
-            if(object[key].savedData){
-              if(object[key].savedData[this.user.uid])
+            if (object[key].savedData) {
+              if (object[key].savedData[this.user.uid])
                 savedData = object[key].savedData[this.user.uid];
-                console.log("---------------------------");
-                console.log(object[key].savedData);
-                console.log("---------------------------");
+              console.log("---------------------------");
+              console.log(object[key].savedData);
+              console.log("---------------------------");
             }
-            else{
+            else {
               ratesNumber = 1;
             }
             gamesArray.push(new Game(key, userRate, avrgRate / ratesNumber, true, object[key].windowWidth, object[key].windowHeight, savedData));
@@ -116,7 +120,7 @@ export class GamesService {
           reject(null);
         }
       })
-      .catch((err) => {
+        .catch((err) => {
           console.log("Error(getGames)");
           console.log(err);
           reject(err);
@@ -141,12 +145,12 @@ export class GamesService {
             console.log(object[key].active);
             let rates = object[key].usersRating;
             let savedData = undefined;
-            if(rates){
+            if (rates) {
               for (var ratekey in rates) {
                 if (ratekey === this.user.uid) {
                   userRate = rates[ratekey].rate;
-                  if(object[key].savedData){
-                    if(object[key].savedData[this.user.uid])
+                  if (object[key].savedData) {
+                    if (object[key].savedData[this.user.uid])
                       savedData = object[key].savedData;
                   }
                 }
@@ -154,10 +158,10 @@ export class GamesService {
                 ratesNumber += 1;
               }
             }
-            else{
+            else {
               ratesNumber = 1;
             }
-            
+
             gamesArray.push(new Game(key, userRate, avrgRate / ratesNumber, true, object[key].windowWidth, object[key].windowHeight, savedData, object[key].active));
           }
           resolve(gamesArray);
@@ -166,7 +170,7 @@ export class GamesService {
           reject(null);
         }
       })
-      .catch((err) => {
+        .catch((err) => {
           console.log("Error(getGames)");
           console.log(err);
           reject(err);
@@ -189,6 +193,44 @@ export class GamesService {
       }
     })
   }
+  getGameChallenges(gamename: string): Promise<any> {
+    
+    return new Promise((resolve, reject) => {
+      let result:Challenge[] = [];
+      firebase.database().ref(`users/${this.user.uid}/challenges/${gamename}`).once("value").then(snapshot => {
+        if (snapshot.val()) {
+          let object = snapshot.val();
+          for (let key in object) {
+            
+            result.push(new Challenge(gamename, object[key].username,object[key].score, key));
+          }
+          resolve(result);
+        }
+        reject("no challenges");
+      });
+
+
+    })
+  }
+  getGameCompletedChallenges(): Promise<any> {
+    
+    return new Promise((resolve, reject) => {
+      let result:ChallengeComplete[] = [];
+      firebase.database().ref(`users/${this.user.uid}/completeChallenges/`).once("value").then(snapshot => {
+        if (snapshot.val()) {
+          let object = snapshot.val();
+          for (let key in object) {
+            
+            result.push(new ChallengeComplete(object[key].friendusername, object[key].gamename,object[key].challengescore,object[key].friendscore, key));
+          }
+          resolve(result);
+        }
+        reject("no compchallenges");
+      });
+
+
+    })
+  }
   isGameNameTaken(gamename: string): Promise<any> {
     console.log("isUsernameTaken");
     console.log(gamename);
@@ -202,11 +244,11 @@ export class GamesService {
           if (r.val()) {
             console.log(r.val().keys);
             for (var key in object) {
-                if (key === gamename) {
-                  console.log("taken");
-                  taken = true;
-                  reject("taken")
-                }
+              if (key === gamename) {
+                console.log("taken");
+                taken = true;
+                reject("taken")
+              }
             }
           }
           if (!taken) {
@@ -219,7 +261,7 @@ export class GamesService {
         })
     })
   }
-  doesUserLiveScoreExists(gamename:string, username: string): Promise<any> {
+  doesUserLiveScoreExists(gamename: string, username: string): Promise<any> {
     console.log("isUsernameTaken");
     console.log(username);
     var rootRef = firebase.database().ref(`games/${gamename}/livescores/`);
@@ -232,11 +274,11 @@ export class GamesService {
           if (r.val()) {
             console.log(r.val().keys);
             for (var key in object) {
-                if (key === username) {
-                  console.log("taken");
-                  exists = true;
-                  resolve("exists")
-                }
+              if (key === username) {
+                console.log("taken");
+                exists = true;
+                resolve("exists")
+              }
             }
           }
           if (!exists) {
@@ -252,105 +294,105 @@ export class GamesService {
   createUserLiveScore(gamename: string, username: string) {
     // let userId = this.user.uid;
     return firebase.database().ref(`games/${gamename}/livescores/${username}`).set({
-      score:0,
-      timestamp:Date.now()
+      score: 0,
+      timestamp: Date.now()
     });
   }
 
-  updateUserLiveScore(gamename: string, username: string, newscore:number) {
+  updateUserLiveScore(gamename: string, username: string, newscore: number) {
     // let userId = this.user.uid;
     return firebase.database().ref(`games/${gamename}/livescores/${username}`).update({
-      score:newscore,
-      timestamp:Date.now()
+      score: newscore,
+      timestamp: Date.now()
     });
   }
-  createNewGame(gameName: string, windowWidth:number, windowHeight:number) {
+  createNewGame(gameName: string, windowWidth: number, windowHeight: number) {
     // let userId = this.user.uid;
     return firebase.database().ref(`games/${gameName}`).set({
-      active:false,
+      active: false,
       windowWidth: windowWidth,
       windowHeight: windowHeight,
-      livescores:{
-        admin:{
+      livescores: {
+        admin: {
           score: -1,
           timestamp: Date.now()
         }
       }
     });
   }
-  
-  updateGameInfo(gameName: string, windowWidth:number, windowHeight:number) {
+
+  updateGameInfo(gameName: string, windowWidth: number, windowHeight: number) {
     // let userId = this.user.uid;
     return firebase.database().ref(`games/${gameName}`).update({
       windowWidth: windowWidth,
       windowHeight: windowHeight
     });
   }
-  setupusergamerate(gamename: string, currentuserrate: number, newuserrate:number) {
+  setupusergamerate(gamename: string, currentuserrate: number, newuserrate: number) {
     let userId = this.user.uid;
-    if(currentuserrate === 0){
+    if (currentuserrate === 0) {
       return firebase.database().ref(`games/${gamename}/usersRating/${userId}`).set({
         rate: newuserrate
       });
     }
-    else{
+    else {
       return firebase.database().ref(`games/${gamename}/usersRating/${userId}`).update({
         rate: newuserrate
       });
     }
   }
-  getgameratings(gamename:string):Promise<any>{
-      console.log("gate rating")
-      return new Promise((resolve, reject) => {
-        firebase.database().ref(`games/${gamename}/usersRating`).once("value").then((usersRating) => {
-          console.log("Games redult");
-          console.log(usersRating.val());
-  
-          if (usersRating.val()) {
-              let userRate = 0;
-              let ratesNumber = 0;
-              let avrgRate = 0;
-              let rates = usersRating.val();
-              if(rates){
-                for (var ratekey in rates) {
-                  if (ratekey === this.user.uid) {
-                    userRate = rates[ratekey].rate;
-                  }
-                  avrgRate += rates[ratekey].rate;
-                  ratesNumber += 1;
-                }
-                if(ratesNumber <1){
-                  ratesNumber = 1;
-                }
+  getgameratings(gamename: string): Promise<any> {
+    console.log("gate rating")
+    return new Promise((resolve, reject) => {
+      firebase.database().ref(`games/${gamename}/usersRating`).once("value").then((usersRating) => {
+        console.log("Games redult");
+        console.log(usersRating.val());
+
+        if (usersRating.val()) {
+          let userRate = 0;
+          let ratesNumber = 0;
+          let avrgRate = 0;
+          let rates = usersRating.val();
+          if (rates) {
+            for (var ratekey in rates) {
+              if (ratekey === this.user.uid) {
+                userRate = rates[ratekey].rate;
               }
-              else{
-                ratesNumber = 1;
-              }
-              console.log("User rate data");
-              console.log({userRate:userRate, avrgRate:avrgRate});
-            resolve({userRate:userRate, avrgRate:(avrgRate/ratesNumber)});
+              avrgRate += rates[ratekey].rate;
+              ratesNumber += 1;
+            }
+            if (ratesNumber < 1) {
+              ratesNumber = 1;
+            }
           }
           else {
-            reject(null);
+            ratesNumber = 1;
           }
-        })
-        .catch((err) => {
-            console.log("Error(getGames)");
-            console.log(err);
-            reject(err);
-          })
+          console.log("User rate data");
+          console.log({ userRate: userRate, avrgRate: avrgRate });
+          resolve({ userRate: userRate, avrgRate: (avrgRate / ratesNumber) });
+        }
+        else {
+          reject(null);
+        }
       })
-    
+        .catch((err) => {
+          console.log("Error(getGames)");
+          console.log(err);
+          reject(err);
+        })
+    })
+
 
   }
-  setupusersaveddata(gamename: string, currentUserSavedData: any, newUserSavedData:any) {
+  setupusersaveddata(gamename: string, currentUserSavedData: any, newUserSavedData: any) {
     let userId = this.user.uid;
-    if(currentUserSavedData){
+    if (currentUserSavedData) {
       return firebase.database().ref(`games/${gamename}/savedData/${userId}`).update({
         data: newUserSavedData
       });
     }
-    else{
+    else {
       return firebase.database().ref(`games/${gamename}/savedData/${userId}`).set({
         data: newUserSavedData
       });
@@ -368,7 +410,7 @@ export class GamesService {
       username: name,
     });
   }
-  updateGameStatus(name: string, value:boolean) {
+  updateGameStatus(name: string, value: boolean) {
     return firebase.database().ref(`games/${name}`).update({
       active: value,
     });

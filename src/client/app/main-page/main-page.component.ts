@@ -10,6 +10,7 @@ import { Game } from "../types/game.type"
 import { setInterval } from 'timers';
 import { CookieService } from 'ng2-cookies';
 import { Friend } from '../types/friend.type';
+import { ChallengeComplete } from '../types/challenge_complete.type';
 
 class GameArgs {
   constructor(public challenges: any, public friends: any, public savedGame: any) { }
@@ -118,8 +119,8 @@ export class MainPageComponent implements OnInit {
   games: Game[] = [];
   public selectedGame = "";
   public changeDisplayedData: boolean = false;
-  public showHover:boolean = false;
-  public showFriendList:boolean = false;
+  public showHover: boolean = false;
+  public showFriendList: boolean = false;
   private currentUsername = "";
   private listenerLiveScore: any;
   private gameRatingListener: any;
@@ -134,7 +135,7 @@ export class MainPageComponent implements OnInit {
    *
    * @param {NameListService} nameListService - The injected NameListService.
    */
-  constructor(private modalService: NgbModal, private authService: AuthService, private userService: UserService, private gamesService: GamesService, private cookieService:CookieService) {
+  constructor(private modalService: NgbModal, private authService: AuthService, private userService: UserService, private gamesService: GamesService, private cookieService: CookieService) {
 
   }
   /**
@@ -145,11 +146,11 @@ export class MainPageComponent implements OnInit {
   }
   ngAfterViewInit() {
     let cookieResult = this.cookieService.get("isFriendListOpened");
-    if(cookieResult === "yes"){
+    if (cookieResult === "yes") {
       setTimeout(() => {
         this.showFriendList = true;
       }, 2000);
-      
+
     }
     this.authService.isUserSignIn()
       .then((r: firebase.User) => {
@@ -172,6 +173,9 @@ export class MainPageComponent implements OnInit {
         console.log("no user found");
         console.log(e);
       });
+  }
+  onTap() {
+    
   }
   activeGames() {
     this.gamesService.getCurrentUser();
@@ -241,7 +245,7 @@ export class MainPageComponent implements OnInit {
     // }
 
     this.showHover = true;
-    if(this.gameRatingListener){
+    if (this.gameRatingListener) {
       this.removeGameRatingListener();
     }
     if (this.selectedGame !== "") {
@@ -269,12 +273,12 @@ export class MainPageComponent implements OnInit {
         this.gamesService.doesUserLiveScoreExists(gamename, rusult.username)
           .then((r) => {
             if (r === "exists") {
-              this.preloadInitGame(gamename, selectedGame);
+              this.getUserChallenges(gamename, selectedGame);
             }
             else if (r === "norecord") {
               this.gamesService.createUserLiveScore(gamename, rusult.username)
                 .then((r) => {
-                  this.preloadInitGame(gamename, selectedGame);
+                  this.getUserChallenges(gamename, selectedGame);
                 })
                 .catch((errCreate) => {
                   console.log("errCreate");
@@ -291,23 +295,23 @@ export class MainPageComponent implements OnInit {
         console.log("Error");
         console.log(err);
       })
-      this.gamesService.getgameratings(this.selectedGame)
-      .then((r)=>{
+    this.gamesService.getgameratings(this.selectedGame)
+      .then((r) => {
         console.log("rating result");
         console.log(r);
         this.updateGameRate(r);
       })
-      .catch((err)=>{
+      .catch((err) => {
         console.log("Rating get Error");
       })
-      this.detectGamesRatingChange(this.selectedGame);
+    this.detectGamesRatingChange(this.selectedGame);
 
 
 
   }
-  updateGameRate(r:any){
-    this.games.forEach((element)=>{
-      if(element.name === this.selectedGame){
+  updateGameRate(r: any) {
+    this.games.forEach((element) => {
+      if (element.name === this.selectedGame) {
         element.avrgRate = r.avrgRate;
         element.userRate = r.userRate;
       }
@@ -316,39 +320,51 @@ export class MainPageComponent implements OnInit {
   destroyGame(gamename: string) {
     window['destroy_' + gamename]();
   }
-  preloadInitGame(gamename: string, game: Game) {
-    let friendList:any[];
-    this.userService.getFriendsAcceptedNotPending()
-    .then((r)=>{
-      friendList = r;
-      console.log("userlist");
-      console.log(JSON.stringify(friendList));
-    
-    this.checkifjscssfileisloaded(gamename + '.js', "js")
-      .then((args) => {
-        if (args === "exist") {
-          console.log("script is removed");
-          // this.addJSFile("assets/gamesTest/asteroids/src/game.js");
-          this.startGame(gamename, 1, game, friendList);
-        }
+  getUserChallenges(gamename: string, selectedGame: Game) {
+    this.gamesService.getGameChallenges(gamename)
+      .then((r) => {
+        console.log("there is challenge");
+        this.preloadInitGame(gamename, selectedGame, r);
       })
-      .catch((err) => {
-        console.log("Error removejscssfile")
-        console.log(err);
-        this.addJSFile("assets/gamesJavaScript/" + gamename + "/src/" + gamename + ".js");
-        this.startGame(gamename, 1000, game, friendList);
+      .catch((e) => {
+        console.log("no users were found");
+        console.log(e);
+        this.preloadInitGame(gamename, selectedGame, undefined);
       })
-    })
-    .catch((err:any)=>{
-      console.log("No friends were found");
-      console.log(err);
-      this.startGame(gamename, 1000, game, undefined);
-    })
   }
-  startGame(gamename: string, delay: number, game: Game, friends:any[]) {
+  preloadInitGame(gamename: string, game: Game, challenges: any) {
+    let friendList: any[];
+    this.userService.getFriendsAcceptedNotPending()
+      .then((r) => {
+        friendList = r;
+        console.log("userlist");
+        console.log(JSON.stringify(friendList));
+
+        this.checkifjscssfileisloaded(gamename + '.js', "js")
+          .then((args) => {
+            if (args === "exist") {
+              console.log("script is removed");
+              // this.addJSFile("assets/gamesTest/asteroids/src/game.js");
+              this.startGame(gamename, 1, game, friendList, challenges);
+            }
+          })
+          .catch((err) => {
+            console.log("Error removejscssfile")
+            console.log(err);
+            this.addJSFile("assets/gamesJavaScript/" + gamename + "/src/" + gamename + ".js");
+            this.startGame(gamename, 1000, game, friendList, challenges);
+          })
+      })
+      .catch((err: any) => {
+        console.log("No friends were found");
+        console.log(err);
+        this.startGame(gamename, 1000, game, undefined, challenges);
+      })
+  }
+  startGame(gamename: string, delay: number, game: Game, friends: any[], challenge: any[]) {
     setTimeout(() => {
       try {
-        let gameArgs: GameArgs = new GameArgs(undefined, friends, game.savedData);
+        let gameArgs: GameArgs = new GameArgs(challenge, friends, game.savedData);
         console.log("gameArgs");
         console.log(gameArgs);
         window['start_' + gamename](game.windowWidth, game.windowHeight, "container_" + gamename, "assets/gamesJavaScript/" + gamename + "/", JSON.stringify(gameArgs), "",
@@ -375,6 +391,16 @@ export class MainPageComponent implements OnInit {
               console.log("LiveScore");
               console.log(score);
               this.gamesService.updateUserLiveScore(gamename, this.currentUsername, score);
+            } else if (status == "ChallengeComplete") {
+              this.gamesService.completeChallenge(this.currentUsername, score, gameArgs.oldScore, this.selectedGame, gameArgs.uid)
+                .then((r) => {
+                  console.log("new Challenge completed");
+                  console.log(r)
+                })
+                .catch((e) => {
+                  console.log("Error completing the challenge");
+                  console.log(e);
+                })
             }
           });
         this.detectGamesLiveScore(gamename);
@@ -422,7 +448,7 @@ export class MainPageComponent implements OnInit {
         let ratesNumber = 0;
         let avrgRate = 0;
         let rates = usersRating.val();
-        if(rates){
+        if (rates) {
           for (var ratekey in rates) {
             if (ratekey === this.gamesService.user.uid) {
               userRate = rates[ratekey].rate;
@@ -430,17 +456,17 @@ export class MainPageComponent implements OnInit {
             avrgRate += rates[ratekey].rate;
             ratesNumber += 1;
           }
-          if(ratesNumber <1){
+          if (ratesNumber < 1) {
             ratesNumber = 1;
           }
         }
-        else{
+        else {
           ratesNumber = 1;
         }
         console.log("User rate data");
-        console.log({userRate:userRate, avrgRate:avrgRate});
-        this.updateGameRate({userRate:userRate, avrgRate:(avrgRate/ratesNumber)});
-    }
+        console.log({ userRate: userRate, avrgRate: avrgRate });
+        this.updateGameRate({ userRate: userRate, avrgRate: (avrgRate / ratesNumber) });
+      }
     });
   }
   removeGameRatingListener() {
@@ -476,7 +502,7 @@ export class MainPageComponent implements OnInit {
       let data = [];
 
       for (let key in object) {
-        if ((object[key].timestamp > cutoff)&&(key !=="admin")) {
+        if ((object[key].timestamp > cutoff) && (key !== "admin")) {
           nothingToShow = false;
           if (this.settimeoutlistener) {
 
@@ -498,27 +524,32 @@ export class MainPageComponent implements OnInit {
     // this.listenerLiveScore.off();
   }
   showLiveRezultTable(result: any) {
-    
-      jQuery("#livescore_" + this.selectedGame).kendoGrid({
-        dataSource: {
-          data: result,
-          sort: {
-            field: "score",
-            dir: "desc"
-          },
-          pageSize: 20
+
+    jQuery("#livescore_" + this.selectedGame).kendoGrid({
+      dataSource: {
+        data: result,
+        sort: {
+          field: "score",
+          dir: "desc"
         },
-        scrollable: false,
-        noRecords:true
-      });
-    
+        pageSize: 20
+      },
+      scrollable: false,
+      noRecords: true
+    });
+
   }
-  openFriendList(){
+  openFriendList() {
     this.showFriendList = true;
-    
+
   }
-  closeFriendList(){
+  closeFriendList() {
     this.showFriendList = false;
+  }
+  onChallengeSelected(gamename: string) {
+    console.log("challenge selected");
+    console.log(gamename);
+    this.onVisibilityChange(gamename);
   }
   // onSubmit(email: string, password: string) {
   //   this.authService.signin(email, password)

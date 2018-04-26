@@ -1,3 +1,7 @@
+@font-face {
+  font-family: icomoon;
+  src: url("../../../assets/fonts/icomoon.ttf");
+}
 :host {
   background-color: #106cc8;
   color: rgba(255, 255, 255, 0.87);
@@ -21,13 +25,79 @@ h1 {
   margin-top: 12px;
   width: 24px;
 }
-.friends {
+/* .friends {
   background: url("./assets/svg/friends.svg");
   float: right;
   height: 24px;
   margin-top: 12px;
   width: 24px;
   fill:white;
+} */
+.friends {
+  font-family: icomoon;
+  float: right;
+  height: 24px;
+  margin-top: 6px;
+  margin-left: 5px;
+  margin-right: 10px;
+  font-size: 24px;
+  width: 24px;
+  fill:white;
+}
+.friends:before {
+  content: "\e971";
+}
+.star {
+  position: relative;
+  font-family: icomoon;
+  float: right;
+  height: 24px;
+  margin-top: 6px;
+  margin-left: 10px;
+  margin-right: 5px;
+  font-size: 24px;
+  width: 24px;
+  fill:white;
+}
+.star:before {
+  content: "\e9d9";
+}
+.bottomright {
+  position: absolute;
+  bottom: 0px;
+  right: 2px;
+  margin: 0;
+  padding: 0;
+  line-height: 2px;
+  font-size: 18px;
+  font-weight: bolder;
+  font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+  color: rgb(175, 0, 0);
+}
+.glow {
+  text-shadow: 
+    0.5px 0px 0.5px #ccc, 0px 1px 1px #eee, 
+    1px 0.5px 0.5px #ccc, 1px 2px 1px #eee,
+    2px 1px 0.5px #ccc, 2px 3px 1px #eee,
+    3.5px 2px 0.5px #ccc, 3px 4px 1px #eee,
+    4px 3.5px 0.5px #ccc, 4px 5px 1px #eee,
+    4.2px 4px 0.5px #ccc, 5px 6px 1px #eee,
+    5px 4.2px 0.5px #ccc;
+}
+.otto{
+  color: white;
+  text-shadow: 0 1px 0 #ccc,
+               0 2px 0 #c9c9c9,
+               0 3px 0 #bbb,
+               0 4px 0 #b9b9b9,
+               0 5px 0 #aaa,
+               0 6px 1px rgba(0,0,0,.1),
+               0 0 5px rgba(0,0,0,.1),
+               0 1px 3px rgba(0,0,0,.3),
+               0 3px 5px rgba(0,0,0,.2),
+               0 5px 10px rgba(0,0,0,.25),
+               0 10px 10px rgba(0,0,0,.2),
+               0 20px 20px rgba(0,0,0,.15);
 }
 .username {
   float: right;
@@ -78,4 +148,61 @@ h1 {
 .card-body a.buttons{
   float: right;
 
+}
+
+.center {
+  text-align: center;
+}
+
+
+.btn-learn .arrow {
+  background-color: salmon;
+}
+.btn-learn:hover .arrow {
+  background-color: #f56d5e;
+}
+
+button::-moz-focus-inner {
+  border: none;
+}
+.btn {
+  display: inline-block;
+  background: #e2e2e2;
+  border: 0;
+  line-height: 2.5em;
+  padding: 0 0 0 1em;
+  margin-bottom: 1em;
+  outline: none;
+  text-decoration: none;
+  color: #666;
+}
+.btn .arrow {
+  display: inline-block;
+  line-height: 2.5em;
+  text-align: center;
+  background: #333;
+  color: white;
+  font-size: 1em;
+  width: 2.5em;
+  -webkit-transition: margin 200ms;
+  transition: margin 200ms;
+  margin-left: .75em;
+}
+.btn:hover {
+  background: white;
+}
+.btn:hover .arrow {
+  margin-left: 1.25em;
+  background-color: #262626;
+}
+.btn:active {
+  background: #ccc;
+}
+.btn:active .arrow {
+  margin-left: 1.5em;
+}
+.styleAlert{
+  background-color: paleturquoise;
+  opacity: 0;
+  color:black;
 }
