@@ -1,0 +1,46 @@
+<sd-toolbar (challengeSelect)="onChallengeSelected($event)" (open)="openFriendList()" [changeUserDisaplyedData]="changeDisplayedData"></sd-toolbar>
+<sd-navbar></sd-navbar>
+
+<div class="container">
+  <button type="button" (click)="onTap()">add chln</button>
+  <div *ngFor="let game of games" class="buttons">
+    <button type="button" class="btn btn-outline-primary" [ngClass]="{'active':!game.isCollapsed}" (click)="onVisibilityChange(game.name)"
+      [attr.aria-expanded]="!game.isCollapsed" aria-controls="collapseExample">
+      {{prettifyHeader(game.name)}}
+    </button>
+  </div>
+  <div class="games" *ngFor="let game of games">
+    <div id="collapseExample" [ngbCollapse]="game.isCollapsed">
+      <div class="card">
+        <h2>{{prettifyHeader(game.name)}}</h2>
+        <br>
+        <hr>
+        <div class="card-body">
+          <div  class="canvasStyle" [style.width.px]="containerWidth" [style.height.px]="containerHeight" id="{{'container_'+game.name}}">
+            
+          </div>
+          
+          <p>Live Score</p>
+          <div id="{{'livescore_'+game.name}}"></div>
+          <br>
+          <hr>
+          <p>Game Rating</p>
+
+          <ngb-rating #rateElement [(rate)]="game.userRate" (rateChange)="onRateChange(rateElement.rate, game.name)">
+            <ng-template let-fill="fill" let-index="index">
+              <span class="star" [class.filled]="fill === 100" [class.bad]="index < 3">&#9733;</span>
+            </ng-template>
+          </ngb-rating>
+          <hr>
+          <pre>Average rate: <b>{{game.avrgRate | number:'.2'}}</b></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+<friend-list *ngIf="showFriendList" (close)="closeFriendList()"></friend-list>
+
+<div *ngIf="showHover" class="hoverContainer">
+  <div class="loader"></div>
+</div>

@@ -420,16 +420,6 @@ export class MainPageComponent implements OnInit {
                   console.log("Error saving casula mode result");
                   console.log(e)
                 })
-            } else if(status == "ChallengeFriend"){
-              this.gamesService.challengeFriend(this.userService.user.uid, gameArgs.useruid, this.selectedGame, score, gameArgs.username)
-              .then(()=>{
-                console.log("challenge added");
-
-              })
-              .catch((e)=>{
-                console.log("Error challenging friend");
-                console.log(e)
-              })
             }
           });
         this.detectGamesLiveScore(gamename);
@@ -519,18 +509,6 @@ export class MainPageComponent implements OnInit {
     //   });
     // }
     //   }, 1000);
-    jQuery("#livescore_" + this.selectedGame).kendoGrid({
-      dataSource: {
-        data: [],
-        sort: {
-          field: "score",
-          dir: "desc"
-        },
-        pageSize: 20
-      },
-      scrollable: false,
-      noRecords: true
-    });
     let nothingToShow = true;
     this.listenerLiveScore = firebase.database().ref(`games/${gamename}/livescores`).on('value', (snapshot) => {
       // Do whatever
@@ -565,8 +543,19 @@ export class MainPageComponent implements OnInit {
     // this.listenerLiveScore.off();
   }
   showLiveRezultTable(result: any) {
-    jQuery("#livescore_" + this.selectedGame).data("kendoGrid").dataSource.data(result);
-    
+
+    jQuery("#livescore_" + this.selectedGame).kendoGrid({
+      dataSource: {
+        data: result,
+        sort: {
+          field: "score",
+          dir: "desc"
+        },
+        pageSize: 20
+      },
+      scrollable: false,
+      noRecords: true
+    });
 
   }
   openFriendList() {
