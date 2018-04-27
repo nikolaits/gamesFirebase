@@ -160,6 +160,7 @@ export class MainPageComponent implements OnInit {
           .then((r) => {
             console.log(r);
             this.activeGames();
+            this.gamesService.getCurrentUser();
           })
           .catch((e) => {
             console.log("Error:");
@@ -175,7 +176,16 @@ export class MainPageComponent implements OnInit {
       });
   }
   onTap() {
-    
+    this.gamesService.getCasulModeResults("test")
+    .then((r)=>{
+      console.log("Result csula mode");
+      console.log(r);
+    })
+    .catch((e)=>{
+      console.log("Error");
+      console.log(e)
+
+    })
   }
   activeGames() {
     this.gamesService.getCurrentUser();
@@ -400,6 +410,15 @@ export class MainPageComponent implements OnInit {
                 .catch((e) => {
                   console.log("Error completing the challenge");
                   console.log(e);
+                })
+            } else if (status == "GameOver") {
+              this.gamesService.saveCasualModeResult(this.selectedGame, score, "" + Date.now())
+                .then(() => {
+                  console.log("result saved")
+                })
+                .catch((e) => {
+                  console.log("Error saving casula mode result");
+                  console.log(e)
                 })
             }
           });

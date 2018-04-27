@@ -7,6 +7,7 @@ import { UserInitInfo } from "../../types/user_init_info.type"
 import { Game } from '../../types/game.type';
 import { Challenge } from '../../types/challenge.type';
 import { ChallengeComplete } from '../../types/challenge_complete.type';
+import { CasualModeResult } from '../../types/casual_mode_result.type';
 // import 'rxjs/add/operator/do';  // for debugging
 
 /**
@@ -47,6 +48,29 @@ export class GamesService {
     return firebase.database().ref(`users/${useruid}/challenges/${gamename}/${myuid}`).update({
       score: score,
       username: username
+    })
+  }
+
+  saveCasualModeResult(gamename: string, score: number, timestamp: string) {
+    
+    return firebase.database().ref(`users/${this.user.uid}/casualmoderesults/${gamename}/${timestamp}`).update({
+      score: score
+    })
+  }
+  getCasulModeResults(gamename:string): Promise<any> {
+    return new Promise((resolve, reject) => {
+        firebase.database().ref(`users/${this.user.uid}/casualmoderesults/${gamename}/`).once("value").then(snapshot => {
+          if (snapshot.val()) {
+            let object = snapshot.val();
+            let result:CasualModeResult[] = []
+            for(let key in object){
+              result.push(new CasualModeResult(gamename, object[key].score, key))
+            }
+            resolve(result);
+          }
+          reject("no info");
+        });
+
     })
   }
   completeChallenge(username: string, newScore: number, oldScore: number, gamename: string, useruid: string) {
