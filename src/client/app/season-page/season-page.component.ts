@@ -39,6 +39,7 @@ class playGame {
   public mazeHeight: number = 31;
   public tileSize: number = 20;
   public mazeGraphics: any;
+  public isFirstLoad:boolean = true;
   constructor() {
     // this.game=game;
   }
@@ -56,7 +57,7 @@ class playGame {
       var posY = 1;
       this.maze[posX][posY] = 0;
       moves.push(posY + posY * this.mazeWidth);
-      gameSeasonMode.time.events.loop(Phaser.Timer.SECOND / 60, function () {
+      gameSeasonMode.time.events.loop(Phaser.Timer.SECOND / 60,  () => {
         if (moves.length) {
           var possibleDirections = "";
           if (posX + 2 > 0 && posX + 2 < this.mazeHeight - 1 && this.maze[posX + 2][posY] == 1) {
@@ -104,6 +105,10 @@ class playGame {
           }
           this.drawMaze(posX, posY);
         }
+        else if(this.isFirstLoad){
+          this.isFirstLoad = false;
+          callbackFuncton("mazeLoaded");
+        }
       }, this);
     }
   }
@@ -126,6 +131,9 @@ class playGame {
   }
 
 }
+class TargetPosition{
+  constructor(public positionX:number, public positionY:number, public gamename:string){}
+}
 /**
  * This class represents the lazy loaded HomeComponent.
  */
@@ -147,9 +155,12 @@ export class SeasonPageComponent implements OnInit {
   public changeDisplayedData: boolean = false;
   public showHover: boolean = false;
   public showFriendList: boolean = false;
-  private isDrawing = false;
+  private isDrawing = true;
   private startPosX: number = 1;
   private startPosY: number = 1;
+  private targetPositions:TargetPosition[];
+  private selectedTarget:TargetPosition;
+  private selectedTargetIndex:number;
   // private currentUsername = "";
   // private listenerLiveScore: any;
   // private gameRatingListener: any;
@@ -167,6 +178,7 @@ export class SeasonPageComponent implements OnInit {
     
   }
   ngAfterViewInit() {
+
     let cookieResult = this.cookieService.get("isFriendListOpened");
     if (cookieResult === "yes") {
       setTimeout(() => {
@@ -199,6 +211,23 @@ export class SeasonPageComponent implements OnInit {
       callbackFuncton = (result:any)=>{
         console.log("callbackFuncton");
         console.log(result);
+        if(result === "mazeLoaded"){
+          this.generateRandPlaces();
+          this.drawTargets();
+          this.isDrawing = false;
+        }
+        else if(result === "pathDraw"){
+          jQuery("#seasonmodeContainer").fadeOut( "slow", () => {
+            // Animation complete.
+            this.showHover= true;
+            this.games.forEach((elem)=>{
+              if(elem.name === this.selectedTarget.gamename){
+                this.preloadInitGame(this.selectedTarget.gamename, elem, undefined);
+              }
+            })
+          });
+          
+        }
         this.isDrawing = false;
       }
   }
@@ -242,6 +271,7 @@ export class SeasonPageComponent implements OnInit {
     }, 2000);
 
     setTimeout(() => {
+
       console.log("phaser game")
       console.log(gameSeasonMode.state.states.PlayGame);
       console.log(gameSeasonMode.input);
@@ -255,24 +285,41 @@ export class SeasonPageComponent implements OnInit {
         let maze = gameSeasonMode.state.states.PlayGame.maze;
         console.log(maze[posY][posX]);
         if ((doubleTap) && (maze[posY][posX] === 0)&&(!this.isDrawing)) {
-          var easystar = new EasyStar.js();
-          console.log("in the calculating mode")
-          console.log(easystar)
-          try {
-            this.isDrawing= true;
-            easystar.setGrid(maze);
-            easystar.setAcceptableTiles([0]);
-            easystar.findPath(this.startPosX, this.startPosY, posX, posY, this.drawPath);
-            easystar.calculate();
-            this.startPosX = posX;
-            this.startPosY = posY;
-          } catch (error) {
-            console.log(error);
+          console.log("in if");
+          let isPositionFromTargets =false;
+          let targetIndex;
+          for (let i = 0; i < this.targetPositions.length; i++) {
+            console.log("Positions: "+ this.targetPositions[i].positionX+" : "+this.targetPositions[i].positionY)
+            if((this.targetPositions[i].positionX == posX)&&(this.targetPositions[i].positionY == posY)){
+              isPositionFromTargets = true;
+              this.selectedTarget = this.targetPositions[i];
+              targetIndex = i;
+              console.log("in position")
+            }
+            
           }
+          if(isPositionFromTargets){
+            this.targetPositions.splice(targetIndex, 1);
+            var easystar = new EasyStar.js();
+            console.log("in the calculating mode")
+            console.log(easystar)
+            try {
+              this.isDrawing= true;
+              easystar.setGrid(maze);
+              easystar.setAcceptableTiles([0]);
+              easystar.findPath(this.startPosX, this.startPosY, posX, posY, this.drawPath);
+              easystar.calculate();
+              this.startPosX = posX;
+              this.startPosY = posY;
+            } catch (error) {
+              console.log(error);
+            }
+          }
+          
 
         }
       })
-    }, 1000);
+    }, 500);
 
   }
   drawPath(path: any) {
@@ -281,7 +328,7 @@ export class SeasonPageComponent implements OnInit {
     let colorsPalette = [
       0x00ffff,
       0xf0ffff,
-      0xf5f5dc,
+      // 0xf5f5dc,
       0x0000ff,
       0xa52a2a,
       0x00ffff,
@@ -320,10 +367,52 @@ export class SeasonPageComponent implements OnInit {
       }
       else if(!finishDrawing){
         finishDrawing = true;
-        callbackFuncton("finish drawing path");
+        callbackFuncton("pathDraw");
         
       }
     })
+  }
+  generateRandPlaces(){
+    let number = this.games.length;
+    this.targetPositions=[];
+    let tmpYPos = []
+    let endposition = (gameSeasonMode.state.states.PlayGame.maze.length)-2;
+    let maze= gameSeasonMode.state.states.PlayGame.maze;
+    console.log(maze);
+    
+    for (let index = 0; index < number; index++) {
+      let psY = Math.floor(Math.random() * endposition) + 2;
+      let tmpArrayXs = [];
+      
+      for (let j = 0; j < maze[psY].length; j++) {
+        if(maze[psY][j] === 0){
+          tmpArrayXs.push(j);
+        }
+      } 
+      console.log("Position y "+psY);
+      console.log("X array");
+      console.log(tmpArrayXs);
+      const psXindex = Math.floor(Math.random() * tmpArrayXs.length) + 1; 
+      console.log("psXindex "+psXindex);
+      let xNumber = tmpArrayXs[psXindex];
+      console.log("xNumber"+ xNumber);
+      console.log("maze position "+maze[psY][xNumber])
+      
+      this.targetPositions.push(new TargetPosition(xNumber, psY, this.games[index].name));
+    }
+    console.log("Targen positions");
+    console.log(this.targetPositions);
+  }
+  drawTargets(){
+    //0xf5f5dc
+    this.targetPositions.forEach((element:TargetPosition)=>{
+      let playGame = gameSeasonMode.state.states.PlayGame;
+      playGame.mazeGraphics.endFill();
+      playGame.mazeGraphics.beginFill(0xf5f5dc);
+      playGame.mazeGraphics.drawRect(element.positionY * playGame.tileSize, element.positionX * playGame.tileSize, playGame.tileSize, playGame.tileSize);
+      playGame.mazeGraphics.endFill();
+    })
+    
   }
   // onTap() {
   //   this.gamesService.getCasulModeResults("test")
@@ -432,9 +521,9 @@ export class SeasonPageComponent implements OnInit {
   //     }
   //   })
   // }
-  // destroyGame(gamename: string) {
-  //   window['destroy_' + gamename]();
-  // }
+  destroyGame(gamename: string) {
+    window['destroy_' + gamename]();
+  }
   // getUserChallenges(gamename: string, selectedGame: Game) {
   //   this.gamesService.getGameChallenges(gamename)
   //     .then((r) => {
@@ -447,133 +536,134 @@ export class SeasonPageComponent implements OnInit {
   //       this.preloadInitGame(gamename, selectedGame, undefined);
   //     })
   // }
-  // preloadInitGame(gamename: string, game: Game, challenges: any) {
-  //   let friendList: any[];
-  //   this.userService.getFriendsAcceptedNotPending()
-  //     .then((r) => {
-  //       friendList = r;
-  //       console.log("userlist");
-  //       console.log(JSON.stringify(friendList));
+  preloadInitGame(gamename: string, game: Game, challenges: any) {
+    // let friendList: any[];
+    // this.userService.getFriendsAcceptedNotPending()
+    //   .then((r) => {
+        // friendList = r;
+        // console.log("userlist");
+        // console.log(JSON.stringify(friendList));
 
-  //       this.checkifjscssfileisloaded(gamename + '.js', "js")
-  //         .then((args) => {
-  //           if (args === "exist") {
-  //             console.log("script is removed");
-  //             // this.addJSFile("assets/gamesTest/asteroids/src/game.js");
-  //             this.startGame(gamename, 1, game, friendList, challenges);
-  //           }
-  //         })
-  //         .catch((err) => {
-  //           console.log("Error removejscssfile")
-  //           console.log(err);
-  //           this.addJSFile("assets/gamesJavaScript/" + gamename + "/src/" + gamename + ".js");
-  //           this.startGame(gamename, 1000, game, friendList, challenges);
-  //         })
-  //     })
-  //     .catch((err: any) => {
-  //       console.log("No friends were found");
-  //       console.log(err);
-  //       this.startGame(gamename, 1000, game, undefined, challenges);
-  //     })
-  // }
-  // startGame(gamename: string, delay: number, game: Game, friends: any[], challenge: any[]) {
-  //   setTimeout(() => {
-  //     try {
-  //       let gameArgs: GameArgs = new GameArgs(challenge, friends, game.savedData);
-  //       console.log("gameArgs");
-  //       console.log(gameArgs);
-  //       window['start_' + gamename](game.windowWidth, game.windowHeight, "container_" + gamename, "assets/gamesJavaScript/" + gamename + "/", JSON.stringify(gameArgs), "casualMode",
-  //         (status: string, score: number, game_xp: number, game_id: number, gameArgs: any, unlocklevel: boolean) => {
-  //           console.log('game start 1');
-  //           console.log(score);
-  //           if (status === "Close") {
-  //             this.destroyGame(this.selectedGame);
-  //             this.selectedGame = "";
-  //             this.removeLiveScoreEventListener();
-  //           } else if (status === "SaveGame") {
-  //             this.cookieService.set("FlappyPlaneSaveGame", JSON.stringify(gameArgs));
-  //             this.gamesService.setupusersaveddata(this.selectedGame, game.savedData, gameArgs)
-  //               .then((r) => {
-  //                 //Cookies.get("FlappyPlaneSaveGame")
-  //                 // this.selectedGame;
-  //                 console.log("game info is set")
-  //               })
-  //               .catch((e) => {
-  //                 console.log("Error (setupusersaveddata)");
-  //                 console.log(e);
-  //               })
-  //           } else if (status == "LiveScore") {
-  //             console.log("LiveScore");
-  //             console.log(score);
-  //             this.gamesService.updateUserLiveScore(gamename, this.currentUsername, score);
-  //           } else if (status == "ChallengeComplete") {
-  //             this.gamesService.completeChallenge(this.currentUsername, score, gameArgs.oldScore, this.selectedGame, gameArgs.uid)
-  //               .then((r) => {
-  //                 console.log("new Challenge completed");
-  //                 console.log(r)
-  //               })
-  //               .catch((e) => {
-  //                 console.log("Error completing the challenge");
-  //                 console.log(e);
-  //               })
-  //           } else if (status == "GameOver") {
-  //             this.gamesService.saveCasualModeResult(this.selectedGame, score, "" + Date.now())
-  //               .then(() => {
-  //                 console.log("result saved")
-  //               })
-  //               .catch((e) => {
-  //                 console.log("Error saving casula mode result");
-  //                 console.log(e)
-  //               })
-  //           } else if(status == "ChallengeFriend"){
-  //             this.gamesService.challengeFriend(this.userService.user.uid, gameArgs.useruid, this.selectedGame, score, this.currentUsername)
-  //             .then(()=>{
-  //               console.log("challenge added");
+        this.checkifjscssfileisloaded(gamename + '.js', "js")
+          .then((args) => {
+            if (args === "exist") {
+              console.log("script is removed");
+              // this.addJSFile("assets/gamesTest/asteroids/src/game.js");
+              this.startGame(gamename, 1, game, undefined, challenges);
+            }
+          })
+          .catch((err) => {
+            console.log("Error removejscssfile")
+            console.log(err);
+            this.addJSFile("assets/gamesJavaScript/" + gamename + "/src/" + gamename + ".js");
+            this.startGame(gamename, 1000, game, undefined, challenges);
+          })
+      // })
+      // .catch((err: any) => {
+      //   console.log("No friends were found");
+      //   console.log(err);
+      //   this.startGame(gamename, 1000, game, undefined, challenges);
+      // })
+  }
+  startGame(gamename: string, delay: number, game: Game, friends: any[], challenge: any[]) {
+    let currentUsername = this.cookieService.get("geitUsername");
+    setTimeout(() => {
+      try {
+        let gameArgs: GameArgs = new GameArgs(challenge, friends, game.savedData);
+        console.log("gameArgs");
+        console.log(gameArgs);
+        window['start_' + gamename](game.windowWidth, game.windowHeight, "container_game", "assets/gamesJavaScript/" + gamename + "/", JSON.stringify(gameArgs), "seasonMode",
+          (status: string, score: number, game_xp: number, game_id: number, gameArgs: any, unlocklevel: boolean) => {
+            console.log('game start 1');
+            console.log(score);
+            if (status === "Close") {
+              this.destroyGame(this.selectedGame);
+              this.selectedGame = "";
+              // this.removeLiveScoreEventListener();
+            } else if (status === "SaveGame") {
+              this.cookieService.set("FlappyPlaneSaveGame", JSON.stringify(gameArgs));
+              this.gamesService.setupusersaveddata(this.selectedGame, game.savedData, gameArgs)
+                .then((r) => {
+                  //Cookies.get("FlappyPlaneSaveGame")
+                  // this.selectedGame;
+                  console.log("game info is set")
+                })
+                .catch((e) => {
+                  console.log("Error (setupusersaveddata)");
+                  console.log(e);
+                })
+            } else if (status == "LiveScore") {
+              console.log("LiveScore");
+              console.log(score);
+              this.gamesService.updateUserLiveScore(gamename, currentUsername, score);
+            } else if (status == "ChallengeComplete") {
+              this.gamesService.completeChallenge(currentUsername, score, gameArgs.oldScore, this.selectedGame, gameArgs.uid)
+                .then((r) => {
+                  console.log("new Challenge completed");
+                  console.log(r)
+                })
+                .catch((e) => {
+                  console.log("Error completing the challenge");
+                  console.log(e);
+                })
+            } else if (status == "GameOver") {
+              this.gamesService.saveCasualModeResult(this.selectedTarget.gamename, score, "" + Date.now())
+                .then(() => {
+                  console.log("result saved")
+                })
+                .catch((e) => {
+                  console.log("Error saving casula mode result");
+                  console.log(e)
+                })
+            } else if(status == "ChallengeFriend"){
+              this.gamesService.challengeFriend(this.userService.user.uid, gameArgs.useruid, this.selectedTarget.gamename, score, currentUsername)
+              .then(()=>{
+                console.log("challenge added");
 
-  //             })
-  //             .catch((e)=>{
-  //               console.log("Error challenging friend");
-  //               console.log(e)
-  //             })
-  //           }
-  //         });
-  //       this.detectGamesLiveScore(gamename);
-  //       this.showHover = false;
-  //     } catch (error) {
-  //       console.log("error");
-  //       console.log(error);
-  //     }
-  //   }, delay);
-  // }
+              })
+              .catch((e)=>{
+                console.log("Error challenging friend");
+                console.log(e)
+              })
+            }
+          });
+        // this.detectGamesLiveScore(gamename);
+        this.showHover = false;
+      } catch (error) {
+        console.log("error");
+        console.log(error);
+      }
+    }, delay);
+  }
   // prettifyHeader(name: string) {
   //   let newName = name.charAt(0).toUpperCase() + name.slice(1);
   //   return newName;
   // }
-  // addJSFile(path: string) {
+  addJSFile(path: string) {
 
-  //   const script = document.createElement('script');
-  //   script.src = path;
-  //   document.body.appendChild(script);
-  // }
-  // checkifjscssfileisloaded(filename: string, filetype: string) {
-  //   return new Promise((resolve, reject) => {
-  //     let error = true;
-  //     var targetelement = (filetype == "js") ? "script" : (filetype == "css") ? "link" : "none" //determine element type to create nodelist from
-  //     var targetattr = (filetype == "js") ? "src" : (filetype == "css") ? "href" : "none" //determine corresponding attribute to test for
-  //     var allsuspects = document.getElementsByTagName(targetelement)
-  //     for (var i = allsuspects.length; i >= 0; i--) { //search backwards within nodelist for matching elements to remove
-  //       if (allsuspects[i] && allsuspects[i].getAttribute(targetattr) != null && allsuspects[i].getAttribute(targetattr).indexOf(filename) != -1) {
-  //         // allsuspects[i].parentNode.removeChild(allsuspects[i]) //remove element by calling parentNode.removeChild()
-  //         error = false;
-  //         resolve("exist");
-  //       }
-  //     }
-  //     if (error) {
-  //       reject("does not exist");
-  //     }
-  //   })
+    const script = document.createElement('script');
+    script.src = path;
+    document.body.appendChild(script);
+  }
+  checkifjscssfileisloaded(filename: string, filetype: string) {
+    return new Promise((resolve, reject) => {
+      let error = true;
+      var targetelement = (filetype == "js") ? "script" : (filetype == "css") ? "link" : "none" //determine element type to create nodelist from
+      var targetattr = (filetype == "js") ? "src" : (filetype == "css") ? "href" : "none" //determine corresponding attribute to test for
+      var allsuspects = document.getElementsByTagName(targetelement)
+      for (var i = allsuspects.length; i >= 0; i--) { //search backwards within nodelist for matching elements to remove
+        if (allsuspects[i] && allsuspects[i].getAttribute(targetattr) != null && allsuspects[i].getAttribute(targetattr).indexOf(filename) != -1) {
+          // allsuspects[i].parentNode.removeChild(allsuspects[i]) //remove element by calling parentNode.removeChild()
+          error = false;
+          resolve("exist");
+        }
+      }
+      if (error) {
+        reject("does not exist");
+      }
+    })
 
-  // }
+  }
   // // TO DO update the array
   // detectGamesRatingChange(gamename: string) {
   //   this.gameRatingListener = firebase.database().ref(`games/${gamename}/usersRating`).on('value', (usersRating) => {

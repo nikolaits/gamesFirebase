@@ -61,3 +61,18 @@
   top: 0;
   background-color: rgba(0, 0, 0, 0.5)
 }
+.container{
+  margin: auto;
+}
+#seasonmodeContainer{
+  margin: auto;
+}
+#seasonmodeContainer div li, ul, h2 canvas {
+  margin-top:10px;
+  margin-bottom: 5px;
+  /* display: inline; */
+  float: none;
+}
+#seasonmodeContainer{
+  width:810px;
+}
