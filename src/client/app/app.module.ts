@@ -7,8 +7,9 @@ import { AppRoutingModule } from './app-routing.module';
 
 import { AboutModule } from './about/about.module';
 import { LoginModule } from './login/login.module';
-import { SignupModule } from "./signup/signup.module"
-import { MainPageModule } from "./main-page/main-page.module"
+import { SignupModule } from "./signup/signup.module";
+import { MainPageModule } from "./main-page/main-page.module";
+import {SeasonPageModule} from "./season-page/season-page.module"
 import { SharedModule } from './shared/shared.module';
 import { CoreModule } from './core/core.module';
 import {GamesAdminModule} from "./admin/games-admin/games-admin.module";
@@ -24,6 +25,7 @@ import {EqualValidatorDirective} from "./signup/equal-validator.directive";
     SignupModule,
     MainPageModule,
     MainPageModule,
+    SeasonPageModule,
     GamesAdminModule,
     UsersAdminModule,    
     SharedModule.forRoot(),

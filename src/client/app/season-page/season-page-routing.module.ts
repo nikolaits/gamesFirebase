@@ -1,13 +1,13 @@
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { MainPageComponent } from './main-page.component';
+import { SeasonPageComponent } from './season-page.component';
 
 @NgModule({
   imports: [
     RouterModule.forChild([
-      { path: 'main-page', component: MainPageComponent }
+      { path: 'season-page', component: SeasonPageComponent }
     ])
   ],
   exports: [RouterModule]
 })
-export class MainPageRoutingModule { }
+export class SeasonPageRoutingModule { }

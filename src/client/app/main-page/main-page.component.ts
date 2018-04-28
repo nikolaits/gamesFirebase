@@ -127,6 +127,7 @@ export class MainPageComponent implements OnInit {
   private settimeoutlistener: any;
   private firstLoad = true;
   private starttime = Date.now();
+  private openGameChallenge:boolean;
   @ViewChild('wrapper') wrapper: any;
 
   /**
@@ -146,6 +147,11 @@ export class MainPageComponent implements OnInit {
   }
   ngAfterViewInit() {
     let cookieResult = this.cookieService.get("isFriendListOpened");
+    this.openGameChallenge = false;
+    let cookieChallengeResult = this.cookieService.get("challengeSelectedEvent");
+    if((cookieChallengeResult)&&(cookieChallengeResult !== "")){
+      this.openGameChallenge = true;
+    }
     if (cookieResult === "yes") {
       setTimeout(() => {
         this.showFriendList = true;
@@ -195,6 +201,9 @@ export class MainPageComponent implements OnInit {
         console.log(result);
         // result[0].isCollapsed=false;
         this.games = result;
+        if(this.openGameChallenge){
+          this.onVisibilityChange(this.cookieService.get("challengeSelectedEvent"));
+        }
       })
       .catch((err) => {
         console.log("Error(activeGames)");
@@ -377,7 +386,7 @@ export class MainPageComponent implements OnInit {
         let gameArgs: GameArgs = new GameArgs(challenge, friends, game.savedData);
         console.log("gameArgs");
         console.log(gameArgs);
-        window['start_' + gamename](game.windowWidth, game.windowHeight, "container_" + gamename, "assets/gamesJavaScript/" + gamename + "/", JSON.stringify(gameArgs), "",
+        window['start_' + gamename](game.windowWidth, game.windowHeight, "container_" + gamename, "assets/gamesJavaScript/" + gamename + "/", JSON.stringify(gameArgs), "casualMode",
           (status: string, score: number, game_xp: number, game_id: number, gameArgs: any, unlocklevel: boolean) => {
             console.log('game start 1');
             console.log(score);
@@ -421,7 +430,7 @@ export class MainPageComponent implements OnInit {
                   console.log(e)
                 })
             } else if(status == "ChallengeFriend"){
-              this.gamesService.challengeFriend(this.userService.user.uid, gameArgs.useruid, this.selectedGame, score, gameArgs.username)
+              this.gamesService.challengeFriend(this.userService.user.uid, gameArgs.useruid, this.selectedGame, score, this.currentUsername)
               .then(()=>{
                 console.log("challenge added");
 

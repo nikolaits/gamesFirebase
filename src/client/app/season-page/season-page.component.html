@@ -1,0 +1,13 @@
+<sd-toolbar (challengeSelect)="onChallengeSelected($event)" (open)="openFriendList()" [changeUserDisaplyedData]="changeDisplayedData"></sd-toolbar>
+<sd-navbar></sd-navbar>
+
+<div class="container">
+  <!-- <button type="button" (click)="onTap()">add chln</button> -->
+  <button type="button" (click)="onTap()">Create maze</button>
+  <div id="seasonmodeContainer"></div>
+</div>
+<friend-list *ngIf="showFriendList" (close)="closeFriendList()"></friend-list>
+
+<div *ngIf="showHover" class="hoverContainer">
+  <div class="loader"></div>
+</div>

@@ -10,6 +10,7 @@ import { CookieService } from 'ng2-cookies';
 import { Challenge } from '../../types/challenge.type';
 import { GamesService } from '../../shared/games-service/games.service';
 import { ChallengeComplete } from '../../types/challenge_complete.type';
+import { Router,NavigationEnd } from '@angular/router';
 /**
  * This class represents the toolbar component.
  */
@@ -42,9 +43,13 @@ export class ToolbarComponent {
     return this._changeUserDisaplyedData;
 
   }
-  constructor(private modalService: NgbModal, private userService:UserService, private authService:AuthService, private navigationService:NavigationService, private cookiesService:CookieService,config: NgbPopoverConfig, private gamesService:GamesService){
+  constructor(private modalService: NgbModal, private userService:UserService, private authService:AuthService, private navigationService:NavigationService, private cookiesService:CookieService,config: NgbPopoverConfig, private gamesService:GamesService, private router:Router){
     config.placement = 'bottom-right';
-    config.container
+    router.events.subscribe(event => {
+      if(event instanceof NavigationEnd){
+        console.log("url:"+ event.url)
+      }})
+
     
   }
   ngAfterViewInit(){
@@ -73,6 +78,7 @@ export class ToolbarComponent {
           console.log(info);
           this.imageUrl = info.profile_picture;
           this.username = info.username;
+          this.cookiesService.set("geitUsername", info.username)
         })
         .catch((err)=>{
           console.log("Error");
