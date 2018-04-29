@@ -7,10 +7,10 @@ import { NameListService } from '../shared/name-list/name-list.service';
 import {AuthService} from "../shared/auth-service/auth.service";
 import {GamesService} from "../shared/games-service/games.service"
 import {CoreModule} from "../core/core.module"
-import { NgbModal, NgbRatingModule, NgbCollapseModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, NgbRatingModule, NgbCollapseModule, NgbCarouselModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
-  imports: [MainPageRoutingModule, SharedModule, CoreModule, BrowserAnimationsModule, NgbRatingModule, NgbCollapseModule],
+  imports: [MainPageRoutingModule, SharedModule, CoreModule, BrowserAnimationsModule, NgbCarouselModule, NgbRatingModule, NgbCollapseModule],
   declarations: [MainPageComponent, NgbdModalContent],
   exports: [MainPageComponent],
   providers: [NameListService, AuthService, GamesService], 

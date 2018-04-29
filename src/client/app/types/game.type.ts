@@ -7,9 +7,13 @@ export class Game{
         public windowWidth:number,
         public windowHeight:number,
         public savedData:any,
-        public active?:boolean
+        public imageUri? :string,
+        public active?:boolean,
+        public mobileCompatible?:boolean
     ){
         if(this.active === undefined)
             this.active = false;
+        if(this.mobileCompatible === undefined)
+            this.mobileCompatible = false;
     }
 }

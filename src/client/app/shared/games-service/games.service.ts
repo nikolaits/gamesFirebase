@@ -136,7 +136,7 @@ export class GamesService {
             else {
               ratesNumber = 1;
             }
-            gamesArray.push(new Game(key, userRate, avrgRate / ratesNumber, true, object[key].windowWidth, object[key].windowHeight, savedData));
+            gamesArray.push(new Game(key, userRate, avrgRate / ratesNumber, true, object[key].windowWidth, object[key].windowHeight, savedData, object[key].imageUri));
           }
           resolve(gamesArray);
         }
@@ -186,7 +186,7 @@ export class GamesService {
               ratesNumber = 1;
             }
 
-            gamesArray.push(new Game(key, userRate, avrgRate / ratesNumber, true, object[key].windowWidth, object[key].windowHeight, savedData, object[key].active));
+            gamesArray.push(new Game(key, userRate, avrgRate / ratesNumber, true, object[key].windowWidth, object[key].windowHeight, savedData, object[key].imageUri, object[key].active, object[key].mobileCompatible));
           }
           resolve(gamesArray);
         }
@@ -334,7 +334,9 @@ export class GamesService {
     // let userId = this.user.uid;
     return firebase.database().ref(`games/${gameName}`).set({
       active: false,
+      mobileCompetibale:false,
       windowWidth: windowWidth,
+      imageUri:"https://firebasestorage.googleapis.com/v0/b/gamesfirebase.appspot.com/o/games%2Fimages%2Fnew_game.jpeg?alt=media&token=ad100168-8ed9-4de9-8325-0ad276511a07",
       windowHeight: windowHeight,
       livescores: {
         admin: {
@@ -344,7 +346,7 @@ export class GamesService {
       }
     });
   }
-
+  
   updateGameInfo(gameName: string, windowWidth: number, windowHeight: number) {
     // let userId = this.user.uid;
     return firebase.database().ref(`games/${gameName}`).update({
@@ -422,10 +424,9 @@ export class GamesService {
       });
     }
   }
-  updateUserImage(imageUrl: string) {
-    let userId = this.user.uid;
-    return firebase.database().ref(`users/${userId}`).update({
-      profile_picture: imageUrl
+  updateGameImage(imageUri: string, gamename:string) {
+    return firebase.database().ref(`games/${gamename}`).update({
+      imageUri: imageUri
     });
   }
   updateUsername(name: string) {
@@ -438,6 +439,14 @@ export class GamesService {
     return firebase.database().ref(`games/${name}`).update({
       active: value,
     });
+  }
+  updateGameStatusMobileCompatible(name: string, value: boolean) {
+    return firebase.database().ref(`games/${name}`).update({
+      mobileCompatible: value,
+    });
+  }
+  deleteGame(name: string) {
+    return firebase.database().ref(`games/${name}/`).remove()
   }
   /**
     * Handle HTTP error

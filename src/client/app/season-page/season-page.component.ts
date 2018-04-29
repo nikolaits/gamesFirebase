@@ -121,8 +121,6 @@ class playGame {
           this.mazeGraphics.drawRect(j * this.tileSize, i * this.tileSize, this.tileSize, this.tileSize);
         }
       }
-      // console.log("Drawer maze")
-      // console.log(this.maze);
     }
     this.mazeGraphics.endFill();
     this.mazeGraphics.beginFill(0xff0000);
@@ -174,7 +172,6 @@ export class SeasonPageComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log("main component ngOnInit2");
     
   }
   ngAfterViewInit() {
@@ -188,11 +185,9 @@ export class SeasonPageComponent implements OnInit {
     }
     this.authService.isUserSignIn()
       .then((r: firebase.User) => {
-        console.log("user exist");
         this.userService.user = r;
         this.userService.hasUsername()
           .then((r) => {
-            console.log(r);
             this.activeGames();
             this.gamesService.getCurrentUser();
           })
@@ -209,11 +204,9 @@ export class SeasonPageComponent implements OnInit {
         console.log(e);
       });
       callbackFuncton = (result:any)=>{
-        console.log("callbackFuncton");
-        console.log(result);
         if(result === "mazeLoaded"){
           this.generateRandPlaces();
-          this.drawTargets();
+          // this.drawTargets();
           this.isDrawing = false;
         }
         else if(result === "pathDraw"){
@@ -236,8 +229,6 @@ export class SeasonPageComponent implements OnInit {
     this.gamesService.getCurrentUser();
     this.gamesService.getGames()
       .then((result) => {
-        console.log("activeGames");
-        console.log(result);
         // result[0].isCollapsed=false;
         this.games = result;
         this.initSeasonMode();
@@ -255,8 +246,6 @@ export class SeasonPageComponent implements OnInit {
     this.showFriendList = false;
   }
   onChallengeSelected(gamename: string) {
-    console.log("challenge selected");
-    console.log(gamename);
     this.cookieService.set("challengeSelectedEvent", gamename);
     this.navigationService.goToMainPage();
   }
@@ -266,15 +255,8 @@ export class SeasonPageComponent implements OnInit {
     gameSeasonMode = new Phaser.Game(810, 610, Phaser.CANVAS, "seasonmodeContainer");
     gameSeasonMode.state.add("PlayGame", playGame);
     gameSeasonMode.state.start("PlayGame");
-    setTimeout(() => {
-      console.log(gameSeasonMode.state.states.drawPath)
-    }, 2000);
 
     setTimeout(() => {
-
-      console.log("phaser game")
-      console.log(gameSeasonMode.state.states.PlayGame);
-      console.log(gameSeasonMode.input);
       gameSeasonMode.input.onTap.add((pointer: any, doubleTap: any) => {
         console.log("onTap");
         console.log(Math.floor(pointer.x / 20));
@@ -283,26 +265,20 @@ export class SeasonPageComponent implements OnInit {
         let pointerX = Math.floor(pointer.x / 20);
         let pointerY = Math.floor(pointer.y / 20)
         let maze = gameSeasonMode.state.states.PlayGame.maze;
-        console.log(maze[pointerY][pointerX]);
         if ((doubleTap) && (maze[pointerY][pointerX] === 0)&&(!this.isDrawing)) {
-          console.log("in if");
           let isPositionFromTargets =false;
           let targetIndex;
           for (let i = 0; i < this.targetPositions.length; i++) {
-            console.log("Positions: "+ this.targetPositions[i].positionX+" : "+this.targetPositions[i].positionY)
-            if((this.targetPositions[i].positionX === pointerY)&&(this.targetPositions[i].positionY === pointerX)){
+            if((this.targetPositions[i].positionX === pointerX)&&(this.targetPositions[i].positionY === pointerY)){
               isPositionFromTargets = true;
               this.selectedTarget = this.targetPositions[i];
               targetIndex = i;
-              console.log("in position")
             }
             
           }
           if(isPositionFromTargets){
             this.targetPositions.splice(targetIndex, 1);
             var easystar = new EasyStar.js();
-            console.log("in the calculating mode")
-            console.log(easystar)
             try {
               this.isDrawing= true;
               easystar.setGrid(maze);
@@ -378,23 +354,36 @@ export class SeasonPageComponent implements OnInit {
     let tmpYPos = []
     let endposition = (gameSeasonMode.state.states.PlayGame.maze.length)-2;
     let maze= gameSeasonMode.state.states.PlayGame.maze;
+    console.log("maze");
+    console.log(maze);
+    console.log("generateRandPlaces")
     for (let index = 0; index < number; index++) {
       let psY = Math.floor(Math.random() * endposition) + 2;
       let tmpArrayXs = [];
-      
+      console.log("Result generate");
+      console.log("Rand y:");
+      console.log(psY);
       for (let j = 0; j < maze[psY].length; j++) {
         if(maze[psY][j] === 0){
           tmpArrayXs.push(j);
         }
       } 
-   
+      console.log("Rand x index");
       const psXindex = Math.floor(Math.random() * tmpArrayXs.length); 
       let xNumber = tmpArrayXs[psXindex];
       this.targetPositions.push(new TargetPosition(psY, xNumber, this.games[index].name));
+      console.log(psXindex);
+      console.log("Array");
+      console.log(tmpArrayXs);
+      console.log("Position from array");
+      console.log(tmpArrayXs[psXindex]);
+      console.log("Maze position");
+      console.log(maze[psY][xNumber]);
     }
-    console.log("Targen positions");
-    console.log(this.targetPositions[0])
-    console.log(this.targetPositions[1])
+    this.drawTargets();
+    // console.log("Targen positions");
+    // console.log(this.targetPositions[0])
+    // console.log(this.targetPositions[1])
   }
   drawTargets(){
     //0xf5f5dc
@@ -402,146 +391,21 @@ export class SeasonPageComponent implements OnInit {
       let playGame = gameSeasonMode.state.states.PlayGame;
       playGame.mazeGraphics.endFill();
       playGame.mazeGraphics.beginFill(0xf5f5dc);
-      playGame.mazeGraphics.drawRoundedRect(element.positionY * playGame.tileSize, element.positionX * playGame.tileSize, playGame.tileSize, playGame.tileSize);
+      playGame.mazeGraphics.drawRoundedRect(element.positionX * playGame.tileSize, element.positionY * playGame.tileSize, playGame.tileSize, playGame.tileSize);
       playGame.mazeGraphics.endFill();
     })
     
   }
-  // onTap() {
-  //   this.gamesService.getCasulModeResults("test")
-  //   .then((r)=>{
-  //     console.log("Result csula mode");
-  //     console.log(r);
-  //   })
-  //   .catch((e)=>{
-  //     console.log("Error");
-  //     console.log(e)
-
-  //   })
-  // }
-  // onRateChange(args: any, game: string) {
-  //   console.log("Rate change");
-  //   console.log(args, game);
-  //   this.games.forEach((element: Game) => {
-  //     if (element.name === game) {
-  //       this.gamesService.setupusergamerate(game, element.userRate, args)
-  //         .then((r) => {
-  //           console.log("Userrate has been change");
-  //           console.log(r);
-  //         })
-  //         .catch((e) => {
-  //           console.log("Error onRateChange");
-  //           console.log(e)
-  //         })
-  //     }
-
-  //   })
-
-  // }
-  // onVisibilityChange(gamename: string) {
-
-
-  //   this.showHover = true;
-  //   if (this.gameRatingListener) {
-  //     this.removeGameRatingListener();
-  //   }
-  //   if (this.selectedGame !== "") {
-  //     this.destroyGame(this.selectedGame);
-  //   }
-  //   this.selectedGame = gamename;
-
-  //   let selectedGame: Game = null;
-  //   this.games.forEach((element) => {
-  //     if (gamename === element.name) {
-  //       element.isCollapsed = false;
-  //       selectedGame = element;
-  //     }
-  //     else {
-  //       element.isCollapsed = true;
-  //     }
-
-  //   })
-  //   this.containerWidth = selectedGame.windowWidth;
-  //   this.containerHeight = selectedGame.windowHeight;
-  //   console.log("Selectedgame " + gamename);
-  //   this.userService.getUserUsernameAndProfilePicture()
-  //     .then((rusult: UserInitInfo) => {
-  //       this.currentUsername = rusult.username;
-  //       this.gamesService.doesUserLiveScoreExists(gamename, rusult.username)
-  //         .then((r) => {
-  //           if (r === "exists") {
-  //             this.getUserChallenges(gamename, selectedGame);
-  //           }
-  //           else if (r === "norecord") {
-  //             this.gamesService.createUserLiveScore(gamename, rusult.username)
-  //               .then((r) => {
-  //                 this.getUserChallenges(gamename, selectedGame);
-  //               })
-  //               .catch((errCreate) => {
-  //                 console.log("errCreate");
-  //                 console.log(errCreate)
-  //               })
-  //           }
-
-  //         })
-  //         .catch((e) => {
-  //           console.log(e)
-  //         })
-  //     })
-  //     .catch((err) => {
-  //       console.log("Error");
-  //       console.log(err);
-  //     })
-  //   this.gamesService.getgameratings(this.selectedGame)
-  //     .then((r) => {
-  //       console.log("rating result");
-  //       console.log(r);
-  //       this.updateGameRate(r);
-  //     })
-  //     .catch((err) => {
-  //       console.log("Rating get Error");
-  //     })
-  //   this.detectGamesRatingChange(this.selectedGame);
-
-
-
-  // }
-  // updateGameRate(r: any) {
-  //   this.games.forEach((element) => {
-  //     if (element.name === this.selectedGame) {
-  //       element.avrgRate = r.avrgRate;
-  //       element.userRate = r.userRate;
-  //     }
-  //   })
-  // }
+ 
   destroyGame(gamename: string) {
     window['destroy_' + gamename]();
   }
-  // getUserChallenges(gamename: string, selectedGame: Game) {
-  //   this.gamesService.getGameChallenges(gamename)
-  //     .then((r) => {
-  //       console.log("there is challenge");
-  //       this.preloadInitGame(gamename, selectedGame, r);
-  //     })
-  //     .catch((e) => {
-  //       console.log("no users were found");
-  //       console.log(e);
-  //       this.preloadInitGame(gamename, selectedGame, undefined);
-  //     })
-  // }
+  
   preloadInitGame(gamename: string, game: Game, challenges: any) {
-    // let friendList: any[];
-    // this.userService.getFriendsAcceptedNotPending()
-    //   .then((r) => {
-        // friendList = r;
-        // console.log("userlist");
-        // console.log(JSON.stringify(friendList));
 
         this.checkifjscssfileisloaded(gamename + '.js', "js")
           .then((args) => {
             if (args === "exist") {
-              console.log("script is removed");
-              // this.addJSFile("assets/gamesTest/asteroids/src/game.js");
               this.startGame(gamename, 1, game, undefined, challenges);
             }
           })
@@ -551,24 +415,15 @@ export class SeasonPageComponent implements OnInit {
             this.addJSFile("assets/gamesJavaScript/" + gamename + "/src/" + gamename + ".js");
             this.startGame(gamename, 1000, game, undefined, challenges);
           })
-      // })
-      // .catch((err: any) => {
-      //   console.log("No friends were found");
-      //   console.log(err);
-      //   this.startGame(gamename, 1000, game, undefined, challenges);
-      // })
   }
   startGame(gamename: string, delay: number, game: Game, friends: any[], challenge: any[]) {
     let currentUsername = this.cookieService.get("geitUsername");
     setTimeout(() => {
       try {
         let gameArgs: GameArgs = new GameArgs(challenge, friends, game.savedData);
-        console.log("gameArgs");
-        console.log(gameArgs);
         window['start_' + gamename](game.windowWidth, game.windowHeight, "container_game", "assets/gamesJavaScript/" + gamename + "/", JSON.stringify(gameArgs), "seasonMode",
           (status: string, score: number, game_xp: number, game_id: number, gameArgs: any, unlocklevel: boolean) => {
-            console.log('game start 1');
-            console.log(score);
+
             if (status === "Close") {
               this.destroyGame(this.selectedGame);
               this.selectedGame = "";
@@ -579,46 +434,21 @@ export class SeasonPageComponent implements OnInit {
                 .then((r) => {
                   //Cookies.get("FlappyPlaneSaveGame")
                   // this.selectedGame;
-                  console.log("game info is set")
                 })
                 .catch((e) => {
                   console.log("Error (setupusersaveddata)");
                   console.log(e);
                 })
-            } else if (status == "LiveScore") {
-              console.log("LiveScore");
-              console.log(score);
-              this.gamesService.updateUserLiveScore(gamename, currentUsername, score);
-            } else if (status == "ChallengeComplete") {
-              this.gamesService.completeChallenge(currentUsername, score, gameArgs.oldScore, this.selectedGame, gameArgs.uid)
-                .then((r) => {
-                  console.log("new Challenge completed");
-                  console.log(r)
-                })
-                .catch((e) => {
-                  console.log("Error completing the challenge");
-                  console.log(e);
-                })
             } else if (status == "GameOver") {
               this.gamesService.saveCasualModeResult(this.selectedTarget.gamename, score, "" + Date.now())
                 .then(() => {
-                  console.log("result saved")
                 })
                 .catch((e) => {
                   console.log("Error saving casula mode result");
                   console.log(e)
                 })
-            } else if(status == "ChallengeFriend"){
-              this.gamesService.challengeFriend(this.userService.user.uid, gameArgs.useruid, this.selectedTarget.gamename, score, currentUsername)
-              .then(()=>{
-                console.log("challenge added");
-
-              })
-              .catch((e)=>{
-                console.log("Error challenging friend");
-                console.log(e)
-              })
-            }
+            } 
+            
           });
         // this.detectGamesLiveScore(gamename);
         this.showHover = false;

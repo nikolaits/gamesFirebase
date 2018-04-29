@@ -2,7 +2,7 @@ import { Component, OnInit, Input, ViewChild } from '@angular/core';
 import { NameListService } from '../shared/name-list/name-list.service';
 import { AuthService } from '../shared/auth-service/auth.service';
 import { UserService } from '../shared/user-service/user.service';
-import { NgbModal, NgbActiveModal, NgbModalOptions } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, NgbActiveModal, NgbModalOptions, NgbCarouselConfig } from '@ng-bootstrap/ng-bootstrap';
 import { UserInitInfo } from '../types/user_init_info.type';
 import * as firebase from "firebase";
 import { GamesService } from '../shared/games-service/games.service';
@@ -128,6 +128,7 @@ export class MainPageComponent implements OnInit {
   private firstLoad = true;
   private starttime = Date.now();
   private openGameChallenge:boolean;
+ 
   @ViewChild('wrapper') wrapper: any;
 
   /**
@@ -136,8 +137,10 @@ export class MainPageComponent implements OnInit {
    *
    * @param {NameListService} nameListService - The injected NameListService.
    */
-  constructor(private modalService: NgbModal, private authService: AuthService, private userService: UserService, private gamesService: GamesService, private cookieService: CookieService) {
-
+  constructor(private modalService: NgbModal, private authService: AuthService, private userService: UserService, private gamesService: GamesService, private cookieService: CookieService,config: NgbCarouselConfig) {
+    config.interval = 10000;
+    config.wrap = true;
+    config.keyboard = false;
   }
   /**
    * Get the names OnInit
@@ -574,7 +577,12 @@ export class MainPageComponent implements OnInit {
     // this.listenerLiveScore.off();
   }
   showLiveRezultTable(result: any) {
-    jQuery("#livescore_" + this.selectedGame).data("kendoGrid").dataSource.data(result);
+    try {
+      jQuery("#livescore_" + this.selectedGame).data("kendoGrid").dataSource.data(result);
+    } catch (error) {
+      
+    }
+    
     
 
   }

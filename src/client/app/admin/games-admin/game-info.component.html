@@ -3,6 +3,29 @@
 </div>
 <div class="modal-body">
     <p>{{notification}}!</p>
+
+    <div *ngIf="updateMode" class="file-upload">
+        <span class="text">upload</span>
+        <input id="custom-input" type="file" (change)="fileChangeListener($event)">
+    </div>
+    <span *ngIf="data.image" class="result rounded">
+        <img [src]="data.image" [width]="cropperSettings.croppedWidth" [height]="cropperSettings.croppedHeight">
+    </span>
+    <p><ngb-progressbar *ngIf="isProgressVisible" type="info" [value]="progress"></ngb-progressbar></p>
+    <div *ngIf="cropperShown" class="pull-left">
+        <h3>
+            Cropper the image
+            <div class="file-upload-button">
+                <button (click)="saveImage()" class="text">save</button>
+            </div>
+            <div class="file-upload-button">
+                <button (click)="closeCropper()" class="text">cancel</button>
+            </div>
+        </h3>
+
+
+        <img-cropper #cropper [image]="data" [settings]="cropperSettings"></img-cropper>
+    </div>
     <form role="form" (ngSubmit)="onSubmit()" [formGroup]="createGameForm">
 
         <div class="form-group">
@@ -52,7 +75,7 @@
 
         <div class="modal-footer">
             
-            <button type="submit" class="btn btn-outline-dark" [disabled]="!createGameForm.valid"  >{{buttonName}}</button>
+            <button type="submit" class="btn btn-outline-dark" [disabled]="!createGameForm.valid || !isReadyForSubmit"  >{{buttonName}}</button>
             <button type="button" class="btn btn-outline-dark"  (click)="close()">Close</button>
         </div>
     </form>

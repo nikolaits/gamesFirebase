@@ -3,6 +3,22 @@
 
 <div class="container">
   <!-- <button type="button" (click)="onTap()">add chln</button> -->
+  <div class="ngbcontainer">
+    <div style="position: relative; width: 100%; height: 100%;">
+
+      <div class="carousel" >
+
+        <ul class="slides">
+
+          <li *ngFor="let game of games">
+            <h2>{{game.name}}</h2>
+            <img src="{{game.imageUri}}" alt="">
+          </li>
+
+        </ul>
+      </div>
+    </div>
+  </div>
   <div *ngFor="let game of games" class="buttons">
     <button type="button" class="btn btn-outline-primary" [ngClass]="{'active':!game.isCollapsed}" (click)="onVisibilityChange(game.name)"
       [attr.aria-expanded]="!game.isCollapsed" aria-controls="collapseExample">
@@ -11,7 +27,7 @@
   </div>
   <div class="games" *ngFor="let game of games">
     <div id="collapseExample" [ngbCollapse]="game.isCollapsed">
-      <div class="card">
+      <div class="card" [ngClass]="{'playFullScreen':!game.isCollapsed}">
         <h2>{{prettifyHeader(game.name)}}</h2>
         <br>
         <hr>

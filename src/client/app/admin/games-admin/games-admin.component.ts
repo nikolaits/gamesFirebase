@@ -10,6 +10,7 @@ import { Game } from "../../types/game.type"
 import { NavigationService } from '../../shared/navigation-service/navigation.service';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { NewGame } from '../../types/new_game.type';
+import { CropperSettings, ImageCropperComponent } from 'ngx-img-cropper';
 
 @Component({
   moduleId: module.id,
@@ -23,14 +24,47 @@ export class NgbdModalCreateGame {
   @Input() updateMode: true;
   model: NewGame
   createGameForm: FormGroup;
-  constructor(public activeModal: NgbActiveModal, private userService: UserService, private gamesService: GamesService) { }
+  constructor(public activeModal: NgbActiveModal, private userService: UserService, private gamesService: GamesService) { 
+    this.cropperSettings = new CropperSettings();
+    this.cropperSettings.width = 700;
+    this.cropperSettings.height = 350;
+    this.cropperSettings.keepAspect = false;
+
+    this.cropperSettings.croppedWidth = 700;
+    this.cropperSettings.croppedHeight = 350;
+
+    this.cropperSettings.canvasWidth = 800;
+    this.cropperSettings.canvasHeight = 450;
+
+    this.cropperSettings.minWidth = 600;
+    this.cropperSettings.minHeight = 250;
+
+    this.cropperSettings.rounded = true;
+    this.cropperSettings.minWithRelativeToResolution = false;
+
+    this.cropperSettings.cropperDrawSettings.strokeColor = 'rgba(255,255,255,1)';
+    this.cropperSettings.cropperDrawSettings.strokeWidth = 2;
+    this.cropperSettings.noFileInput = true;
+    this.data = {};
+  }
   public error = false;
   public isEmpty = false;
   public btnDisabled = true
   public buttonName: string = "Save";
+  public imageUpdated:boolean = false;
+  isReadyForSubmit: boolean = true;
+  data: any;
+  file: File;
+  progress:number;
+  isProgressVisible:boolean = false;
+  cropperSettings: CropperSettings;
+  cropperShown: boolean = false;
   public taken = false;
-
+  @ViewChild('cropper', undefined)
+  cropper: ImageCropperComponent;
+  oldPicture: any;
   ngOnInit() {
+    // this.data.image="";
     this.model = new NewGame("", 0, 0);
     if (this.updateMode) {
       this.buttonName = "Update"
@@ -39,9 +73,9 @@ export class NgbdModalCreateGame {
       this.model.windowHeight = this.game.windowHeight;
       console.log(this.game.windowHeight);
       this.model = new NewGame(this.game.name, this.game.windowWidth, this.game.windowHeight);
-
+      this.data.image = this.oldPicture = this.game.imageUri;
     }
-    
+
 
     this.createGameForm = new FormGroup({
       'name': new FormControl({ value: this.model.name, disabled: this.updateMode }, [
@@ -75,7 +109,7 @@ export class NgbdModalCreateGame {
             // this.saveUserData(result);
             this.gamesService.createNewGame(name, windowWidth, windowHeight)
               .then((r) => {
-                this.activeModal.close({newname:name});
+                this.activeModal.close({ newname: name });
               })
               .catch((err) => {
                 console.log("Error create game");
@@ -93,21 +127,133 @@ export class NgbdModalCreateGame {
 
         });
     }
-    else{
+    else {
       this.gamesService.updateGameInfo(name, windowWidth, windowHeight)
-              .then((r) => {
-                console.log("game info updated");
-                this.activeModal.close();
-              })
-              .catch((err) => {
-                console.log("Error create game");
-                console.log(err);
-              })
+        .then((r) => {
+          console.log("game info updated");
+          this.activeModal.close({isImageUpdated: this.imageUpdated, newUri:this.oldPicture, gamename:this.game.name});
+        })
+        .catch((err) => {
+          console.log("Error create game");
+          console.log(err);
+        })
     }
 
   }
+  fileChangeListener($event: any) {
+    let image: any = new Image();
+    this.file = $event.target.files[0];
+    let myReader: FileReader = new FileReader();
+    try {
+      myReader.onloadend = (loadEvent: any) => {
+        this.cropperShown = true;
+        this.isReadyForSubmit = false;
+        setTimeout(() => {
+          image.src = loadEvent.target.result;
+          this.data = {}
+          this.cropper.setImage(image);
+          console.log("File:")
+          console.log(this.data.image);
+        }, 1000);
+
+
+      };
+
+      myReader.readAsDataURL(this.file);
+
+
+    } catch (error) {
+      console.log("Error:");
+      console.log(error);
+    }
+
+  }
+  closeCropper() {
+    this.cropperShown = false;
+    this.data.image = this.oldPicture;
+    this.isReadyForSubmit = true;
+  }
+
+  saveImage() {
+    console.log(firebase);
+    try {
+      let storageRef = firebase.storage().ref('games/images' + this.game.name + '.jpeg');
+      console.log("storage ref");
+      console.log(storageRef);
+      // let imageRef = storageRef.child('users/profile_pic_uid'+this.userService.user.uid+'.jpg');
+      console.log("imageRef");
+      // console.log(imageRef);
+      // storageRef.getDownloadURL().then(function(url) {
+      //   console.log("image url");
+      //   console.log(url);
+      // }); 
+      let base64string = this.data.image.substring(23);
+      var metadata = {
+        contentType: 'image/jpeg',
+      };
+      var task = storageRef.putString(base64string, 'base64', metadata);
+
+      // .then((snapshot) => {
+      //   console.log('Uploaded a base64 string!');
+      // })
+      // .catch((err)=>{
+      //   console.log('Upload error:', err);
+      // });
+      this.isProgressVisible = true;
+      this.progress = 0;
+      (<any>task).on('state_changed', (snapshot: any) => {
+        // Observe state change events such as progress, pause, and resume
+        // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
+        this.progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        console.log(snapshot.bytesTransferred);
+        console.log(snapshot.totalBytes)
+
+      }, (error: any) => {
+        console.log("Error");
+        console.log(error);
+      }, () => {
+        console.log("uploaded");
+        this.cropperShown = false;
+        this.oldPicture = task.snapshot.downloadURL;
+        this.isReadyForSubmit = true;
+        this.gamesService.updateGameImage(task.snapshot.downloadURL, this.game.name)
+          .then(() => {
+            console.log("username updated");
+            this.imageUpdated= true;
+
+            this.oldPicture = task.snapshot.downloadURL;
+            // this.change.emit({message:"profilePictureUpdated", result:task.snapshot.downloadURL});
+            setTimeout(() => {
+              this.isProgressVisible = false;
+            }, 100);
+            setTimeout(() => {
+              alert("The profile picture was updated");
+            }, 1000);
+            
+            
+          })
+          .catch((err) => {
+            console.log("Error");
+            console.log(err);
+          })
+        console.log(task.snapshot.downloadURL);
+      })
+      console.log("test project")
+    } catch (error) {
+      console.log("Error");
+      console.log(error)
+    }
+
+    // console.log(this.data.image);
+  }
   close() {
-    this.activeModal.close();
+    
+    if(this.updateMode){
+      this.activeModal.close({isImageUpdated: this.imageUpdated, newUri:this.oldPicture, gamename:this.game.name});
+    }
+    else{
+      this.activeModal.close();
+    }
   }
 
 }
@@ -133,10 +279,12 @@ export class GamesAdminComponent implements OnInit {
   games: Game[] = [];
   private gameRatingListener: any;
   private newGame = "";
+  private deletedGameName = "";
   private listenerLiveScore: any;
   private settimeoutlistener: any;
-  private selectedGameName:string = ""
+  private selectedGameName: string = ""
   public changeDisplayedData: boolean = false;
+  private selectedGame:Game;
   @ViewChild('wrapper') wrapper: any;
   firstLoad = true;
   /**
@@ -179,9 +327,10 @@ export class GamesAdminComponent implements OnInit {
             if (!r) {
               this.navigationService.goToMainPage();
             }
-            else{
+            else {
               this.getAllGames();
               this.onNewGameAdded();
+              this.onGameRemoved();
             }
           })
           .catch((err) => {
@@ -226,31 +375,38 @@ export class GamesAdminComponent implements OnInit {
     }
 
     const modalRef = this.modalService.open(NgbdModalCreateGame, options);
-    modalRef.componentInstance.notification = 'Please enter your username';
+    modalRef.componentInstance.notification = 'Enter game info';
     modalRef.componentInstance.updateMode = false;
     modalRef.componentInstance.game = null;
     modalRef.result.then((arg: any) => {
       console.log(arg);
-      if(arg){
+      if (arg) {
         this.newGame = arg.newname;
       }
     })
   }
-  updateGameInfo(name:string){
-    this.games.forEach((element)=>{
-      if(element.name === name){
+  updateGameInfo(name: string) {
+    this.games.forEach((element) => {
+      this.selectedGame = element;
+      if (element.name === name) {
+        this.selectedGame = element;
         let options: NgbModalOptions = {
           beforeDismiss: () => { return true },
-          windowClass: "in"
+          windowClass: "in",
+          size:"lg"
         }
-    
+
         const modalRef = this.modalService.open(NgbdModalCreateGame, options);
-        modalRef.componentInstance.notification = 'Please enter your username';
+        modalRef.componentInstance.notification = 'Update game info';
         modalRef.componentInstance.updateMode = true;
         modalRef.componentInstance.game = element;
-        modalRef.result.then((arg: string) => {
+        modalRef.result.then((arg: any) => {
           console.log(arg);
-    
+          //this.activeModal.close({isImageUpdated: this.imageUpdated, newUri:this.oldPicture, gamename:this.game.name});
+          if((arg.isImageUpdated)&&(arg.isImageUpdated === true)){
+            element.imageUri = arg.newUri;
+          }
+
         })
       }
 
@@ -259,11 +415,11 @@ export class GamesAdminComponent implements OnInit {
   }
   onVisibilityChange(gamename: string) {
 
-    if(this.gameRatingListener){
+    if (this.gameRatingListener) {
       this.removeGameRatingListener();
     }
 
-    this.selectedGameName=gamename;
+    this.selectedGameName = gamename;
     let selectedGame = null;
     this.games.forEach((element) => {
       if (gamename === element.name) {
@@ -277,23 +433,23 @@ export class GamesAdminComponent implements OnInit {
     })
 
     this.gamesService.getgameratings(this.selectedGameName)
-      .then((r)=>{
+      .then((r) => {
         console.log("rating result");
         console.log(r);
         this.updateGameRate(r);
       })
-      .catch((err)=>{
+      .catch((err) => {
         console.log("Rating get Error");
       })
-      this.detectGamesRatingChange(this.selectedGameName);
-      if(this.listenerLiveScore)
-        this.removeLiveScoreEventListener();
-      this.detectGamesLiveScore(gamename);
+    this.detectGamesRatingChange(this.selectedGameName);
+    if (this.listenerLiveScore)
+      this.removeLiveScoreEventListener();
+    this.detectGamesLiveScore(gamename);
   }
 
-  updateGameRate(r:any){
-    this.games.forEach((element)=>{
-      if(element.name === this.selectedGameName){
+  updateGameRate(r: any) {
+    this.games.forEach((element) => {
+      if (element.name === this.selectedGameName) {
         element.avrgRate = r.avrgRate;
         element.userRate = r.userRate;
       }
@@ -306,7 +462,7 @@ export class GamesAdminComponent implements OnInit {
         let ratesNumber = 0;
         let avrgRate = 0;
         let rates = usersRating.val();
-        if(rates){
+        if (rates) {
           for (var ratekey in rates) {
             if (ratekey === this.gamesService.user.uid) {
               userRate = rates[ratekey].rate;
@@ -314,17 +470,17 @@ export class GamesAdminComponent implements OnInit {
             avrgRate += rates[ratekey].rate;
             ratesNumber += 1;
           }
-          if(ratesNumber <1){
+          if (ratesNumber < 1) {
             ratesNumber = 1;
           }
         }
-        else{
+        else {
           ratesNumber = 1;
         }
         console.log("User rate data");
-        console.log({userRate:userRate, avrgRate:avrgRate});
-        this.updateGameRate({userRate:userRate, avrgRate:(avrgRate/ratesNumber)});
-    }
+        console.log({ userRate: userRate, avrgRate: avrgRate });
+        this.updateGameRate({ userRate: userRate, avrgRate: (avrgRate / ratesNumber) });
+      }
     });
   }
   removeGameRatingListener() {
@@ -334,29 +490,59 @@ export class GamesAdminComponent implements OnInit {
     let newName = name.charAt(0).toUpperCase() + name.slice(1);
     return newName;
   }
-  onNewGameAdded(){
+  onNewGameAdded() {
     firebase.database().ref("games").on('child_added', (game) => {
       console.log("on child added");
       console.log(game.val());
-      this.games.push(new Game(this.newGame, 0, 0, true, game.val().windowWidth, game.val().windowHeight, undefined, false));
+      this.games.push(new Game(this.newGame, 0, 0, true, game.val().windowWidth, game.val().windowHeight, undefined, "https://firebasestorage.googleapis.com/v0/b/gamesfirebase.appspot.com/o/games%2Fimages%2Fnew_game.jpeg?alt=media&token=ad100168-8ed9-4de9-8325-0ad276511a07", false, false));
     });
   }
-  updateGameSattus(name:string){
-    this.games.forEach((element)=>{
-      if(element.name === name){
+  updateGameSattus(name: string) {
+    this.games.forEach((element) => {
+      if (element.name === name) {
         element.active = !element.active;
         this.gamesService.updateGameStatus(name, element.active)
-        .then((r)=>{
-          let text = "Deactivated";
-          if(element.active){
-            text = "Activated"
-          }
-          alert(`${name} is ${text}`)
-        })
+          .then((r) => {
+            let text = "Deactivated";
+            if (element.active) {
+              text = "Activated"
+            }
+            alert(`${name} is ${text}`)
+          })
       }
     })
   }
 
+  updateGameSattusMobileCompatible(name: string) {
+    this.games.forEach((element) => {
+      if (element.name === name) {
+        element.mobileCompatible = !element.mobileCompatible;
+        this.gamesService.updateGameStatusMobileCompatible(name, element.mobileCompatible)
+          .then((r) => {
+            let text = "Deactivated";
+            if (element.mobileCompatible) {
+              text = "Activated"
+            }
+            alert(`${name} is ${text}`)
+          })
+      }
+    })
+  }
+  deleteGame(gamename: string) {
+    let r = confirm(gamename + " will be deleted! Confirm!");
+    if (r) {
+      this.deletedGameName = gamename;
+      this.gamesService.deleteGame(gamename)
+      .then((r)=>{
+        alert(gamename+" is deleted");
+      })
+      .catch((e)=>{
+        console.log("Error");
+        console.log(e);
+        alert("Error deleting "+gamename);
+      })
+    }
+  }
   detectGamesLiveScore(gamename: string) {
     //  this.setintervallistener= setInterval(()=>{
     // let endtime = Date.now();
@@ -385,14 +571,14 @@ export class GamesAdminComponent implements OnInit {
       let data = [];
       let activeUsers = 0;
       for (let key in object) {
-        if ((object[key].timestamp > cutoff)&&(key !=="admin")) {
+        if ((object[key].timestamp > cutoff) && (key !== "admin")) {
           nothingToShow = false;
           activeUsers += 1;
           if (this.settimeoutlistener) {
 
             clearTimeout(this.settimeoutlistener);
           }
-          
+
         }
       }
       data.push({ name: "active users", number: activeUsers })
@@ -408,14 +594,14 @@ export class GamesAdminComponent implements OnInit {
   removeLiveScoreEventListener() {
     // this.listenerLiveScore.off();
   }
-  
+
   showLiveRezultTable(result: any) {
     if (result.length < 1) {
       jQuery("#livedata_" + this.selectedGameName).kendoGrid({
         dataSource: {
           data: [{
-            name:"",
-            number:"no active users"
+            name: "",
+            number: "no active users"
           }],
           sort: {
             field: "number",
@@ -440,8 +626,30 @@ export class GamesAdminComponent implements OnInit {
       });
     }
   }
-  
 
+  onGameRemoved() {
+    firebase.database().ref("games").on('child_removed', (game) => {
+      console.log("on child removed");
+      console.log(game.val());
+      console.log()
+      if (game.val()) {
+        let i = -1;
+          for (let index = 0; index < this.games.length; index++) {
+            const element = this.games[index];
+            if (element.name === this.deletedGameName) {
+              i=index;
+            }
+
+          }
+        
+        if (i > -1) {
+          this.games.splice(i, 1);
+          console.log("in if splice")
+        }
+      }
+      // this.games.push(new Game(this.newGame, 0, 0, true, game.val().windowWidth, game.val().windowHeight, undefined, false, false));
+    });
+  }
   // detectGamesContentChange() {
   //   firebase.database().ref("games/").on('value', (games) => {
   //     // Do whatever
