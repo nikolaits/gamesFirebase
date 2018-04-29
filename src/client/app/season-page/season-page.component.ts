@@ -457,6 +457,10 @@ export class SeasonPageComponent implements OnInit {
 
             if (status == "GameOver") {
               this.gamesResults.push(score);
+              this.destroyGame(this.selectedTarget.gamename);
+              jQuery("#seasonmodeContainer").fadeIn("slow", () => {
+                
+              });
               if (this.targetPositions.length < 1) {
                 let result = 0
                 this.gamesResults.forEach(element => {
