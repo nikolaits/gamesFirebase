@@ -559,7 +559,7 @@ export class SeasonPageComponent implements OnInit {
         let object = snapshot.val();
         let result:any[] =[];
         for(let key in object){
-          result.push({score: Math.floor(object[key].score) + " points", duration:(object[key].duration/100 + " seconds")});
+          result.push({score: Math.floor(object[key].score) + " points", duration:(object[key].duration/1000 + " seconds")});
         }
         jQuery("#seasonmodeResult").data("kendoGrid").dataSource.data(result);
       }
