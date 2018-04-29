@@ -71,8 +71,39 @@
   margin-top:10px;
   margin-bottom: 5px;
   /* display: inline; */
+  text-align: center;
   float: none;
 }
 #seasonmodeContainer{
   width:810px;
+}
+
+#seasonmodeContainer{
+  /* position: relative; */
+}
+.gridcanvas {
+  height: 100%;
+  width: 100%;
+  background-image: repeating-linear-gradient(0deg, transparent, transparent 19px, #FF0000 19px, #FF0000 20px), repeating-linear-gradient(-90deg, transparent, transparent 20px, #FF0000 19px, #FF0000 20px);
+  background-size: 20px 20px;
+  position: absolute;
+  opacity: 0.1;
+  top: 0;
+  left: 0;
+  display: block;
+  pointer-events: none;
+  content: " ";
+}
+
+#debug-gridcanvas:target {
+  display: none
+}
+
+.card-body{
+  /* position: absolute; */
+  /* background-color: #106cc8; */
+  margin: auto;
+}
+#container_game canvas{
+  margin:auto !important;
 }

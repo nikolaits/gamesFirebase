@@ -132,7 +132,7 @@ class playGame {
 
 }
 class TargetPosition{
-  constructor(public positionX:number, public positionY:number, public gamename:string){}
+  constructor(public positionY:number, public positionX:number, public gamename:string){}
 }
 /**
  * This class represents the lazy loaded HomeComponent.
@@ -280,17 +280,17 @@ export class SeasonPageComponent implements OnInit {
         console.log(Math.floor(pointer.x / 20));
         console.log(Math.floor(pointer.y / 20));
         console.log(doubleTap);
-        let posX = Math.floor(pointer.x / 20);
-        let posY = Math.floor(pointer.y / 20)
+        let pointerX = Math.floor(pointer.x / 20);
+        let pointerY = Math.floor(pointer.y / 20)
         let maze = gameSeasonMode.state.states.PlayGame.maze;
-        console.log(maze[posY][posX]);
-        if ((doubleTap) && (maze[posY][posX] === 0)&&(!this.isDrawing)) {
+        console.log(maze[pointerY][pointerX]);
+        if ((doubleTap) && (maze[pointerY][pointerX] === 0)&&(!this.isDrawing)) {
           console.log("in if");
           let isPositionFromTargets =false;
           let targetIndex;
           for (let i = 0; i < this.targetPositions.length; i++) {
             console.log("Positions: "+ this.targetPositions[i].positionX+" : "+this.targetPositions[i].positionY)
-            if((this.targetPositions[i].positionX == posX)&&(this.targetPositions[i].positionY == posY)){
+            if((this.targetPositions[i].positionX === pointerY)&&(this.targetPositions[i].positionY === pointerX)){
               isPositionFromTargets = true;
               this.selectedTarget = this.targetPositions[i];
               targetIndex = i;
@@ -307,10 +307,10 @@ export class SeasonPageComponent implements OnInit {
               this.isDrawing= true;
               easystar.setGrid(maze);
               easystar.setAcceptableTiles([0]);
-              easystar.findPath(this.startPosX, this.startPosY, posX, posY, this.drawPath);
+              easystar.findPath(this.startPosX, this.startPosY, pointerX, pointerY, this.drawPath);
               easystar.calculate();
-              this.startPosX = posX;
-              this.startPosY = posY;
+              this.startPosX = pointerX;
+              this.startPosY = pointerY;
             } catch (error) {
               console.log(error);
             }
@@ -378,8 +378,6 @@ export class SeasonPageComponent implements OnInit {
     let tmpYPos = []
     let endposition = (gameSeasonMode.state.states.PlayGame.maze.length)-2;
     let maze= gameSeasonMode.state.states.PlayGame.maze;
-    console.log(maze);
-    
     for (let index = 0; index < number; index++) {
       let psY = Math.floor(Math.random() * endposition) + 2;
       let tmpArrayXs = [];
@@ -389,19 +387,14 @@ export class SeasonPageComponent implements OnInit {
           tmpArrayXs.push(j);
         }
       } 
-      console.log("Position y "+psY);
-      console.log("X array");
-      console.log(tmpArrayXs);
-      const psXindex = Math.floor(Math.random() * tmpArrayXs.length) + 1; 
-      console.log("psXindex "+psXindex);
+   
+      const psXindex = Math.floor(Math.random() * tmpArrayXs.length); 
       let xNumber = tmpArrayXs[psXindex];
-      console.log("xNumber"+ xNumber);
-      console.log("maze position "+maze[psY][xNumber])
-      
-      this.targetPositions.push(new TargetPosition(xNumber, psY, this.games[index].name));
+      this.targetPositions.push(new TargetPosition(psY, xNumber, this.games[index].name));
     }
     console.log("Targen positions");
-    console.log(this.targetPositions);
+    console.log(this.targetPositions[0])
+    console.log(this.targetPositions[1])
   }
   drawTargets(){
     //0xf5f5dc
@@ -409,7 +402,7 @@ export class SeasonPageComponent implements OnInit {
       let playGame = gameSeasonMode.state.states.PlayGame;
       playGame.mazeGraphics.endFill();
       playGame.mazeGraphics.beginFill(0xf5f5dc);
-      playGame.mazeGraphics.drawRect(element.positionY * playGame.tileSize, element.positionX * playGame.tileSize, playGame.tileSize, playGame.tileSize);
+      playGame.mazeGraphics.drawRoundedRect(element.positionY * playGame.tileSize, element.positionX * playGame.tileSize, playGame.tileSize, playGame.tileSize);
       playGame.mazeGraphics.endFill();
     })
     

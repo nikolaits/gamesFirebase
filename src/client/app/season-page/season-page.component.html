@@ -5,8 +5,14 @@
   <!-- <button type="button" (click)="onTap()">add chln</button> -->
   <!-- <button type="button" (click)="onTap()">Create maze</button> -->
   <h2>Double tap on every target(white dot) and complete the games</h2>
-  <div id="seasonmodeContainer"></div>
-  <div  class="canvasStyle" id="container_game"></div>
+  <div id="seasonmodeContainer">
+    <!-- <div id="debug-gridcanvas" class="gridcanvas"></div> -->
+  </div>
+  <div class="card-body">
+    <div class="canvasStyle" id="container_game">
+
+    </div>
+  </div>
 </div>
 <friend-list *ngIf="showFriendList" (close)="closeFriendList()"></friend-list>
 
