@@ -57,7 +57,7 @@ class playGame {
       var posY = 1;
       this.maze[posX][posY] = 0;
       moves.push(posY + posY * this.mazeWidth);
-      gameSeasonMode.time.events.loop(Phaser.Timer.SECOND / 60, () => {
+      gameSeasonMode.time.events.loop(Phaser.Timer.SECOND / 100, () => {
         if (moves.length) {
           var possibleDirections = "";
           if (posX + 2 > 0 && posX + 2 < this.mazeHeight - 1 && this.maze[posX + 2][posY] == 1) {
@@ -195,6 +195,7 @@ export class SeasonPageComponent implements OnInit {
             this.activeGames();
             this.gamesService.getCurrentUser();
             this.onSeasonModeUnlockListener();
+            this.onSeasonModeResult();
           })
           .catch((e) => {
             console.log("Error:");
@@ -251,6 +252,19 @@ export class SeasonPageComponent implements OnInit {
     //       console.log(errsmode);
     //     })
     // }, 3000);
+    jQuery("#seasonmodeResult").kendoGrid({
+        dataSource: {
+          data: [],
+          sort: {
+            field: "score",
+            dir: "desc"
+          },
+          pageSize: 20
+        },
+        scrollable: false,
+        noRecords: true
+      });
+      
   }
 
   activeGames() {
@@ -447,6 +461,8 @@ export class SeasonPageComponent implements OnInit {
   startGame(gamename: string, delay: number, game: Game, friends: any[], challenge: any[]) {
     if (this.ifFirstStart) {
       this.startPlayingTime = Date.now();
+      this.ifFirstStart = false;
+      
     }
     let currentUsername = this.cookieService.get("geitUsername");
     setTimeout(() => {
@@ -473,6 +489,7 @@ export class SeasonPageComponent implements OnInit {
                   .then((r) => {
                     console.log("Result:");
                     alert("Season mode completed");
+                    this.navigationService.goToMainPage();
                   })
                   .catch((errsmode) => {
                     console.log("Error");
@@ -532,6 +549,19 @@ export class SeasonPageComponent implements OnInit {
       }
       else {
         this.navigationService.goToMainPage();
+      }
+    });
+  }
+  onSeasonModeResult() {
+    // let username = this.cookieService.get("geitUsername");
+    firebase.database().ref(`users/${this.userService.user.uid}/seasonmoderesults`).on('value', (snapshot) => {
+      if (snapshot.val()) {
+        let object = snapshot.val();
+        let result:any[] =[];
+        for(let key in object){
+          result.push({score: Math.floor(object[key].score) + " points", duration:(object[key].duration/100 + " seconds")});
+        }
+        jQuery("#seasonmodeResult").data("kendoGrid").dataSource.data(result);
       }
     });
   }

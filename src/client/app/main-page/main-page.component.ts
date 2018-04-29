@@ -122,6 +122,7 @@ export class MainPageComponent implements OnInit {
   public showHover: boolean = false;
   public showFriendList: boolean = false;
   public isUnlockedSeason:boolean = false;
+  public isCarouselShown = true;
   private currentUsername = "";
   private listenerLiveScore: any;
   private gameRatingListener: any;
@@ -267,7 +268,7 @@ export class MainPageComponent implements OnInit {
     //   }, 500);
 
     // }
-
+    this.isCarouselShown=true;
     this.showHover = true;
     if (this.gameRatingListener) {
       this.removeGameRatingListener();
@@ -386,6 +387,7 @@ export class MainPageComponent implements OnInit {
       })
   }
   startGame(gamename: string, delay: number, game: Game, friends: any[], challenge: any[]) {
+    this.isCarouselShown = false;
     setTimeout(() => {
       try {
         let gameArgs: GameArgs = new GameArgs(challenge, friends, game.savedData);
@@ -432,7 +434,10 @@ export class MainPageComponent implements OnInit {
                   if(unlocklevel){
                     this.userService.unlockSeasonmode(unlocklevel)
                     .then((unlockresult)=>{
-                      alert("You have unlocked season mode");
+                      if(!this.isUnlockedSeason){
+                        alert("You have unlocked season mode");
+                      }
+                      
                     })
                     .catch((unlockerror)=>{
                       console.log("Error unlocking season mode");
