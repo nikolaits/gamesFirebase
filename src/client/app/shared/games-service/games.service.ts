@@ -57,6 +57,13 @@ export class GamesService {
       score: score
     })
   }
+  saveSeasonModeResult(score: number, timestamp: string, tmpDuration:number) {
+    
+    return firebase.database().ref(`users/${this.user.uid}/seasonmoderesults/${timestamp}`).update({
+      score: score,
+      duration:tmpDuration
+    })
+  }
   getCasulModeResults(gamename:string): Promise<any> {
     return new Promise((resolve, reject) => {
         firebase.database().ref(`users/${this.user.uid}/casualmoderesults/${gamename}/`).once("value").then(snapshot => {

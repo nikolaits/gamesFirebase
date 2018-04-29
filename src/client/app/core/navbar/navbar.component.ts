@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import {AuthService} from "../../shared/auth-service/auth.service";
 import {NavigationService} from "../../shared/navigation-service/navigation.service"
 import { UserService } from '../../shared/user-service/user.service';
@@ -14,6 +14,21 @@ import * as  firebase from 'firebase';
 })
 export class NavbarComponent {
   public isAdmin:boolean = false;
+  public _isSeasonModeUnlocked:boolean = false;
+
+  @Input() set isSeasonModeUnlocked(value: boolean) {
+
+    this._isSeasonModeUnlocked = value;
+    if(this._isSeasonModeUnlocked){
+      // this.displayData();
+    }
+
+  }
+  get isSeasonModeUnlocked(): boolean {
+
+    return this._isSeasonModeUnlocked;
+
+  }
   constructor(private userService:UserService){
     
   }

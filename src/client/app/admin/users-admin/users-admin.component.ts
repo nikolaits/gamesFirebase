@@ -33,6 +33,7 @@ export class UsersAdminComponent implements OnInit {
   // containerWidth = 0;
   // containerHeight = 0;
   users: UserAdmin[] = [];
+  public isUnlockedSeason:boolean=true;
   // private gameRatingListener: any;
   // private newGame = "";
   // private listenerLiveScore: any;

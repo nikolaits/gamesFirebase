@@ -1,5 +1,5 @@
 <sd-toolbar (challengeSelect)="onChallengeSelected($event)" (open)="openFriendList()" [changeUserDisaplyedData]="changeDisplayedData"></sd-toolbar>
-<sd-navbar></sd-navbar>
+<sd-navbar [isSeasonModeUnlocked]="isUnlockedSeason"></sd-navbar>
 
 <div class="container">
   <!-- <button type="button" (click)="onTap()">add chln</button> -->
@@ -7,7 +7,7 @@
   <h2>Double tap on every target(white dot) and complete the games.</h2>
   <p>Collect maximum points from every game and take your place in the 'Best players' list list.</p>
   <div id="seasonmodeContainer">
-    <div id="debug-gridcanvas" class="gridcanvas"></div>
+    <!-- <div id="debug-gridcanvas" class="gridcanvas"></div> -->
   </div>
   <div class="card-body">
     <div class="canvasStyle" id="container_game">

@@ -23,7 +23,7 @@ declare let window: any;
 declare let jQuery: any;
 declare let EasyStar: any
 let gameSeasonMode: any = null;
-let callbackFuncton:any = null;
+let callbackFuncton: any = null;
 declare let Phaser: any
 // declare let game: any;
 // declare let maze: any;
@@ -39,7 +39,7 @@ class playGame {
   public mazeHeight: number = 31;
   public tileSize: number = 20;
   public mazeGraphics: any;
-  public isFirstLoad:boolean = true;
+  public isFirstLoad: boolean = true;
   constructor() {
     // this.game=game;
   }
@@ -57,7 +57,7 @@ class playGame {
       var posY = 1;
       this.maze[posX][posY] = 0;
       moves.push(posY + posY * this.mazeWidth);
-      gameSeasonMode.time.events.loop(Phaser.Timer.SECOND / 60,  () => {
+      gameSeasonMode.time.events.loop(Phaser.Timer.SECOND / 60, () => {
         if (moves.length) {
           var possibleDirections = "";
           if (posX + 2 > 0 && posX + 2 < this.mazeHeight - 1 && this.maze[posX + 2][posY] == 1) {
@@ -105,7 +105,7 @@ class playGame {
           }
           this.drawMaze(posX, posY);
         }
-        else if(this.isFirstLoad){
+        else if (this.isFirstLoad) {
           this.isFirstLoad = false;
           callbackFuncton("mazeLoaded");
         }
@@ -129,8 +129,8 @@ class playGame {
   }
 
 }
-class TargetPosition{
-  constructor(public positionY:number, public positionX:number, public gamename:string){}
+class TargetPosition {
+  constructor(public positionY: number, public positionX: number, public gamename: string) { }
 }
 /**
  * This class represents the lazy loaded HomeComponent.
@@ -153,12 +153,16 @@ export class SeasonPageComponent implements OnInit {
   public changeDisplayedData: boolean = false;
   public showHover: boolean = false;
   public showFriendList: boolean = false;
+  public isUnlockedSeason: boolean = true;
   private isDrawing = true;
   private startPosX: number = 1;
   private startPosY: number = 1;
-  private targetPositions:TargetPosition[];
-  private selectedTarget:TargetPosition;
-  private selectedTargetIndex:number;
+  private targetPositions: TargetPosition[];
+  private selectedTarget: TargetPosition;
+  private selectedTargetIndex: number;
+  private startPlayingTime: any;
+  private ifFirstStart: boolean = true;
+  private gamesResults: number[];
   // private currentUsername = "";
   // private listenerLiveScore: any;
   // private gameRatingListener: any;
@@ -172,7 +176,7 @@ export class SeasonPageComponent implements OnInit {
   }
 
   ngOnInit() {
-    
+    this.gamesResults = []
   }
   ngAfterViewInit() {
 
@@ -190,6 +194,7 @@ export class SeasonPageComponent implements OnInit {
           .then((r) => {
             this.activeGames();
             this.gamesService.getCurrentUser();
+            this.onSeasonModeUnlockListener();
           })
           .catch((e) => {
             console.log("Error:");
@@ -203,26 +208,49 @@ export class SeasonPageComponent implements OnInit {
         console.log("no user found");
         console.log(e);
       });
-      callbackFuncton = (result:any)=>{
-        if(result === "mazeLoaded"){
-          this.generateRandPlaces();
-          // this.drawTargets();
-          this.isDrawing = false;
-        }
-        else if(result === "pathDraw"){
-          jQuery("#seasonmodeContainer").fadeOut( "slow", () => {
-            // Animation complete.
-            this.showHover= true;
-            this.games.forEach((elem)=>{
-              if(elem.name === this.selectedTarget.gamename){
-                this.preloadInitGame(this.selectedTarget.gamename, elem, undefined);
-              }
-            })
-          });
-          
-        }
+    callbackFuncton = (result: any) => {
+      if (result === "mazeLoaded") {
+        this.generateRandPlaces();
+        // this.drawTargets();
         this.isDrawing = false;
       }
+      else if (result === "pathDraw") {
+        jQuery("#seasonmodeContainer").fadeOut("slow", () => {
+          // Animation complete.
+          this.showHover = true;
+          this.games.forEach((elem) => {
+            if (elem.name === this.selectedTarget.gamename) {
+              this.preloadInitGame(this.selectedTarget.gamename, elem, undefined);
+            }
+          })
+        });
+
+      }
+      this.isDrawing = false;
+    }
+    // this.startPlayingTime = Date.now();
+    // this.gamesResults.push(5);
+
+    // this.gamesResults.push(4);
+    // this.gamesResults.push(5);
+    // setTimeout(() => {
+    //   let result = 0
+    //   this.gamesResults.forEach(element => {
+    //     result = result + element;
+    //   });
+    //   let endTime = Date.now();
+    //   let timestamptmp = "" + endTime;
+    //   let duration = endTime - this.startPlayingTime;
+    //   this.gamesService.saveSeasonModeResult(result, timestamptmp, duration)
+    //     .then((r) => {
+    //       console.log("Result:");
+    //       alert("Season mode completed");
+    //     })
+    //     .catch((errsmode) => {
+    //       console.log("Error");
+    //       console.log(errsmode);
+    //     })
+    // }, 3000);
   }
 
   activeGames() {
@@ -265,22 +293,22 @@ export class SeasonPageComponent implements OnInit {
         let pointerX = Math.floor(pointer.x / 20);
         let pointerY = Math.floor(pointer.y / 20)
         let maze = gameSeasonMode.state.states.PlayGame.maze;
-        if ((doubleTap) && (maze[pointerY][pointerX] === 0)&&(!this.isDrawing)) {
-          let isPositionFromTargets =false;
+        if ((doubleTap) && (maze[pointerY][pointerX] === 0) && (!this.isDrawing)) {
+          let isPositionFromTargets = false;
           let targetIndex;
           for (let i = 0; i < this.targetPositions.length; i++) {
-            if((this.targetPositions[i].positionX === pointerX)&&(this.targetPositions[i].positionY === pointerY)){
+            if ((this.targetPositions[i].positionX === pointerX) && (this.targetPositions[i].positionY === pointerY)) {
               isPositionFromTargets = true;
               this.selectedTarget = this.targetPositions[i];
               targetIndex = i;
             }
-            
+
           }
-          if(isPositionFromTargets){
+          if (isPositionFromTargets) {
             this.targetPositions.splice(targetIndex, 1);
             var easystar = new EasyStar.js();
             try {
-              this.isDrawing= true;
+              this.isDrawing = true;
               easystar.setGrid(maze);
               easystar.setAcceptableTiles([0]);
               easystar.findPath(this.startPosX, this.startPosY, pointerX, pointerY, this.drawPath);
@@ -291,7 +319,7 @@ export class SeasonPageComponent implements OnInit {
               console.log(error);
             }
           }
-          
+
 
         }
       })
@@ -332,7 +360,7 @@ export class SeasonPageComponent implements OnInit {
       0xffffff,
       0xffff00
     ]
-    var color = colorsPalette[Math.floor(Math.random()*colorsPalette.length)];
+    var color = colorsPalette[Math.floor(Math.random() * colorsPalette.length)];
     let finishDrawing = false;
     gameSeasonMode.time.events.loop(Phaser.Timer.SECOND / 25, () => {
       if (i < path.length) {
@@ -341,19 +369,19 @@ export class SeasonPageComponent implements OnInit {
         i++;
         playGame.mazeGraphics.endFill();
       }
-      else if(!finishDrawing){
+      else if (!finishDrawing) {
         finishDrawing = true;
         callbackFuncton("pathDraw");
-        
+
       }
     })
   }
-  generateRandPlaces(){
+  generateRandPlaces() {
     let number = this.games.length;
-    this.targetPositions=[];
+    this.targetPositions = [];
     let tmpYPos = []
-    let endposition = (gameSeasonMode.state.states.PlayGame.maze.length)-2;
-    let maze= gameSeasonMode.state.states.PlayGame.maze;
+    let endposition = (gameSeasonMode.state.states.PlayGame.maze.length) - 2;
+    let maze = gameSeasonMode.state.states.PlayGame.maze;
     console.log("maze");
     console.log(maze);
     console.log("generateRandPlaces")
@@ -364,12 +392,12 @@ export class SeasonPageComponent implements OnInit {
       console.log("Rand y:");
       console.log(psY);
       for (let j = 0; j < maze[psY].length; j++) {
-        if(maze[psY][j] === 0){
+        if (maze[psY][j] === 0) {
           tmpArrayXs.push(j);
         }
-      } 
+      }
       console.log("Rand x index");
-      const psXindex = Math.floor(Math.random() * tmpArrayXs.length); 
+      const psXindex = Math.floor(Math.random() * tmpArrayXs.length);
       let xNumber = tmpArrayXs[psXindex];
       this.targetPositions.push(new TargetPosition(psY, xNumber, this.games[index].name));
       console.log(psXindex);
@@ -385,38 +413,41 @@ export class SeasonPageComponent implements OnInit {
     // console.log(this.targetPositions[0])
     // console.log(this.targetPositions[1])
   }
-  drawTargets(){
+  drawTargets() {
     //0xf5f5dc
-    this.targetPositions.forEach((element:TargetPosition)=>{
+    this.targetPositions.forEach((element: TargetPosition) => {
       let playGame = gameSeasonMode.state.states.PlayGame;
       playGame.mazeGraphics.endFill();
       playGame.mazeGraphics.beginFill(0xf5f5dc);
       playGame.mazeGraphics.drawRoundedRect(element.positionX * playGame.tileSize, element.positionY * playGame.tileSize, playGame.tileSize, playGame.tileSize);
       playGame.mazeGraphics.endFill();
     })
-    
+
   }
- 
+
   destroyGame(gamename: string) {
     window['destroy_' + gamename]();
   }
-  
+
   preloadInitGame(gamename: string, game: Game, challenges: any) {
 
-        this.checkifjscssfileisloaded(gamename + '.js', "js")
-          .then((args) => {
-            if (args === "exist") {
-              this.startGame(gamename, 1, game, undefined, challenges);
-            }
-          })
-          .catch((err) => {
-            console.log("Error removejscssfile")
-            console.log(err);
-            this.addJSFile("assets/gamesJavaScript/" + gamename + "/src/" + gamename + ".js");
-            this.startGame(gamename, 1000, game, undefined, challenges);
-          })
+    this.checkifjscssfileisloaded(gamename + '.js', "js")
+      .then((args) => {
+        if (args === "exist") {
+          this.startGame(gamename, 1, game, undefined, challenges);
+        }
+      })
+      .catch((err) => {
+        console.log("Error removejscssfile")
+        console.log(err);
+        this.addJSFile("assets/gamesJavaScript/" + gamename + "/src/" + gamename + ".js");
+        this.startGame(gamename, 1000, game, undefined, challenges);
+      })
   }
   startGame(gamename: string, delay: number, game: Game, friends: any[], challenge: any[]) {
+    if (this.ifFirstStart) {
+      this.startPlayingTime = Date.now();
+    }
     let currentUsername = this.cookieService.get("geitUsername");
     setTimeout(() => {
       try {
@@ -424,31 +455,28 @@ export class SeasonPageComponent implements OnInit {
         window['start_' + gamename](game.windowWidth, game.windowHeight, "container_game", "assets/gamesJavaScript/" + gamename + "/", JSON.stringify(gameArgs), "seasonMode",
           (status: string, score: number, game_xp: number, game_id: number, gameArgs: any, unlocklevel: boolean) => {
 
-            if (status === "Close") {
-              this.destroyGame(this.selectedGame);
-              this.selectedGame = "";
-              // this.removeLiveScoreEventListener();
-            } else if (status === "SaveGame") {
-              this.cookieService.set("FlappyPlaneSaveGame", JSON.stringify(gameArgs));
-              this.gamesService.setupusersaveddata(this.selectedGame, game.savedData, gameArgs)
-                .then((r) => {
-                  //Cookies.get("FlappyPlaneSaveGame")
-                  // this.selectedGame;
-                })
-                .catch((e) => {
-                  console.log("Error (setupusersaveddata)");
-                  console.log(e);
-                })
-            } else if (status == "GameOver") {
-              this.gamesService.saveCasualModeResult(this.selectedTarget.gamename, score, "" + Date.now())
-                .then(() => {
-                })
-                .catch((e) => {
-                  console.log("Error saving casula mode result");
-                  console.log(e)
-                })
-            } 
-            
+            if (status == "GameOver") {
+              this.gamesResults.push(score);
+              if (this.targetPositions.length < 1) {
+                let result = 0
+                this.gamesResults.forEach(element => {
+                  result = result + element;
+                });
+                let endTime = Date.now();
+                let timestamptmp = "" + endTime;
+                let duration = endTime - this.startPlayingTime;
+                this.gamesService.saveSeasonModeResult(result, timestamptmp, duration)
+                  .then((r) => {
+                    console.log("Result:");
+                    alert("Season mode completed");
+                  })
+                  .catch((errsmode) => {
+                    console.log("Error");
+                    console.log(errsmode);
+                  })
+              }
+            }
+
           });
         // this.detectGamesLiveScore(gamename);
         this.showHover = false;
@@ -486,6 +514,22 @@ export class SeasonPageComponent implements OnInit {
       }
     })
 
+  }
+  onSeasonModeUnlockListener() {
+    // let username = this.cookieService.get("geitUsername");
+    firebase.database().ref(`users/${this.userService.user.uid}/`).on('value', (snapshot) => {
+      if ((snapshot.val()) && (snapshot.val().isSeasonModeUnlocked)) {
+        if (snapshot.val().isSeasonModeUnlocked === true) {
+          this.isUnlockedSeason = true;
+        }
+        else {
+          this.navigationService.goToMainPage();
+        }
+      }
+      else {
+        this.navigationService.goToMainPage();
+      }
+    });
   }
   // // TO DO update the array
   // detectGamesRatingChange(gamename: string) {

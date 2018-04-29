@@ -179,7 +179,8 @@ export class UserService {
     return firebase.database().ref(`users/${userId}`).set({
       username: name,
       profile_picture : imageUrl,
-      isAdmin:false
+      isAdmin:false,
+      isSeasonModeUnlocked:false 
     });
   }
   addFriendInTheList(frienuid:string, username:string, accepted:boolean, pending:boolean, uid:string) {
@@ -198,6 +199,11 @@ export class UserService {
         accepted:accepted
       
     });
+  }
+  unlockSeasonmode(value: boolean) {
+    return firebase.database().ref(`users/${this.user.uid}/}`).update({
+      isSeasonModeUnlocked: value
+    })
   }
   deleteFriendInTheList(frienuid:string,  uid:string) {
 

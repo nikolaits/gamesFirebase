@@ -121,6 +121,7 @@ export class MainPageComponent implements OnInit {
   public changeDisplayedData: boolean = false;
   public showHover: boolean = false;
   public showFriendList: boolean = false;
+  public isUnlockedSeason:boolean = false;
   private currentUsername = "";
   private listenerLiveScore: any;
   private gameRatingListener: any;
@@ -170,6 +171,7 @@ export class MainPageComponent implements OnInit {
             console.log(r);
             this.activeGames();
             this.gamesService.getCurrentUser();
+            this.onSeasonModeUnlockListener();
           })
           .catch((e) => {
             console.log("Error:");
@@ -426,7 +428,17 @@ export class MainPageComponent implements OnInit {
             } else if (status == "GameOver") {
               this.gamesService.saveCasualModeResult(this.selectedGame, score, "" + Date.now())
                 .then(() => {
-                  console.log("result saved")
+                  console.log("result saved");
+                  if(unlocklevel){
+                    this.userService.unlockSeasonmode(unlocklevel)
+                    .then((unlockresult)=>{
+                      alert("You have unlocked season mode");
+                    })
+                    .catch((unlockerror)=>{
+                      console.log("Error unlocking season mode");
+                      console.log(unlockerror)
+                    })
+                  }
                 })
                 .catch((e) => {
                   console.log("Error saving casula mode result");
@@ -577,10 +589,12 @@ export class MainPageComponent implements OnInit {
     // this.listenerLiveScore.off();
   }
   showLiveRezultTable(result: any) {
+    console.log(this.selectedGame);
     try {
       jQuery("#livescore_" + this.selectedGame).data("kendoGrid").dataSource.data(result);
     } catch (error) {
-      
+        console.log("livescore error");
+        console.log(error);
     }
     
     
@@ -598,42 +612,14 @@ export class MainPageComponent implements OnInit {
     console.log(gamename);
     this.onVisibilityChange(gamename);
   }
-  // onSubmit(email: string, password: string) {
-  //   this.authService.signin(email, password)
-  //     .then((r) => {
-  //       console.log("Login result");
-  //       console.log(r);
-  //       console.log("emailVerified" + r.emailVerified);
-  //       if (!r.emailVerified) {
-  //         alert("Please, visit your mail box and verify your email!");
-  //       }
-  //       else {
-  //         console.log("login");
-  //       }
-  //     })
-  //     .catch((e) => {
-  //       console.log("Login Error");
-  //       console.log(e);
-  //       alert(`Login Error ${e}`);
-  //     })
-  // }
-  // googleSignIn() {
-  //   console.log("googleSignIn");
-  //   this.authService.signInGoogle()
-  //     .then((result) => {
-  //       var token = result.credential.accessToken;
-  //       // The signed-in user info.
-  //       var user = result.user;
-  //       console.log("Token");
-  //       console.log(token);
-  //       console.log("User");
-  //       console.log(user);
-  //     })
-  //     .catch((e) => {
-  //       console.log("Login Error");
-  //       console.trace(e);
-
-  //       alert(`Login Error ${e}`);
-  //     })
-  // }
+  onSeasonModeUnlockListener(){
+    // let username = this.cookieService.get("geitUsername");
+    firebase.database().ref(`users/${this.userService.user.uid}/`).on('value', (snapshot) => {
+      if((snapshot.val())&&(snapshot.val().isSeasonModeUnlocked)){
+        if(snapshot.val().isSeasonModeUnlocked === true){
+          this.isUnlockedSeason = true;
+        }
+      }
+    });
+  }
 }

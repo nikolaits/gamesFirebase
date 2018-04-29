@@ -285,6 +285,7 @@ export class GamesAdminComponent implements OnInit {
   private selectedGameName: string = ""
   public changeDisplayedData: boolean = false;
   private selectedGame:Game;
+  public isUnlockedSeason:boolean = true;
   @ViewChild('wrapper') wrapper: any;
   firstLoad = true;
   /**
