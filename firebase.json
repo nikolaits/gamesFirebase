@@ -8,8 +8,15 @@
       "firebase.json",
       "**/.*",
       "**/node_modules/**"
-    ]
-  },
+    ],
+    "headers": [ {
+      "source" : "**/*.@(eot|otf|ttf|ttc|jpg|jpeg|gif|fnt|png|woff|mp3|wav|font.css)",
+      "headers" : [ {
+        "key" : "Access-Control-Allow-Origin",
+        "value" : "*"
+    } ]
+    } ]
+},
   "storage": {
     "rules": "storage.rules"
   }
