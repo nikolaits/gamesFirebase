@@ -1,0 +1,109 @@
+.star {
+  font-size: 1.5rem;
+  color: #b0c4de;
+}
+.filled {
+  color: #1e90ff;
+}
+.bad {
+  color: #deb0b0;
+}
+.filled.bad {
+  color: #ff1e1e;
+}
+.buttons{
+  float: left;
+}
+.buttons button{
+  margin:2px 5px;
+}
+.games{
+  clear: both;
+}
+.active{
+  background-color: whitesmoke;
+  color: #106cc8;
+}
+.canvasStyle {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  display: block !important;
+}
+
+.loader {
+  border: 16px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 16px solid #3498db;
+  width: 120px;
+  height: 120px;
+  margin:auto;
+  -webkit-animation: spin 2s linear infinite; /* Safari */
+  animation: spin 2s linear infinite;
+}
+
+/* Safari */
+@-webkit-keyframes spin {
+  0% { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+.hoverContainer{
+  position: fixed;
+  width:100%;
+  height:100%;
+  left: 0;
+  top: 0;
+  background-color: rgba(0, 0, 0, 0.5)
+}
+.container{
+  margin: auto;
+}
+#seasonmodeContainer{
+  margin: auto;
+}
+#seasonmodeContainer div li, ul, h2 canvas {
+  margin-top:10px;
+  margin-bottom: 5px;
+  /* display: inline; */
+  text-align: center;
+  float: none;
+}
+#seasonmodeContainer{
+  width:810px;
+}
+
+#seasonmodeContainer{
+  position: relative;
+}
+.gridcanvas {
+  height: 100%;
+  width: 100%;
+  background-image: repeating-linear-gradient(0deg, transparent, transparent 19px, #FF0000 19px, #FF0000 20px), repeating-linear-gradient(-90deg, transparent, transparent 20px, #FF0000 19px, #FF0000 20px);
+  background-size: 20px 20px;
+  position: absolute;
+  opacity: 0.1;
+  top: 0;
+  left: 0;
+  display: block;
+  pointer-events: none;
+  content: " ";
+}
+
+#debug-gridcanvas:target {
+  display: none
+}
+
+.card-body{
+  /* position: absolute; */
+  /* background-color: #106cc8; */
+  margin: auto;
+}
+#container_game canvas{
+  margin:auto !important;
+}

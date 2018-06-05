@@ -1,0 +1,28 @@
+<sd-toolbar (challengeSelect)="onChallengeSelected($event)" (open)="openFriendList()" [changeUserDisaplyedData]="changeDisplayedData"></sd-toolbar>
+<sd-navbar [isSeasonModeUnlocked]="isUnlockedSeason"></sd-navbar>
+
+<div class="container">
+  <!-- <button type="button" (click)="onTap()">add chln</button> -->
+  <!-- <button type="button" (click)="onTap()">Create maze</button> -->
+  <h2> Casual mode Double tap on every target(white dot) and complete the games.</h2>
+  <p>Collect maximum points from every game and take your place in the 'Best players' list list.</p>
+  <div id="seasonmodeContainer">
+    <!-- <div id="debug-gridcanvas" class="gridcanvas"></div> -->
+  </div>
+  <div class="card-body">
+    <div class="canvasStyle" id="container_game">
+
+    </div>
+  </div>
+  <br>
+  <hr>
+  <p>Season Scores</p>
+  <div id="seasonmodeResult"></div>
+  <br>
+  <hr>
+</div>
+<friend-list *ngIf="showFriendList" (close)="closeFriendList()"></friend-list>
+
+<div *ngIf="showHover" class="hoverContainer">
+  <div class="loader"></div>
+</div>
