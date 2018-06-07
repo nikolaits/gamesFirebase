@@ -9,11 +9,21 @@
     <!-- <div id="debug-gridcanvas" class="gridcanvas"></div> -->
   </div>
   <div class="card-body">
-    <div id="casualmodeResult"></div>
+    <div>
+      <div>
+        Search By Username/Gamename:
+        <input class=k-textbox type=text id="txtSearchString" placeholder="enter search text..." />
+        <button id="btnSearch">Search</button>
+      </div>
+      <br>
+      <br>
+      <div id="casualmodeResult"></div>
+    </div>
+
   </div>
   <br>
   <hr>
-  
+
 </div>
 <friend-list *ngIf="showFriendList" (close)="closeFriendList()"></friend-list>
 

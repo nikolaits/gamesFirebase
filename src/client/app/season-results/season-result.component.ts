@@ -53,6 +53,9 @@ export class SeasonResultComponent implements OnInit {
             console.log("username");
             console.log(r);
             this.username = r;
+            jQuery("#btnSearch").kendoButton({
+              click:this.onSearch
+            })
             jQuery("#seasonmodeResult").kendoGrid({
               dataSource: {
                 data: [],
@@ -60,10 +63,35 @@ export class SeasonResultComponent implements OnInit {
                   field: "score",
                   dir: "desc"
                 },
-                pageSize: 20
+                pageSize: 100
+              },
+              sortable: {
+                mode: "multiple",
+                allowUnsort: true,
+                showIndexes: true
+              },
+              pageable: {
+                buttonCount: 5
               },
               scrollable: false,
-              noRecords: true
+              noRecords: true,
+              columns: [
+                {
+                    field: "username",
+                    title: "Username",
+                    width: 300
+                },
+                {
+                  field: "score",
+                  title: "Score (points)",
+                  width: 300
+                },
+                {
+                    field: "duration",
+                    title: "Duration (seconds)",
+                    format: "{0:d}"
+                }
+            ]
             });
             this.onSeasonModeResult();
           })
@@ -93,6 +121,24 @@ export class SeasonResultComponent implements OnInit {
   closeFriendList() {
     this.showFriendList = false;
   }
+  onSearch()
+  {
+    var q = jQuery("#txtSearchString").val();
+        var grid = jQuery("#seasonmodeResult").data("kendoGrid");
+        grid.dataSource.query({
+          page:1,
+          pageSize:20,
+          filter:{
+            logic:"or",
+            filters:[
+              {field:"username", operator:"contains",value:q},
+              // {field:"gamename", operator:"contains",value:q},
+              // {field:"score", operator:"contains",value:q},
+              // {field:"date", operator:"contains",value:q}
+              ]
+          }
+        });
+  }
   onSeasonModeResult() {
     // let username = this.cookieService.get("geitUsername");
     firebase.database().ref(`users/`).on('value', (snapshot) => {
@@ -105,11 +151,11 @@ export class SeasonResultComponent implements OnInit {
           
           for(let innerKey in object[key].seasonmoderesults){
             if(object[key].username === this.username){
-              userResults.push({username: object[key].username,score: Math.floor(object[key].seasonmoderesults[innerKey].score) + " points", duration:(object[key].seasonmoderesults[innerKey].duration/1000 + " seconds")});
+              userResults.push({username: object[key].username,score: Math.floor(object[key].seasonmoderesults[innerKey].score), duration:(object[key].seasonmoderesults[innerKey].duration/1000)});
           
             }
             else{
-             otherUserResults.push({username: object[key].username,score: Math.floor(object[key].seasonmoderesults[innerKey].score) + " points", duration:(object[key].seasonmoderesults[innerKey].duration/1000 + " seconds")});
+             otherUserResults.push({username: object[key].username,score: Math.floor(object[key].seasonmoderesults[innerKey].score), duration:(object[key].seasonmoderesults[innerKey].duration/1000)});
             }
           }
         }

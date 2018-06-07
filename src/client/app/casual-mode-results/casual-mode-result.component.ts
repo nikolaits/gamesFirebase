@@ -56,6 +56,9 @@ export class CasualModeResultComponent implements OnInit {
             console.log("username");
             console.log(r);
             this.username = r;
+            jQuery("#btnSearch").kendoButton({
+              click:this.onSearch
+            })
             jQuery("#casualmodeResult").kendoGrid({
               dataSource: {
                 data: [],
@@ -65,8 +68,38 @@ export class CasualModeResultComponent implements OnInit {
                 },
                 pageSize: 100
               },
+              sortable: {
+                mode: "multiple",
+                allowUnsort: true,
+                showIndexes: true
+              },
+              pageable: {
+                buttonCount: 5
+              },
               scrollable: false,
-              noRecords: true
+              noRecords: true,
+              columns: [
+                {
+                    field: "username",
+                    title: "Username",
+                    width: 300
+                },
+                {
+                    field: "gamename",
+                    title: "Gamename",
+                    width: 300
+                },
+                {
+                  field: "score",
+                  title: "Score (points)",
+                  width: 300
+                },
+                {
+                    field: "date",
+                    title: "Date",
+                    format: "{0:d}"
+                }
+            ]
             });
             this.onCasualModeResult();
           })
@@ -84,6 +117,24 @@ export class CasualModeResultComponent implements OnInit {
       });
 
 
+  }
+  onSearch()
+  {
+    var q = jQuery("#txtSearchString").val();
+        var grid = jQuery("#casualmodeResult").data("kendoGrid");
+        grid.dataSource.query({
+          page:1,
+          pageSize:20,
+          filter:{
+            logic:"or",
+            filters:[
+              {field:"username", operator:"contains",value:q},
+              {field:"gamename", operator:"contains",value:q},
+              // {field:"score", operator:"contains",value:q},
+              // {field:"date", operator:"contains",value:q}
+              ]
+          }
+        });
   }
   onChallengeSelected(gamename: string) {
     this.cookieService.set("challengeSelectedEvent", gamename);
@@ -109,11 +160,11 @@ export class CasualModeResultComponent implements OnInit {
           for (let innerKey in object[key].casualmoderesults) {
             for (let gameKey in object[key].casualmoderesults[innerKey]) {
               if (object[key].username === this.username) {
-                userResults.push({ username: object[key].username, gamename: innerKey, score: Math.floor(object[key].casualmoderesults[innerKey][gameKey].score) + " points", date: this.formatDate(new Date(Number(gameKey))) });
+                userResults.push({ username: object[key].username, gamename: innerKey, score: Math.floor(object[key].casualmoderesults[innerKey][gameKey].score), date: this.formatDate(new Date(Number(gameKey))) });
 
               }
               else {
-                userResults.push({ username: object[key].username, gamename: innerKey, score: Math.floor(object[key].casualmoderesults[innerKey][gameKey].score) + " points", date: this.formatDate(new Date(Number(gameKey))) });
+                userResults.push({ username: object[key].username, gamename: innerKey, score: Math.floor(object[key].casualmoderesults[innerKey][gameKey].score), date: this.formatDate(new Date(Number(gameKey))) });
               }
             }
           }
@@ -125,23 +176,23 @@ export class CasualModeResultComponent implements OnInit {
       }
     });
   }
-  formatDate(date:Date) {
+  formatDate(date: Date) {
     var monthNames = [
       "January", "February", "March",
       "April", "May", "June", "July",
       "August", "September", "October",
       "November", "December"
     ];
-  
-    
+
+
     var day = date.getDate();
     var monthIndex = date.getMonth();
     var year = date.getFullYear();
     var hour = date.getHours();
     var minutes = date.getMinutes();
     var seconds = date.getSeconds();
-  
+
     return day + ' ' + monthNames[monthIndex] + ' ' + year + ' '
-    + hour + ':'+minutes + ':' + seconds;
+      + hour + ':' + minutes + ':' + seconds;
   }
 }
