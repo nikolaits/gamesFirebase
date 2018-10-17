@@ -1,4 +1,4 @@
-<h1>Games</h1>
+<h1>Ge.I.T Games</h1>
 <div class="more" (click)="isCollapsed = !isCollapsed" [attr.aria-expanded]="!isCollapsed" aria-controls="collapseExample"></div>
 <div class="friends otto" (click)="openFriendLis()"></div>
 <ng-template class="bottom " #popContent>
@@ -20,7 +20,7 @@
 <h1 class="username">Hi, {{username}}</h1>
 <div id="collapseExample" [ngbCollapse]="isCollapsed">
     <div class="card">
-        <div class="card-body">
+        <div style="z-index: 10000;" class="card-body">
             <ul>
                 <li>
                     <a [routerLinkActive]="['router-link-active']" [routerLinkActiveOptions]="{exact:true}" class="buttons" (click)="updateInfo()">UPDATE</a>

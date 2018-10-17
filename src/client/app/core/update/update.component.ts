@@ -178,6 +178,14 @@ export class UpdateComponent {
   fileChangeListener($event: any) {
     let image: any = new Image();
     this.file = $event.target.files[0];
+    let fileTypes = ['jpg', 'jpeg'];
+    // alert(this.file.name)
+    let extension = this.file.name.split('.').pop().toLowerCase();
+    if (fileTypes.indexOf(extension) == -1) {
+      alert("Only JPEG images are supported");
+      this.closeCropper();
+      return;
+    }
     let myReader: FileReader = new FileReader();
     try {
       myReader.onloadend = (loadEvent: any) => {
