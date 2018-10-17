@@ -9,14 +9,24 @@
       "**/.*",
       "**/node_modules/**"
     ],
-    "headers": [ {
-      "source" : "**/*.@(eot|otf|ttf|ttc|jpg|jpeg|gif|fnt|png|woff|mp3|wav|font.css)",
-      "headers" : [ {
-        "key" : "Access-Control-Allow-Origin",
-        "value" : "*"
-    } ]
-    } ]
-},
+    "headers": [
+      {
+        "source": "**/*.@(eot|otf|ttf|ttc|jpg|jpeg|gif|fnt|png|woff|mp3|wav|font.css)",
+        "headers": [
+          {
+            "key": "Access-Control-Allow-Origin",
+            "value": "*"
+          }
+        ]
+      }
+    ],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ]
+  },
   "storage": {
     "rules": "storage.rules"
   }
