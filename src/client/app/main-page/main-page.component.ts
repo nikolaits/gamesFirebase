@@ -143,6 +143,7 @@ export class MainPageComponent implements OnInit {
     config.interval = 10000;
     config.wrap = true;
     config.keyboard = false;
+    
   }
   /**
    * Get the names OnInit

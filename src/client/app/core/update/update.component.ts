@@ -1,4 +1,4 @@
-import { Component, ViewChild, Output, EventEmitter } from '@angular/core';
+import { Component, ViewChild, Output, EventEmitter, isDevMode, enableProdMode } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { UserService } from '../../shared/user-service/user.service';
 import { UserUpdate } from "../../types/user_update.type"
@@ -8,9 +8,11 @@ import { UserInitInfo } from '../../types/user_init_info.type';
 import { AuthService } from '../../shared/auth-service/auth.service';
 import * as firebase from "firebase";
 import { ImageCropperComponent, CropperSettings } from "ngx-img-cropper";
+import { prod } from '../globals';
 /**
  * This class represents the toolbar component.
  */
+declare var window:any;
 @Component({
   moduleId: module.id,
   selector: 'update-module',
@@ -31,12 +33,14 @@ export class UpdateComponent {
   progress:number;
   isProgressVisible:boolean = false;
   cropperShown: boolean = false;
+  showTheCropper:boolean = true;
   cropperSettings: CropperSettings;
   isReadyForSubmit: boolean = true;
   @ViewChild('cropper', undefined)
   cropper: ImageCropperComponent;
   @Output() change: EventEmitter<any> = new EventEmitter<any>();
   constructor(public activeModal: NgbActiveModal, private userService: UserService, private authService: AuthService) {
+
     this.cropperSettings = new CropperSettings();
     this.cropperSettings.width = 200;
     this.cropperSettings.height = 200;
@@ -176,41 +180,104 @@ export class UpdateComponent {
     }
   }
   fileChangeListener($event: any) {
-    let image: any = new Image();
     this.file = $event.target.files[0];
+
     let fileTypes = ['jpg', 'jpeg'];
-    // alert(this.file.name)
     let extension = this.file.name.split('.').pop().toLowerCase();
     if (fileTypes.indexOf(extension) == -1) {
       alert("Only JPEG images are supported");
       this.closeCropper();
       return;
     }
+    let that = this;
+    that.data = {}
+    that.cropperShown = true;
+    that.isReadyForSubmit = false;
+    // that.data = {}
     let myReader: FileReader = new FileReader();
+    // console.log("file reader created");
+
+    myReader.onerror = (e) => {
+      console.log("myReader Error");
+
+      console.log(e);
+      console.log("Error");
+      console.log(myReader.error);
+    }
+    myReader.onloadend = (loadEvent: any) => {
+      let image = new Image();
+
+      image.onload = () => {
+        if (!prod) {
+          console.log("in dev mode");
+
+          that.cropper.setImage(image);
+        }
+        else {
+          console.log("in production mode ")
+          this.showTheCropper = false;
+          this.ResizeImage($event)
+        }
+
+      }
+      image.src = myReader.result.toString();
+    };
     try {
-      myReader.onloadend = (loadEvent: any) => {
-        this.cropperShown = true;
-        this.isReadyForSubmit = false;
-        setTimeout(() => {
-          image.src = loadEvent.target.result;
-          this.data = {}
-          this.cropper.setImage(image);
-          console.log("File:")
-          console.log(this.data.image);
-        }, 1000);
-
-
-      };
-
       myReader.readAsDataURL(this.file);
 
-
     } catch (error) {
-      console.log("Error:");
-      console.log(error);
     }
 
   }
+  public ResizeImage(event:any) {
+    if (window.File && window.FileReader && window.FileList && window.Blob) {
+        // var filesToUploads = document.getElementById('imageFile').files;
+        var file = event.target.files[0];
+        if (file) {
+
+            var reader = new FileReader();
+            // Set the image once loaded into file reader
+            reader.onload = (e:any)=> {
+
+                var img = document.createElement("img");
+                img.src = e.target.result;
+
+                var canvas = document.createElement("canvas");
+                var ctx = canvas.getContext("2d");
+                ctx.drawImage(img, 0, 0);
+
+                var MAX_WIDTH = 400;
+                var MAX_HEIGHT = 400;
+                var width = img.width;
+                var height = img.height;
+
+                if (width > height) {
+                    if (width > MAX_WIDTH) {
+                        height *= MAX_WIDTH / width;
+                        width = MAX_WIDTH;
+                    }
+                } else {
+                    if (height > MAX_HEIGHT) {
+                        width *= MAX_HEIGHT / height;
+                        height = MAX_HEIGHT;
+                    }
+                }
+                canvas.width = width;
+                canvas.height = height;
+                var ctx = canvas.getContext("2d");
+                ctx.drawImage(img, 0, 0, width, height);
+
+                let dataurl = canvas.toDataURL(file.type);
+                this.data = {image:dataurl};
+            }
+            reader.readAsDataURL(file);
+
+        }
+
+    } else {
+        alert('The File APIs are not fully supported in this browser.');
+    }
+}
   closeCropper() {
     this.cropperShown = false;
     this.data.image = this.oldPicture;

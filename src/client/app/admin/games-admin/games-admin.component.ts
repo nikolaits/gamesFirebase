@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ViewChild } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, isDevMode, enableProdMode } from '@angular/core';
 import { NameListService } from '../../shared/name-list/name-list.service';
 import { AuthService } from '../../shared/auth-service/auth.service';
 import { UserService } from '../../shared/user-service/user.service';
@@ -11,7 +11,7 @@ import { NavigationService } from '../../shared/navigation-service/navigation.se
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { NewGame } from '../../types/new_game.type';
 import { CropperSettings, ImageCropperComponent } from 'ngx-img-cropper';
-
+import {prod} from "../../core/globals";
 @Component({
   moduleId: module.id,
   selector: 'create-game',
@@ -25,6 +25,7 @@ export class NgbdModalCreateGame {
   model: NewGame
   createGameForm: FormGroup;
   constructor(public activeModal: NgbActiveModal, private userService: UserService, private gamesService: GamesService) { 
+
     this.cropperSettings = new CropperSettings();
     this.cropperSettings.width = 700;
     this.cropperSettings.height = 350;
@@ -39,7 +40,7 @@ export class NgbdModalCreateGame {
     this.cropperSettings.minWidth = 600;
     this.cropperSettings.minHeight = 250;
 
-    this.cropperSettings.rounded = true;
+    this.cropperSettings.rounded = false;
     this.cropperSettings.minWithRelativeToResolution = false;
 
     this.cropperSettings.cropperDrawSettings.strokeColor = 'rgba(255,255,255,1)';
@@ -58,7 +59,10 @@ export class NgbdModalCreateGame {
   progress:number;
   isProgressVisible:boolean = false;
   cropperSettings: CropperSettings;
-  cropperShown: boolean = false;
+  cropperShown: boolean = true;
+  showTheCropper:boolean = true;
+  stlDisplay: string = "none";
+
   public taken = false;
   @ViewChild('cropper', undefined)
   cropper: ImageCropperComponent;
@@ -93,6 +97,11 @@ export class NgbdModalCreateGame {
         Validators.pattern("^[1-9][0-9]*$")
       ])
     }, );
+  }
+  ngAfterViewInit(){
+    // setTimeout(() => {
+    //   this.cropperShown = false;
+    // }, 500);
   }
   get name() { return this.createGameForm.get('name'); }
   get windowWidth() { return this.createGameForm.get('windowWidth'); }
@@ -141,44 +150,108 @@ export class NgbdModalCreateGame {
 
   }
   fileChangeListener($event: any) {
-    let image: any = new Image();
     this.file = $event.target.files[0];
+
     let fileTypes = ['jpg', 'jpeg'];
-    // alert(this.file.name)
     let extension = this.file.name.split('.').pop().toLowerCase();
     if (fileTypes.indexOf(extension) == -1) {
       alert("Only JPEG images are supported");
       this.closeCropper();
       return;
     }
+    let that = this;
+    that.data = {}
+    // that.cropperShown = true;
+    this.stlDisplay = "block";
+    that.isReadyForSubmit = false;
+    // that.data = {}
     let myReader: FileReader = new FileReader();
+    // console.log("file reader created");
+    
+    myReader.onerror = (e) => {
+      console.log("myReader Error");
+
+      console.log(e);
+      console.log("Error");
+      console.log(myReader.error);
+    }
+    myReader.onloadend = (loadEvent: any) => {
+      let image = new Image();
+
+      image.onload = () => {
+        if (!prod) {
+          console.log("in dev mode");
+
+          that.cropper.setImage(image);
+        }
+        else {
+          console.log("in production mode")
+          this.showTheCropper = false;
+          this.ResizeImage($event)
+        }
+
+      }
+      image.src = myReader.result.toString();
+    };
     try {
-      myReader.onloadend = (loadEvent: any) => {
-        this.cropperShown = true;
-        this.isReadyForSubmit = false;
-        setTimeout(() => {
-          image.src = loadEvent.target.result;
-          this.data = {}
-          this.cropper.setImage(image);
-          console.log("File:")
-          console.log(this.data.image);
-          
-        }, 1000);
-
-
-      };
-
       myReader.readAsDataURL(this.file);
 
-
     } catch (error) {
-      console.log("Error:");
-      console.log(error);
     }
 
   }
+  public ResizeImage(event:any) {
+    if (window.File && window.FileReader && window.FileList && window.Blob) {
+        // var filesToUploads = document.getElementById('imageFile').files;
+        var file = event.target.files[0];
+        if (file) {
+
+            var reader = new FileReader();
+            // Set the image once loaded into file reader
+            reader.onload = (e:any)=> {
+
+                var img = document.createElement("img");
+                img.src = e.target.result;
+
+                var canvas = document.createElement("canvas");
+                var ctx = canvas.getContext("2d");
+                ctx.drawImage(img, 0, 0);
+
+                var MAX_WIDTH = 400;
+                var MAX_HEIGHT = 400;
+                var width = img.width;
+                var height = img.height;
+
+                if (width > height) {
+                    if (width > MAX_WIDTH) {
+                        height *= MAX_WIDTH / width;
+                        width = MAX_WIDTH;
+                    }
+                } else {
+                    if (height > MAX_HEIGHT) {
+                        width *= MAX_HEIGHT / height;
+                        height = MAX_HEIGHT;
+                    }
+                }
+                canvas.width = width;
+                canvas.height = height;
+                var ctx = canvas.getContext("2d");
+                ctx.drawImage(img, 0, 0, width, height);
+
+                let dataurl = canvas.toDataURL(file.type);
+                this.data = {image:dataurl};
+            }
+            reader.readAsDataURL(file);
+
+        }
+
+    } else {
+        alert('The File APIs are not fully supported in this browser.');
+    }
+}
   closeCropper() {
-    this.cropperShown = false;
+    // this.cropperShown = false;
+    this.stlDisplay="none"
     this.data.image = this.oldPicture;
     this.isReadyForSubmit = true;
   }
@@ -222,7 +295,8 @@ export class NgbdModalCreateGame {
         console.log(error);
       }, () => {
         console.log("uploaded");
-        this.cropperShown = false;
+        // this.cropperShown = false;
+        this.stlDisplay= "none";
         this.oldPicture = task.snapshot.downloadURL;
         this.isReadyForSubmit = true;
         this.gamesService.updateGameImage(task.snapshot.downloadURL, this.game.name)
@@ -313,6 +387,7 @@ export class GamesAdminComponent implements OnInit {
     console.log("main component ngOnInit2");
   }
   ngAfterViewInit() {
+    
     //   jQuery("#test").kendoGrid({
     //     dataSource: {
     //         data: [

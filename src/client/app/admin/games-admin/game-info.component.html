@@ -12,9 +12,9 @@
         <img [src]="data.image" [width]="cropperSettings.croppedWidth" [height]="cropperSettings.croppedHeight">
     </span>
     <p><ngb-progressbar *ngIf="isProgressVisible" type="info" [value]="progress"></ngb-progressbar></p>
-    <div *ngIf="cropperShown" class="pull-left">
+    <div [style.display]="stlDisplay" *ngIf="cropperShown" class="pull-left">
         <h3>
-            Cropper the image
+            <h2 *ngIf="showTheCropper">Cropper the image</h2>
             <div class="file-upload-button">
                 <button (click)="saveImage()" class="text">save</button>
             </div>
@@ -24,7 +24,7 @@
         </h3>
 
 
-        <img-cropper #cropper [image]="data" [settings]="cropperSettings"></img-cropper>
+        <img-cropper *ngIf="showTheCropper" #cropper [image]="data" [settings]="cropperSettings"></img-cropper>
     </div>
     <form role="form" (ngSubmit)="onSubmit()" [formGroup]="createGameForm">
 
