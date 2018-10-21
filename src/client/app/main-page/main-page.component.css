@@ -61,14 +61,14 @@
   top: 0;
   background-color: rgba(0, 0, 0, 0.5)
 }
-.carousel{
+.carouselmain{
   overflow:hidden;
   width:100%;
 }
-.slides{
+.slidesmain{
   list-style:none;
   position:relative;
-  width:500%; /* Number of panes * 100% */
+  width:508%; /* Number of panes * 100% */
   overflow:hidden; /* Clear floats */
       /* Slide effect Animations*/
   -moz-animation:carousel 30s infinite;
@@ -85,19 +85,20 @@
 .staticslide > li{
 position:relative;
   float:left;
+  /* left: 2px; */
   width: 100%; 
 }
-.slides > li{
+.slidesmain > li{
   position:relative;
   float:left;
   width: 20%; /* 100 / number of panes */
 }
-.carousel img{
+.carouselmain img{
   display:block;
   width:100%;
   max-width:100%;
 }
-.carousel h2{
+.carouselmain h2{
   margin-bottom: 0;
   font-size:1em;
   padding:1.5em 0.5em 1.5em 0.5em;

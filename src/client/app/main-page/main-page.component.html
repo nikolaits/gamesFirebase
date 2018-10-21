@@ -3,16 +3,16 @@
 
 <div class="container">
   <!-- <button type="button" (click)="onTap()">add chln</button> -->
-  <div class="ngbcontainer" *ngIf="isCarouselShown">
+  <div class="" *ngIf="isCarouselShown">
     <div style="position: relative; width: 100%; height: 100%;">
 
-      <div class="carousel" >
+      <div class="carouselmain" >
 
-        <ul class="slides">
+        <ul class="slidesmain">
 
           <li *ngFor="let game of games">
-            <h2>{{game.name}}</h2>
-            <img src="{{game.imageUri}}" alt="">
+            <h2 >{{game.name}}</h2>
+            <img  src="{{game.imageUri}}" width="100%" alt="">
           </li>
 
         </ul>

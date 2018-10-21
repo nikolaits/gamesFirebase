@@ -140,7 +140,7 @@ export class MainPageComponent implements OnInit {
    * @param {NameListService} nameListService - The injected NameListService.
    */
   constructor(private modalService: NgbModal, private authService: AuthService, private userService: UserService, private gamesService: GamesService, private cookieService: CookieService,config: NgbCarouselConfig) {
-    config.interval = 10000;
+    config.interval = 1000000;
     config.wrap = true;
     config.keyboard = false;
     
@@ -208,6 +208,9 @@ export class MainPageComponent implements OnInit {
         console.log(result);
         // result[0].isCollapsed=false;
         this.games = result;
+        for(let key in result){
+
+        }
         if(this.openGameChallenge){
           this.onVisibilityChange(this.cookieService.get("challengeSelectedEvent"));
         }
