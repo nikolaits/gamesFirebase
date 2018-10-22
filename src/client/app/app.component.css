@@ -3,3 +3,7 @@
   display: flex;
   flex-flow: column;
 }
+body .stop-scroll {
+  overflow: hidden;
+  position: fixed;
+}

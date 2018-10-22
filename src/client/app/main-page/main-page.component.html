@@ -25,23 +25,25 @@
       {{prettifyHeader(game.name)}}
     </button>
   </div>
-  <div class="games" *ngFor="let game of games">
+  <div class="games"  *ngFor="let game of games">
     <div id="collapseExample" [ngbCollapse]="game.isCollapsed">
       <div class="card" [ngClass]="{'playFullScreen':!game.isCollapsed}">
         <h2>{{prettifyHeader(game.name)}}</h2>
         <br>
         <hr>
-        <div class="card-body">
+        <div #gameContainer class="{{'card-body '  + game.name}}">
+          <!--  -->
           <div  class="canvasStyle" [style.width.px]="containerWidth" [style.height.px]="containerHeight" id="{{'container_'+game.name}}">
             
           </div>
-          
+          <div class="livescore">
           <p>Live Score</p>
           <div id="{{'livescore_'+game.name}}"></div>
+        </div>
           <br>
           <hr>
           <p>Game Rating</p>
-
+          
           <ngb-rating #rateElement [(rate)]="game.userRate" (rateChange)="onRateChange(rateElement.rate, game.name)">
             <ng-template let-fill="fill" let-index="index">
               <span class="star" [class.filled]="fill === 100" [class.bad]="index < 3">&#9733;</span>

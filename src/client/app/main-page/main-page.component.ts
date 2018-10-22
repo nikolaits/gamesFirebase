@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ViewChild } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, Renderer2,ElementRef,QueryList, ViewChildren } from '@angular/core';
 import { NameListService } from '../shared/name-list/name-list.service';
 import { AuthService } from '../shared/auth-service/auth.service';
 import { UserService } from '../shared/user-service/user.service';
@@ -42,7 +42,7 @@ class GameArgs {
 export class NgbdModalContent {
   @Input() notification: string;
 
-  constructor(public activeModal: NgbActiveModal, private userService: UserService) { }
+  constructor(public activeModal: NgbActiveModal, private userService: UserService, private renderer: Renderer2) { }
   public error = false;
   public isEmpty = false;
   public btnDisabled = true;
@@ -130,8 +130,15 @@ export class MainPageComponent implements OnInit {
   private firstLoad = true;
   private starttime = Date.now();
   private openGameChallenge:boolean;
- 
+  // private gameContainer: ElementRef;
+
+//  @ViewChild('gameContainer') set content(content: ElementRef) {
+//     this.gameContainer = content;
+//  }
+  // @ViewChild('gameContainer') gameContainer: ElementRef;
   @ViewChild('wrapper') wrapper: any;
+  @ViewChildren('gameContainer') gameContainer:QueryList<ElementRef>;
+
 
   /**
    * Creates an instance of the HomeComponent with the injected
@@ -139,7 +146,7 @@ export class MainPageComponent implements OnInit {
    *
    * @param {NameListService} nameListService - The injected NameListService.
    */
-  constructor(private modalService: NgbModal, private authService: AuthService, private userService: UserService, private gamesService: GamesService, private cookieService: CookieService,config: NgbCarouselConfig) {
+  constructor(private modalService: NgbModal, private authService: AuthService, private userService: UserService, private gamesService: GamesService, private cookieService: CookieService,config: NgbCarouselConfig, private renderer:Renderer2) {
     config.interval = 1000000;
     config.wrap = true;
     config.keyboard = false;
@@ -392,7 +399,18 @@ export class MainPageComponent implements OnInit {
   }
   startGame(gamename: string, delay: number, game: Game, friends: any[], challenge: any[]) {
     this.isCarouselShown = false;
+    
     setTimeout(() => {
+      console.log("test");
+      console.log(this.gameContainer);
+      console.log(this.renderer);
+      let tmpelementref:ElementRef=undefined;
+      this.gameContainer.forEach((ref:ElementRef)=>{
+        if(ref.nativeElement.classList.contains(gamename)){
+          tmpelementref=ref;
+        }
+      })
+      this.renderer.addClass(tmpelementref.nativeElement, 'Fullscreen');
       try {
         let gameArgs: GameArgs = new GameArgs(challenge, friends, game.savedData);
         console.log("gameArgs");
@@ -404,6 +422,8 @@ export class MainPageComponent implements OnInit {
             if (status === "Close") {
               this.destroyGame(this.selectedGame);
               this.selectedGame = "";
+              this.renderer.removeClass(tmpelementref.nativeElement, 'Fullscreen');
+              this.isCarouselShown = true;
               this.removeLiveScoreEventListener();
             } else if (status === "SaveGame") {
               this.cookieService.set("FlappyPlaneSaveGame", JSON.stringify(gameArgs));
@@ -464,6 +484,7 @@ export class MainPageComponent implements OnInit {
                 console.log(e)
               })
             }
+            
           });
         this.detectGamesLiveScore(gamename);
         this.showHover = false;
@@ -562,7 +583,10 @@ export class MainPageComponent implements OnInit {
         pageSize: 20
       },
       scrollable: false,
-      noRecords: true
+      noRecords: {
+        template:"<div style='heigh:5em; width:100%;'>No Records"
+      },
+        width: "100%"
     });
     let nothingToShow = true;
     this.listenerLiveScore = firebase.database().ref(`games/${gamename}/livescores`).on('value', (snapshot) => {

@@ -75,6 +75,7 @@ export class NgbdModalCreateGame {
       this.model.name = this.game.name;
       this.model.windowWidth = this.game.windowWidth;
       this.model.windowHeight = this.game.windowHeight;
+      console.log("width")
       console.log(this.game.windowHeight);
       this.model = new NewGame(this.game.name, this.game.windowWidth, this.game.windowHeight);
       this.data.image = this.oldPicture = this.game.imageUri;
@@ -86,12 +87,12 @@ export class NgbdModalCreateGame {
         Validators.nullValidator,
         Validators.required
       ]),
-      'windowWidth': new FormControl({ value: this.model.windowWidth }, [
+      'windowWidth': new FormControl({ value: this.model.windowWidth, disabled:false }, [
         Validators.nullValidator,
         Validators.required,
         Validators.pattern("^[1-9][0-9]*$")
       ]),
-      'windowHeight': new FormControl({ value: this.model.windowHeight }, [
+      'windowHeight': new FormControl({ value: this.model.windowHeight, disabled:false }, [
         Validators.nullValidator,
         Validators.required,
         Validators.pattern("^[1-9][0-9]*$")
