@@ -130,7 +130,7 @@ export class MainPageComponent implements OnInit {
   private firstLoad = true;
   private starttime = Date.now();
   private openGameChallenge:boolean;
-  // private gameContainer: ElementRef;
+  private tmpelementref: ElementRef;
 
 //  @ViewChild('gameContainer') set content(content: ElementRef) {
 //     this.gameContainer = content;
@@ -404,13 +404,13 @@ export class MainPageComponent implements OnInit {
       console.log("test");
       console.log(this.gameContainer);
       console.log(this.renderer);
-      let tmpelementref:ElementRef=undefined;
+      this.tmpelementref=undefined;
       this.gameContainer.forEach((ref:ElementRef)=>{
         if(ref.nativeElement.classList.contains(gamename)){
-          tmpelementref=ref;
+          this.tmpelementref=ref;
         }
       })
-      this.renderer.addClass(tmpelementref.nativeElement, 'Fullscreen');
+      this.renderer.addClass(this.tmpelementref.nativeElement, 'Fullscreen');
       try {
         let gameArgs: GameArgs = new GameArgs(challenge, friends, game.savedData);
         console.log("gameArgs");
@@ -422,9 +422,11 @@ export class MainPageComponent implements OnInit {
             if (status === "Close") {
               this.destroyGame(this.selectedGame);
               this.selectedGame = "";
-              this.renderer.removeClass(tmpelementref.nativeElement, 'Fullscreen');
+              this.renderer.removeClass(this.tmpelementref.nativeElement, 'Fullscreen');
               this.isCarouselShown = true;
               this.removeLiveScoreEventListener();
+              this.containerHeight=0;
+              this.containerWidth = 0;
             } else if (status === "SaveGame") {
               this.cookieService.set("FlappyPlaneSaveGame", JSON.stringify(gameArgs));
               this.gamesService.setupusersaveddata(this.selectedGame, game.savedData, gameArgs)
@@ -654,5 +656,14 @@ export class MainPageComponent implements OnInit {
         }
       }
     });
+  }
+  public onCloseClick(){
+    this.destroyGame(this.selectedGame);
+    this.selectedGame = "";
+    this.renderer.removeClass(this.tmpelementref.nativeElement, 'Fullscreen');
+    this.isCarouselShown = true;
+    this.removeLiveScoreEventListener();
+    this.containerHeight=0;
+    this.containerWidth = 0;
   }
 }
