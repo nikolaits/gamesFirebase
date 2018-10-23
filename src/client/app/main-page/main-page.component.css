@@ -2,16 +2,10 @@ body .stop-scroll {
   overflow: hidden;
   position: fixed;
 }
-.close {
-  cursor: pointer;
-  position: absolute;
-  top: 2%;
-  right: 0%;
-  padding: 12px 16px;
-  font-size: 32px;
-  transform: translate(0%, -50%);
+.close{
+  display: none;
 }
-.close:hover {background: #bbb;}
+
 
 .Fullscreen
   {
@@ -35,6 +29,17 @@ body .stop-scroll {
   .Fullscreen > div.livescore > div.k-grid-norecords-template{
     width: 100%!important;
   }
+  .Fullscreen > span.close {
+    display: block;
+    cursor: pointer;
+    position: absolute;
+    top: 2%;
+    right: 0%;
+    padding: 12px 16px;
+    font-size: 32px;
+    transform: translate(0%, -50%);
+  }
+  .Fullscreen > span.close:hover {background: #bbb;}
 .star {
   font-size: 1.5rem;
   color: #b0c4de;
