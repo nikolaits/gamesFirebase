@@ -113,12 +113,11 @@ export class LoginComponent implements OnInit {
     })
   }
 
-  facebookSignIn(event:any){
+  facebookSignIn(){
     this.authService.signInFacebook()
-    .then((result)=>{
-      var token = result.credential.accessToken;
+    .then((result:string)=>{
+      var token = result;
       // The signed-in user info.
-      var user = result.user;
 
       this.authService.saveSignInToken(token);
       // user.
@@ -130,7 +129,6 @@ export class LoginComponent implements OnInit {
       
       alert(`Login Error ${e}`);
     })
-    return false;
   }
   onPasswordReset(){
     let options: NgbModalOptions = {

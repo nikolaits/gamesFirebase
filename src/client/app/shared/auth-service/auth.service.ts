@@ -23,6 +23,14 @@ export class AuthService {
   //   //              .do(data => console.log('server data:', data))  // debug
   //                   .catch(this.handleError);
   // }
+  public handleError (error: any) {
+    // In a real world app, we might use a remote logging infrastructure
+    // We'd also dig deeper into the error to get a better message
+    const errMsg = (error.message) ? error.message :
+      error.status ? `${error.status} - ${error.statusText}` : 'Server error';
+    console.error(errMsg); // log to console instead
+    return Observable.throw(errMsg);
+  }
   isUserSignIn():Promise<any>{
     console.log("in isUserSignIn")
     // let user = firebase.auth().currentUser;
@@ -96,14 +104,31 @@ export class AuthService {
   }
   signInFacebook(){
     let provider = new firebase.auth.FacebookAuthProvider();
-    return firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
-    .then(function() {
-      return firebase.auth().signInWithPopup(provider);
-    })
-    .catch(function(error) {
-      // Handle Errors here.
-      this.handleError(error)
-    });
+    console.log("provider")
+    console.log(provider)
+    return new Promise((resolve, reject)=>{
+      firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
+      .then(function() {
+        console.log("before");
+        
+        firebase.auth().signInWithPopup(provider).then((r)=>{
+          console.log("signInWithPopup");
+          console.log(r);
+          resolve(r.credential.accessToken)
+        })
+        .catch((err)=>{
+          console.log("signInWithPopup error");
+          console.log(err);
+          reject(err);
+        });
+      })
+      .catch(function(error) {
+        // Handle Errors here.
+        console.log(error)
+        reject(error);
+        // this.handleError(error);
+      });
+    }) 
     
   }
   passwordResetRequest(email:string):Promise<any>{
@@ -115,13 +140,6 @@ export class AuthService {
   /**
     * Handle HTTP error
     */
-  private handleError (error: any) {
-    // In a real world app, we might use a remote logging infrastructure
-    // We'd also dig deeper into the error to get a better message
-    const errMsg = (error.message) ? error.message :
-      error.status ? `${error.status} - ${error.statusText}` : 'Server error';
-    console.error(errMsg); // log to console instead
-    return Observable.throw(errMsg);
-  }
+ 
 }
 
