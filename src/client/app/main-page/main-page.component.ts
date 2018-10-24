@@ -11,6 +11,7 @@ import { setInterval } from 'timers';
 import { CookieService } from 'ng2-cookies';
 import { Friend } from '../types/friend.type';
 import { ChallengeComplete } from '../types/challenge_complete.type';
+import { NavigationService } from '../shared/navigation-service/navigation.service';
 
 class GameArgs {
   constructor(public challenges: any, public friends: any, public savedGame: any) { }
@@ -146,7 +147,7 @@ export class MainPageComponent implements OnInit {
    *
    * @param {NameListService} nameListService - The injected NameListService.
    */
-  constructor(private modalService: NgbModal, private authService: AuthService, private userService: UserService, private gamesService: GamesService, private cookieService: CookieService,config: NgbCarouselConfig, private renderer:Renderer2) {
+  constructor(private modalService: NgbModal, private authService: AuthService,private navServ:NavigationService, private userService: UserService, private gamesService: GamesService, private cookieService: CookieService,config: NgbCarouselConfig, private renderer:Renderer2) {
     config.interval = 1000000;
     config.wrap = true;
     config.keyboard = false;
@@ -193,6 +194,7 @@ export class MainPageComponent implements OnInit {
       .catch((e) => {
         console.log("no user found");
         console.log(e);
+        this.navServ.goToSignIn();
       });
   }
   onTap() {
@@ -204,7 +206,6 @@ export class MainPageComponent implements OnInit {
     .catch((e)=>{
       console.log("Error");
       console.log(e)
-
     })
   }
   activeGames() {

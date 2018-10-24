@@ -8,12 +8,12 @@ import {AuthService} from "../shared/auth-service/auth.service";
 import {GamesService} from "../shared/games-service/games.service"
 import {CoreModule} from "../core/core.module"
 import { NgbModal, NgbRatingModule, NgbCollapseModule, NgbCarouselModule } from '@ng-bootstrap/ng-bootstrap';
-
+import { NavigationService } from '../shared/navigation-service/navigation.service';
 @NgModule({
   imports: [MainPageRoutingModule, SharedModule, CoreModule, BrowserAnimationsModule, NgbCarouselModule, NgbRatingModule, NgbCollapseModule],
   declarations: [MainPageComponent, NgbdModalContent],
   exports: [MainPageComponent],
-  providers: [NameListService, AuthService, GamesService], 
+  providers: [NameListService, AuthService, GamesService, NavigationService], 
   entryComponents:[NgbdModalContent]
 })
 export class MainPageModule { }

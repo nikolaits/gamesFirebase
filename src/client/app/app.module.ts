@@ -4,7 +4,7 @@ import { APP_BASE_HREF } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
-
+import {PrivacypolicyModule} from "./privacypolicy/privacypolicy.module"
 import { AboutModule } from './about/about.module';
 import { LoginModule } from './login/login.module';
 import { SignupModule } from "./signup/signup.module";
@@ -24,6 +24,7 @@ import {EqualValidatorDirective} from "./signup/equal-validator.directive";
   imports: [BrowserModule, CoreModule,NgbModule.forRoot(),
     HttpClientModule, AppRoutingModule,
     AboutModule, LoginModule,
+    PrivacypolicyModule,
     SignupModule,
     MainPageModule,
     MainPageModule,
