@@ -72,8 +72,12 @@ body .stop-scroll {
   margin-left: auto !important;
   margin-right: auto !important;
   display: block !important;
+  width: fit-content;
 }
-
+/* canvas{
+  margin-left: auto !important;
+  margin-right: auto !important;
+} */
 .loader {
   border: 16px solid #f3f3f3;
   border-radius: 50%;
