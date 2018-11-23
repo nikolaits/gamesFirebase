@@ -105,7 +105,7 @@ export class SignupComponent implements OnInit {
   onSubmit() {
     let emailValue = this.email.value;
     let passwordValue = this.password.value;
-    alert(`Email: ${emailValue} Password: ${passwordValue}`);
+    // alert(`Email: ${emailValue} Password: ${passwordValue}`);
     this.authService.signup(emailValue, passwordValue)
         .then((r) => {
           console.log("Result signup");

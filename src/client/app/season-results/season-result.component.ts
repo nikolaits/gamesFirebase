@@ -26,7 +26,7 @@ export class SeasonResultComponent implements OnInit {
   public changeDisplayedData: boolean = false;
   public showHover: boolean = false;
   public showFriendList: boolean = false;
-  public isUnlockedSeason: boolean = true;
+  public isUnlockedSeason: boolean = false;
   private username:string = "";
  
 
@@ -53,6 +53,7 @@ export class SeasonResultComponent implements OnInit {
             console.log("username");
             console.log(r);
             this.username = r;
+            this.onSeasonModeUnlockListener();
             jQuery("#btnSearch").kendoButton({
               click:this.onSearch
             })
@@ -166,5 +167,14 @@ export class SeasonResultComponent implements OnInit {
       }
     });
   }
-  
+  onSeasonModeUnlockListener(){
+    // let username = this.cookieService.get("geitUsername");
+    firebase.database().ref(`users/${this.userService.user.uid}/`).on('value', (snapshot) => {
+      if((snapshot.val())&&(snapshot.val().isSeasonModeUnlocked)){
+        if(snapshot.val().isSeasonModeUnlocked === true){
+          this.isUnlockedSeason = true;
+        }
+      }
+    });
+  }
 }
