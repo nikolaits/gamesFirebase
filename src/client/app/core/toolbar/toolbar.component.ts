@@ -1,9 +1,9 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, ViewChild, ViewContainerRef, ElementRef } from '@angular/core';
 import { UserService } from '../../shared/user-service/user.service';
 import { UserInitInfo } from '../../types/user_init_info.type';
 import { AuthService } from '../../shared/auth-service/auth.service';
 import { NavigationService } from '../../shared/navigation-service/navigation.service';
-import { NgbModalOptions, NgbModal, NgbPopoverConfig } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModalOptions, NgbModal, NgbPopoverConfig, NgbPopoverModule,NgbPopover } from '@ng-bootstrap/ng-bootstrap';
 import { UpdateComponent } from "../update/update.component"
 import  * as firebase from "firebase";
 import { CookieService } from 'ng2-cookies';
@@ -28,6 +28,7 @@ export class ToolbarComponent {
   public info:any[] = [];
   private _changeUserDisaplyedData = false;
   public isCollapsed = true;
+  @ViewChild("popContent",{read: ViewContainerRef}) popContentElement: ElementRef;
   @Output() open: EventEmitter<any> = new EventEmitter();
   @Output() challengeSelect: EventEmitter<any> = new EventEmitter();
   @Input() set changeUserDisaplyedData(value: boolean) {
@@ -43,8 +44,9 @@ export class ToolbarComponent {
     return this._changeUserDisaplyedData;
 
   }
-  constructor(private modalService: NgbModal, private userService:UserService, private authService:AuthService, private navigationService:NavigationService, private cookiesService:CookieService,config: NgbPopoverConfig, private gamesService:GamesService, private router:Router){
+  constructor(private modalService: NgbModal, private userService:UserService, private authService:AuthService, private navigationService:NavigationService, private cookiesService:CookieService, config: NgbPopoverConfig, private gamesService:GamesService, private router:Router){
     config.placement = 'bottom-right';
+    
     router.events.subscribe(event => {
       if(event instanceof NavigationEnd){
         console.log("url:"+ event.url)
@@ -133,6 +135,10 @@ export class ToolbarComponent {
     this.open.emit();
   }
   gameSelected(gamename:string){
+    // console.log(this.popContentElement.nativeElement)
+    // debugger
+    // this.popContentElement.nativeElement
+    
     this.challengeSelect.emit(gamename);
   }
   challengesListener(){

@@ -2,7 +2,7 @@
 <div class="more" (click)="isCollapsed = !isCollapsed" [attr.aria-expanded]="!isCollapsed" aria-controls="collapseExample"></div>
 <div class="friends otto" (click)="openFriendLis()"></div>
 <ng-template class="bottom " #popContent>
-    <div style="color:black; margin-top:10px;">
+    <div style="color:black; margin-top:10px;" (click)="p.close()">
         <div class="center" *ngFor="let challenge of challengesList">
             <a href="javascript:void(0)" (click)="gameSelected(challenge.gamename)" class="btn btn-learn">{{challenge.friendusername + ' -> ' + challenge.gamename }}
                 <span class="arrow">❯</span>
@@ -12,7 +12,7 @@
     </div>
 
 </ng-template>
-<div class="star otto" [ngbPopover]="popContent" popoverTitle="Friends challenges ">
+<div class="star otto" [ngbPopover]="popContent" #p="ngbPopover" popoverTitle="Friends challenges ">
     <p *ngIf="challengesList.length > 0" class="bottomright glow">{{ challengesList.length }}</p>
 </div>
 <!-- <button type="button" class="friends" [ngbPopover]="popContent2" popoverTitle="Fancy content">2</button> -->
