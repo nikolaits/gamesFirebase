@@ -201,7 +201,7 @@ export class UserService {
     });
   }
   unlockSeasonmode(value: boolean) {
-    return firebase.database().ref(`users/${this.user.uid}/}`).update({
+    return firebase.database().ref(`users/${this.user.uid}`).update({
       isSeasonModeUnlocked: value
     })
   }
