@@ -377,13 +377,17 @@ export class MainPageComponent implements OnInit {
         console.log("userlist");
         console.log(JSON.stringify(friendList));
 
-        this.checkifjscssfileisloaded(gamename + '.js', "js")
+        this.checkifjscssfileisloaded( gamename + '.js', "js")
           .then((args) => {
             if (args === "exist") {
               console.log("script is removed");
               // this.addJSFile("assets/gamesTest/asteroids/src/game.js");
               this.startGame(gamename, 1, game, friendList, challenges);
             }
+            // else{
+            //   this.addJSFile("assets/gamesJavaScript/" + gamename + "/src/" + gamename + ".js");
+            //   this.startGame(gamename, 1000, game, friendList, challenges);
+            // }
           })
           .catch((err) => {
             console.log("Error removejscssfile")
@@ -395,7 +399,21 @@ export class MainPageComponent implements OnInit {
       .catch((err: any) => {
         console.log("No friends were found");
         console.log(err);
-        this.startGame(gamename, 1000, game, undefined, challenges);
+        this.checkifjscssfileisloaded( gamename + '.js', "js")
+          .then((args) => {
+            if (args === "exist") {
+              console.log("script is removed");
+              // this.addJSFile("assets/gamesTest/asteroids/src/game.js");
+              this.startGame(gamename, 1000, game, undefined, challenges);
+            }
+          })
+          .catch((err) => {
+            console.log("Error removejscssfile")
+            console.log(err);
+            this.addJSFile("assets/gamesJavaScript/" + gamename + "/src/" + gamename + ".js");
+            this.startGame(gamename, 1000, game, undefined, challenges);
+          })
+        
       })
   }
   startGame(gamename: string, delay: number, game: Game, friends: any[], challenge: any[]) {
@@ -416,6 +434,7 @@ export class MainPageComponent implements OnInit {
         let gameArgs: GameArgs = new GameArgs(challenge, friends, game.savedData);
         console.log("gameArgs");
         console.log(gameArgs);
+        console.log("gamename "+gamename)
         window['start_' + gamename](game.windowWidth, game.windowHeight, "container_" + gamename, "assets/gamesJavaScript/" + gamename + "/", JSON.stringify(gameArgs), "casualMode",
           (status: string, score: number, game_xp: number, game_id: number, gameArgs: any, unlocklevel: boolean) => {
             console.log('game start 1');
@@ -492,6 +511,8 @@ export class MainPageComponent implements OnInit {
         this.detectGamesLiveScore(gamename);
         this.showHover = false;
       } catch (error) {
+        this.showHover = false;
+        alert("There was an unexpected error. Please refresh the current page.")
         console.log("error");
         console.log(error);
       }
@@ -502,13 +523,14 @@ export class MainPageComponent implements OnInit {
     return newName;
   }
   addJSFile(path: string) {
-
+// alert("inside the addJS")
     const script = document.createElement('script');
     script.src = path;
     document.body.appendChild(script);
   }
   checkifjscssfileisloaded(filename: string, filetype: string) {
     return new Promise((resolve, reject) => {
+      // alert("inside the check")
       let error = true;
       var targetelement = (filetype == "js") ? "script" : (filetype == "css") ? "link" : "none" //determine element type to create nodelist from
       var targetattr = (filetype == "js") ? "src" : (filetype == "css") ? "href" : "none" //determine corresponding attribute to test for
