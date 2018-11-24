@@ -112,7 +112,7 @@ export class SignupComponent implements OnInit {
           console.dir(r);
           console.log(r.user);
           r.sendEmailVerification();
-          alert(`Please chexk your email.`);
+          alert(`Please check your email.`);
           this.navigation.goToSignIn();
         })
         .catch((e) => {

@@ -242,6 +242,15 @@ export class MainPageComponent implements OnInit {
       console.log(arg);
 
       this.changeDisplayedData = true;
+      // firebase.database().ref(`users/${this.userService.user.uid}/`).on('value', (snapshot) => {
+      //   if((snapshot.val())&&(snapshot.val().isSeasonModeUnlocked)){
+      //     if(snapshot.val().isSeasonModeUnlocked === true){
+            this.activeGames();
+              this.gamesService.getCurrentUser();
+              this.onSeasonModeUnlockListener();
+      //     }
+      //   }
+      // });
     })
   }
   readfilestorage() {
@@ -680,6 +689,7 @@ export class MainPageComponent implements OnInit {
         }
       }
     });
+    
   }
   public onCloseClick(){
     this.destroyGame(this.selectedGame);
