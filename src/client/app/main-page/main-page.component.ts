@@ -121,6 +121,7 @@ export class MainPageComponent implements OnInit {
   public selectedGame = "";
   public changeDisplayedData: boolean = false;
   public showHover: boolean = false;
+  public isalertShown = false;
   public showFriendList: boolean = false;
   public isUnlockedSeason:boolean = false;
   public isCarouselShown = true;
@@ -489,9 +490,10 @@ export class MainPageComponent implements OnInit {
                   if(unlocklevel){
                     this.userService.unlockSeasonmode(unlocklevel)
                     .then((unlockresult)=>{
-                      if(this.isUnlockedSeason){
+                      if(!this.isalertShown){
                         alert("You have unlocked season mode");
                         this.isUnlockedSeason = true;
+                        this.isalertShown = true;
                       }
                       
                     })
