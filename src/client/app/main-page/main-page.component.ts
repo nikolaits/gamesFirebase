@@ -489,7 +489,7 @@ export class MainPageComponent implements OnInit {
                   if(unlocklevel){
                     this.userService.unlockSeasonmode(unlocklevel)
                     .then((unlockresult)=>{
-                      if(!this.isUnlockedSeason){
+                      if(this.isUnlockedSeason){
                         alert("You have unlocked season mode");
                         this.isUnlockedSeason = true;
                       }
