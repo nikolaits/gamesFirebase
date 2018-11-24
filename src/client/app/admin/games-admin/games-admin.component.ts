@@ -11,7 +11,8 @@ import { NavigationService } from '../../shared/navigation-service/navigation.se
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { NewGame } from '../../types/new_game.type';
 import { CropperSettings, ImageCropperComponent } from 'ngx-img-cropper';
-import {prod} from "../../core/globals";
+import {prod, gametmpname} from "../../core/globals";
+declare var newnametmp:any;
 @Component({
   moduleId: module.id,
   selector: 'create-game',
@@ -119,7 +120,9 @@ export class NgbdModalCreateGame {
             // this.saveUserData(result);
             this.gamesService.createNewGame(name, windowWidth, windowHeight)
               .then((r) => {
-                this.activeModal.close({ newname: name });
+                console.log("firebaseresult")
+                console.log(r)
+                this.activeModal.close(new Game(name, 0, 0, true, windowWidth, windowHeight, undefined, "https://firebasestorage.googleapis.com/v0/b/gamesfirebase.appspot.com/o/games%2Fimages%2Fnew_game.jpeg?alt=media&token=ad100168-8ed9-4de9-8325-0ad276511a07", false, false));
               })
               .catch((err) => {
                 console.log("Error create game");
@@ -361,8 +364,9 @@ export class GamesAdminComponent implements OnInit {
   containerWidth = 0;
   containerHeight = 0;
   games: Game[] = [];
+  private tmpgmname = "";
   private gameRatingListener: any;
-  private newGame = "";
+  public newGame = "";
   private deletedGameName = "";
   private listenerLiveScore: any;
   private settimeoutlistener: any;
@@ -467,7 +471,13 @@ export class GamesAdminComponent implements OnInit {
     modalRef.result.then((arg: any) => {
       console.log(arg);
       if (arg) {
-        this.newGame = arg.newname;
+        console.log("this.newGame");
+        
+        // this.newGame = arg;
+        // newnametmp = arg;
+        // console.log(this.newGame)
+        this.games.push(arg);
+
       }
     })
   }
@@ -577,10 +587,15 @@ export class GamesAdminComponent implements OnInit {
     return newName;
   }
   onNewGameAdded() {
-    firebase.database().ref("games").on('child_added', (game) => {
+    let that = this;
+    firebase.database().ref("games").on('child_added', (game, b) => {
       console.log("on child added");
-      console.log(game.val());
-      this.games.push(new Game(this.newGame, 0, 0, true, game.val().windowWidth, game.val().windowHeight, undefined, "https://firebasestorage.googleapis.com/v0/b/gamesfirebase.appspot.com/o/games%2Fimages%2Fnew_game.jpeg?alt=media&token=ad100168-8ed9-4de9-8325-0ad276511a07", false, false));
+      // console.log((<any>game).getKey());
+      console.log(this.newGame);
+      let gm = new Game(this.newGame, 0, 0, true, game.val().windowWidth, game.val().windowHeight, undefined, "https://firebasestorage.googleapis.com/v0/b/gamesfirebase.appspot.com/o/games%2Fimages%2Fnew_game.jpeg?alt=media&token=ad100168-8ed9-4de9-8325-0ad276511a07", false, false);
+      console.log("gm");
+      console.log(gm);
+      // this.games.push(gm);
     });
   }
   updateGameSattus(name: string) {
