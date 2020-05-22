@@ -1,0 +1,1150 @@
+{
+  "games" : {
+    "NextNewgame" : {
+      "active" : false,
+      "imageUri" : "https://firebasestorage.googleapis.com/v0/b/gamesfirebase.appspot.com/o/games%2Fimages%2Fnew_game.jpeg?alt=media&token=ad100168-8ed9-4de9-8325-0ad276511a07",
+      "livescores" : {
+        "admin" : {
+          "score" : -1,
+          "timestamp" : 1543065309547
+        }
+      },
+      "mobileCompetibale" : false,
+      "windowHeight" : 1000,
+      "windowWidth" : 200
+    },
+    "asteroids" : {
+      "active" : true,
+      "imageUri" : "https://firebasestorage.googleapis.com/v0/b/gamesfirebase.appspot.com/o/games%2Fimagesasteroids.jpeg?alt=media&token=30907626-443b-42e4-ab18-a2cc1b59497a",
+      "livescores" : {
+        "Presly po-Best" : {
+          "score" : 36,
+          "timestamp" : 1525724597293
+        },
+        "PreslyBest" : {
+          "score" : 34,
+          "timestamp" : 1541968486769
+        },
+        "admin" : {
+          "score" : -1,
+          "timestamp" : 1525025628764
+        },
+        "niknik" : {
+          "score" : 27,
+          "timestamp" : 1543065244829
+        },
+        "niknikqwe" : {
+          "score" : 0,
+          "timestamp" : 1525092888265
+        },
+        "nikuser122" : {
+          "score" : 278,
+          "timestamp" : 1543019306440
+        },
+        "nikuser123" : {
+          "score" : 211,
+          "timestamp" : 1543065133323
+        }
+      },
+      "mobileCompatible" : false,
+      "mobileCompetibale" : false,
+      "savedData" : {
+        "1KfIXrNF3WbngjyZEw9OxwbWxQj2" : {
+          "data" : {
+            "curLvl" : 2,
+            "curMaxAsteroids" : 20,
+            "livesRemaining" : 3,
+            "score" : 37
+          }
+        },
+        "4n5Bp5hPjgZyoEiK8X9oWPtG9iI3" : {
+          "data" : {
+            "curLvl" : 2,
+            "curMaxAsteroids" : 20,
+            "livesRemaining" : 0,
+            "score" : 30
+          }
+        },
+        "GwqbQ56mESRgWMY11FUaiv1Jstq2" : {
+          "data" : {
+            "curLvl" : 4,
+            "curMaxAsteroids" : 40,
+            "livesRemaining" : 2,
+            "score" : 179
+          }
+        },
+        "HJrOhzlLbXYe0fsy1PHaJ8pBzDo1" : {
+          "data" : {
+            "curLvl" : 3,
+            "curMaxAsteroids" : 30,
+            "livesRemaining" : 3,
+            "score" : 117
+          }
+        },
+        "JJ7Iejmg4KQAfLfBgAsBffwwUio2" : {
+          "data" : {
+            "curLvl" : 3,
+            "curMaxAsteroids" : 30,
+            "livesRemaining" : 1,
+            "score" : 124
+          }
+        },
+        "K5Pzw4T8KUWiUWQOJi0IivY6G6i2" : {
+          "data" : {
+            "curLvl" : 1,
+            "curMaxAsteroids" : 10,
+            "livesRemaining" : 2,
+            "score" : 7
+          }
+        },
+        "RxFuMTpEkjgZfH1kkKaDZ5FSixu2" : {
+          "data" : {
+            "curLvl" : 2,
+            "curMaxAsteroids" : 20,
+            "livesRemaining" : 3,
+            "score" : 23
+          }
+        },
+        "c2gqBYwRbKWA30lHKzSJbyRzKgL2" : {
+          "data" : {
+            "curLvl" : 2,
+            "curMaxAsteroids" : 20,
+            "livesRemaining" : 3,
+            "score" : 55
+          }
+        },
+        "ecYYZNT20lZbdOOTcsuwWtVnLNV2" : {
+          "data" : {
+            "curLvl" : 3,
+            "curMaxAsteroids" : 30,
+            "livesRemaining" : 1,
+            "score" : 178
+          }
+        },
+        "ei1rd8LVX6WDk4qs6dVe8E0R36l2" : {
+          "data" : {
+            "curLvl" : 4,
+            "curMaxAsteroids" : 40,
+            "livesRemaining" : 2,
+            "score" : 215
+          }
+        },
+        "qu1UnXzTfTR9udnx2aXKKjE30vt2" : {
+          "data" : {
+            "curLvl" : 2,
+            "curMaxAsteroids" : 20,
+            "livesRemaining" : 3,
+            "score" : 23
+          }
+        }
+      },
+      "usersRating" : {
+        "GwqbQ56mESRgWMY11FUaiv1Jstq2" : {
+          "rate" : 4
+        },
+        "ecYYZNT20lZbdOOTcsuwWtVnLNV2" : {
+          "rate" : 10
+        }
+      },
+      "windowHeight" : 600,
+      "windowWidth" : 441
+    },
+    "crazyAliens" : {
+      "active" : true,
+      "imageUri" : "https://firebasestorage.googleapis.com/v0/b/gamesfirebase.appspot.com/o/games%2FimagescrazyAliens.jpeg?alt=media&token=765829f1-cc5c-4afd-83f1-6c323341cad8",
+      "livescores" : {
+        "Fil" : {
+          "score" : 0,
+          "timestamp" : 1525070611756
+        },
+        "Presly po-Best" : {
+          "score" : 360,
+          "timestamp" : 1525296798859
+        },
+        "PreslyBest" : {
+          "score" : 40,
+          "timestamp" : 1541968067253
+        },
+        "admin" : {
+          "score" : -1,
+          "timestamp" : 1525025594695
+        },
+        "niknik" : {
+          "score" : 370,
+          "timestamp" : 1542984569843
+        },
+        "niknikqwe" : {
+          "score" : 0,
+          "timestamp" : 1525240228609
+        },
+        "nikuser123" : {
+          "score" : 570,
+          "timestamp" : 1543018503687
+        }
+      },
+      "mobileCompetibale" : false,
+      "savedData" : {
+        "4n5Bp5hPjgZyoEiK8X9oWPtG9iI3" : {
+          "data" : {
+            "curLvl" : 1,
+            "livesRemaining" : 2,
+            "score" : 120
+          }
+        },
+        "RxFuMTpEkjgZfH1kkKaDZ5FSixu2" : {
+          "data" : {
+            "curLvl" : 1,
+            "livesRemaining" : 3,
+            "score" : 190
+          }
+        },
+        "ei1rd8LVX6WDk4qs6dVe8E0R36l2" : {
+          "data" : {
+            "curLvl" : 3,
+            "livesRemaining" : 2,
+            "score" : 570
+          }
+        }
+      },
+      "usersRating" : {
+        "RxFuMTpEkjgZfH1kkKaDZ5FSixu2" : {
+          "rate" : 3
+        }
+      },
+      "windowHeight" : 768,
+      "windowWidth" : 1024
+    },
+    "flappyPlane" : {
+      "active" : true,
+      "imageUri" : "https://firebasestorage.googleapis.com/v0/b/gamesfirebase.appspot.com/o/games%2FimagesflappyPlane.jpeg?alt=media&token=1bab48c3-652a-4f7f-910d-7a6c86bb3d9a",
+      "livescores" : {
+        "Fil" : {
+          "score" : 0,
+          "timestamp" : 1525071114269
+        },
+        "PreslyBest" : {
+          "score" : 0,
+          "timestamp" : 1542208167417
+        },
+        "admin" : {
+          "score" : -1,
+          "timestamp" : 1524426305
+        },
+        "niknik" : {
+          "score" : 1,
+          "timestamp" : 1542403143683
+        },
+        "niknikqwe" : {
+          "score" : 2,
+          "timestamp" : 1524865621117
+        },
+        "nikolay14" : {
+          "score" : 24,
+          "timestamp" : 1524522829661
+        },
+        "nikuser123" : {
+          "score" : 0,
+          "timestamp" : 1542974326558
+        },
+        "test" : {
+          "score" : 0,
+          "timestamp" : 1524864927815
+        }
+      },
+      "mobileCompatible" : true,
+      "savedData" : {
+        "4n5Bp5hPjgZyoEiK8X9oWPtG9iI3" : {
+          "data" : {
+            "score" : 4
+          }
+        },
+        "RxFuMTpEkjgZfH1kkKaDZ5FSixu2" : {
+          "data" : {
+            "score" : 32
+          }
+        }
+      },
+      "usersRating" : {
+        "4n5Bp5hPjgZyoEiK8X9oWPtG9iI3" : {
+          "rate" : 10
+        },
+        "RxFuMTpEkjgZfH1kkKaDZ5FSixu2" : {
+          "rate" : 9
+        },
+        "hvAEQURA0tdqcHRAvj9htrK97CB2" : {
+          "rate" : 4
+        },
+        "rmiqd8pkFEToGw54met8CiYyR2g1" : {
+          "rate" : 9
+        }
+      },
+      "windowHeight" : 960,
+      "windowWidth" : 640
+    },
+    "newGame" : {
+      "active" : false,
+      "imageUri" : "https://firebasestorage.googleapis.com/v0/b/gamesfirebase.appspot.com/o/games%2Fimages%2Fnew_game.jpeg?alt=media&token=ad100168-8ed9-4de9-8325-0ad276511a07",
+      "livescores" : {
+        "admin" : {
+          "score" : -1,
+          "timestamp" : 1543062326203
+        }
+      },
+      "mobileCompetibale" : false,
+      "windowHeight" : 200,
+      "windowWidth" : 120
+    },
+    "newGameNik" : {
+      "active" : false,
+      "imageUri" : "https://firebasestorage.googleapis.com/v0/b/gamesfirebase.appspot.com/o/games%2Fimages%2Fnew_game.jpeg?alt=media&token=ad100168-8ed9-4de9-8325-0ad276511a07",
+      "livescores" : {
+        "admin" : {
+          "score" : -1,
+          "timestamp" : 1543064315419
+        }
+      },
+      "mobileCompetibale" : false,
+      "windowHeight" : 220,
+      "windowWidth" : 120
+    },
+    "sita" : {
+      "active" : true,
+      "imageUri" : "https://firebasestorage.googleapis.com/v0/b/gamesfirebase.appspot.com/o/games%2Fimagessita.jpeg?alt=media&token=06c9e89d-5305-461d-abc4-ceb21ea17c73",
+      "livescores" : {
+        "Fil" : {
+          "score" : 0,
+          "timestamp" : 1525071217210
+        },
+        "Presly po-Best" : {
+          "score" : 5,
+          "timestamp" : 1525724628106
+        },
+        "PreslyBest" : {
+          "score" : 6,
+          "timestamp" : 1541967867452
+        },
+        "admin" : {
+          "score" : -1,
+          "timestamp" : 1525025519355
+        },
+        "niknik" : {
+          "score" : 3,
+          "timestamp" : 1542984598817
+        },
+        "nikuser123" : {
+          "score" : 0,
+          "timestamp" : 1542972286411
+        }
+      },
+      "mobileCompatible" : true,
+      "mobileCompetibale" : false,
+      "savedData" : {
+        "K5Pzw4T8KUWiUWQOJi0IivY6G6i2" : {
+          "data" : {
+            "score" : 0,
+            "timeRemaining" : 8.295
+          }
+        }
+      },
+      "windowHeight" : 640,
+      "windowWidth" : 960
+    },
+    "spaceFlight" : {
+      "active" : true,
+      "imageUri" : "https://firebasestorage.googleapis.com/v0/b/gamesfirebase.appspot.com/o/games%2FimagesspaceFlight.jpeg?alt=media&token=d412ec1b-3106-425c-861d-72321d79c641",
+      "livescores" : {
+        "Fil" : {
+          "score" : 0,
+          "timestamp" : 1525071298764
+        },
+        "Presly po-Best" : {
+          "score" : 36,
+          "timestamp" : 1525724648142
+        },
+        "PreslyBest" : {
+          "score" : 49,
+          "timestamp" : 1541968658887
+        },
+        "admin" : {
+          "score" : -1,
+          "timestamp" : 1524596983474
+        },
+        "niknik" : {
+          "score" : 21,
+          "timestamp" : 1525033055086
+        },
+        "niknikqwe" : {
+          "score" : 26,
+          "timestamp" : 1524865671387
+        },
+        "nikolay14" : {
+          "score" : 0,
+          "timestamp" : 1524630226818
+        }
+      },
+      "mobileCompatible" : true,
+      "savedData" : {
+        "4n5Bp5hPjgZyoEiK8X9oWPtG9iI3" : {
+          "data" : {
+            "score" : 27
+          }
+        }
+      },
+      "windowHeight" : 960,
+      "windowWidth" : 640
+    }
+  },
+  "guser" : {
+    "user" : "test2_nikolaytsonev93@gmail.com"
+  },
+  "test" : {
+    "74uPSCcBiXX9d2jdQXLBu4SIGh72" : {
+      "isAdmin" : false,
+      "isSeasonModeUnlocked" : false,
+      "profile_picture" : "https://firebasestorage.googleapis.com/v0/b/gamesfirebase.appspot.com/o/def_profile_picture.png?alt=media&token=4f698215-13da-4235-84e0-e1668f68df4b",
+      "username" : "testttt@tttttttt.cpm"
+    },
+    "GJft3st9ZnhHw29pyS6zZP8hOCW2" : {
+      "username" : ""
+    },
+    "axDXUUACk7XpQ2pTrsAPtuNj9oT2" : {
+      "username" : ""
+    },
+    "swHKsgfNRbMzETooePptr9bi0My1" : {
+      "isAdmin" : false,
+      "isSeasonModeUnlocked" : false,
+      "profile_picture" : "https://firebasestorage.googleapis.com/v0/b/gamesfirebase.appspot.com/o/def_profile_picture.png?alt=media&token=4f698215-13da-4235-84e0-e1668f68df4b",
+      "username" : "test@gmail.com"
+    }
+  },
+  "users" : {
+    "4n5Bp5hPjgZyoEiK8X9oWPtG9iI3" : {
+      "casualmoderesults" : {
+        "asteroids" : {
+          "1525026175184" : {
+            "score" : 28
+          },
+          "1525026261902" : {
+            "score" : 26
+          },
+          "1525026293550" : {
+            "score" : 30
+          },
+          "1525026320942" : {
+            "score" : 30
+          },
+          "1540154699166" : {
+            "score" : 35
+          },
+          "1540232265849" : {
+            "score" : 0
+          }
+        },
+        "crazyAliens" : {
+          "1525025818313" : {
+            "score" : 86
+          },
+          "1525025836413" : {
+            "score" : 104
+          },
+          "1525025841786" : {
+            "score" : 150
+          },
+          "1525025980204" : {
+            "score" : 340
+          },
+          "1525026017738" : {
+            "score" : 120
+          },
+          "1525026386323" : {
+            "score" : 280
+          }
+        },
+        "flappyPlane" : {
+          "1525026126666" : {
+            "score" : 2
+          },
+          "1525077549916" : {
+            "score" : 4
+          },
+          "1539806153143" : {
+            "score" : 8
+          },
+          "1539807216775" : {
+            "score" : 2
+          },
+          "1539807239691" : {
+            "score" : 2
+          },
+          "1539807255682" : {
+            "score" : 2
+          },
+          "1540154538888" : {
+            "score" : -1
+          },
+          "1540155656764" : {
+            "score" : 1
+          },
+          "1541967416124" : {
+            "score" : 1
+          },
+          "1541967425607" : {
+            "score" : 0
+          },
+          "1542208013154" : {
+            "score" : 2
+          },
+          "1542208157954" : {
+            "score" : 1
+          },
+          "1542461667296" : {
+            "score" : 1
+          },
+          "1542468364994" : {
+            "score" : 5
+          },
+          "1543061830503" : {
+            "score" : 4
+          },
+          "1543062101183" : {
+            "score" : 2
+          },
+          "1543062117002" : {
+            "score" : 3
+          },
+          "1543062168536" : {
+            "score" : 8
+          }
+        },
+        "sita" : {
+          "1525031167855" : {
+            "score" : 3
+          },
+          "1525033049948" : {
+            "score" : 11
+          },
+          "1525077524594" : {
+            "score" : 12
+          },
+          "1525433354339" : {
+            "score" : 9
+          },
+          "1539807431352" : {
+            "score" : 10
+          },
+          "1539807438390" : {
+            "score" : 5
+          },
+          "1539807486481" : {
+            "score" : 12
+          },
+          "1539807496262" : {
+            "score" : 5
+          },
+          "1541967442471" : {
+            "score" : 6
+          },
+          "1541967830438" : {
+            "score" : 6
+          },
+          "1541967869020" : {
+            "score" : 6
+          },
+          "1542468394703" : {
+            "score" : 3
+          },
+          "1542468403331" : {
+            "score" : 2
+          },
+          "1542468414763" : {
+            "score" : 3
+          },
+          "1542468425263" : {
+            "score" : 4
+          },
+          "1543061863025" : {
+            "score" : 1
+          }
+        },
+        "spaceFlight" : {
+          "1525026080156" : {
+            "score" : 26
+          },
+          "1525026104646" : {
+            "score" : 48
+          },
+          "1525033098851" : {
+            "score" : 88
+          },
+          "1525033291562" : {
+            "score" : 27
+          },
+          "1525077643862" : {
+            "score" : 52
+          },
+          "1539806257894" : {
+            "score" : 49
+          },
+          "1539806271505" : {
+            "score" : 26
+          },
+          "1539807658143" : {
+            "score" : 27
+          },
+          "1540154649431" : {
+            "score" : 90
+          },
+          "1541967457793" : {
+            "score" : 22
+          },
+          "1541968612830" : {
+            "score" : 25
+          },
+          "1541968660910" : {
+            "score" : 49
+          },
+          "1542468451069" : {
+            "score" : 17
+          },
+          "1543061924179" : {
+            "score" : 42
+          },
+          "1543062080527" : {
+            "score" : 32
+          }
+        }
+      },
+      "completeChallenges" : {
+        "1542984601877" : {
+          "challengescore" : "6",
+          "friendscore" : 3,
+          "friendusername" : "niknik",
+          "gamename" : "sita"
+        }
+      },
+      "friends" : {
+        "BDd9JpblqeNJuZ2DqlshLQTbV7E3" : {
+          "accepted" : true,
+          "pending" : false,
+          "username" : "Presly po-Best"
+        },
+        "K5Pzw4T8KUWiUWQOJi0IivY6G6i2" : {
+          "accepted" : true,
+          "pending" : false,
+          "username" : "niknikqwe"
+        },
+        "RxFuMTpEkjgZfH1kkKaDZ5FSixu2" : {
+          "accepted" : true,
+          "pending" : false,
+          "username" : "niknik"
+        },
+        "rmiqd8pkFEToGw54met8CiYyR2g1" : {
+          "accepted" : true,
+          "pending" : false,
+          "username" : "nikolay14"
+        }
+      },
+      "isAdmin" : false,
+      "isSeasonModeUnlocked" : true,
+      "profile_picture" : "https://firebasestorage.googleapis.com/v0/b/gamesfirebase.appspot.com/o/def_profile_picture.png?alt=media&token=fb6c2ff5-8efc-4ae9-a477-85393611338b",
+      "seasonmoderesults" : {
+        "1525032229402" : {
+          "duration" : 9607,
+          "score" : 56.69047619047619
+        },
+        "1525032555540" : {
+          "duration" : 58801,
+          "score" : 94.41904761904763
+        }
+      },
+      "username" : "PreslyBest"
+    },
+    "9Bq2hQj3gkYrmcrq1txKn4IoV3K2" : {
+      "isAdmin" : false,
+      "isSeasonModeUnlocked" : false,
+      "profile_picture" : "https://firebasestorage.googleapis.com/v0/b/gamesfirebase.appspot.com/o/def_profile_picture.png?alt=media&token=fb6c2ff5-8efc-4ae9-a477-85393611338b",
+      "username" : "Fil"
+    },
+    "A5QOXHmM5bNOFhBtYxZerFnS9N23" : {
+      "casualmoderesults" : {
+        "flappyPlane" : {
+          "1542752488521" : {
+            "score" : 1
+          }
+        },
+        "sita" : {
+          "1542752443562" : {
+            "score" : 2
+          },
+          "1542752462511" : {
+            "score" : 5
+          }
+        }
+      },
+      "isAdmin" : false,
+      "profile_picture" : "https://firebasestorage.googleapis.com/v0/b/gamesfirebase.appspot.com/o/def_profile_picture.png?alt=media&token=fb6c2ff5-8efc-4ae9-a477-85393611338b",
+      "username" : "reqwe"
+    },
+    "BDd9JpblqeNJuZ2DqlshLQTbV7E3" : {
+      "completeChallenges" : {
+        "1525724717647" : {
+          "challengescore" : "36",
+          "friendscore" : 50,
+          "friendusername" : "PreslyBest",
+          "gamename" : "asteroids"
+        },
+        "1525724740473" : {
+          "challengescore" : "5",
+          "friendscore" : 4,
+          "friendusername" : "PreslyBest",
+          "gamename" : "sita"
+        },
+        "1525724760181" : {
+          "challengescore" : "36",
+          "friendscore" : 34,
+          "friendusername" : "PreslyBest",
+          "gamename" : "spaceFlight"
+        }
+      },
+      "friends" : {
+        "4n5Bp5hPjgZyoEiK8X9oWPtG9iI3" : {
+          "accepted" : true,
+          "pending" : false,
+          "username" : "PreslyBest"
+        }
+      },
+      "isAdmin" : false,
+      "isSeasonModeUnlocked" : false,
+      "profile_picture" : "https://firebasestorage.googleapis.com/v0/b/gamesfirebase.appspot.com/o/def_profile_picture.png?alt=media&token=fb6c2ff5-8efc-4ae9-a477-85393611338b",
+      "username" : "Presly po-Best"
+    },
+    "DnK39sFUFXOflZYSY8pnoQd49nx1" : {
+      "isAdmin" : false,
+      "isSeasonModeUnlocked" : false,
+      "profile_picture" : "https://firebasestorage.googleapis.com/v0/b/gamesfirebase.appspot.com/o/def_profile_picture.png?alt=media&token=fb6c2ff5-8efc-4ae9-a477-85393611338b",
+      "username" : "nikts2410"
+    },
+    "F0D9gCqD2iZVyEJ9XWJWTXnH8iw2" : {
+      "isAdmin" : false,
+      "isSeasonModeUnlocked" : false,
+      "profile_picture" : "https://firebasestorage.googleapis.com/v0/b/gamesfirebase.appspot.com/o/def_profile_picture.png?alt=media&token=4f698215-13da-4235-84e0-e1668f68df4b",
+      "uid" : "F0D9gCqD2iZVyEJ9XWJWTXnH8iw2",
+      "username" : "nikolaytsonev93@gmail.com"
+    },
+    "HJrOhzlLbXYe0fsy1PHaJ8pBzDo1" : {
+      "casualmoderesults" : {
+        "flappyPlane" : {
+          "1543064297721" : {
+            "score" : 5
+          }
+        }
+      },
+      "isAdmin" : false,
+      "profile_picture" : "https://firebasestorage.googleapis.com/v0/b/gamesfirebase.appspot.com/o/def_profile_picture.png?alt=media&token=fb6c2ff5-8efc-4ae9-a477-85393611338b",
+      "username" : "testqw"
+    },
+    "K5Pzw4T8KUWiUWQOJi0IivY6G6i2" : {
+      "casualmoderesults" : {
+        "flappyPlane" : {
+          "1539856778846" : {
+            "score" : 1
+          },
+          "1539861531503" : {
+            "score" : 1
+          },
+          "1539888719821" : {
+            "score" : 0
+          },
+          "1539942435778" : {
+            "score" : 0
+          },
+          "1540155371654" : {
+            "score" : 0
+          },
+          "1540155379066" : {
+            "score" : 0
+          },
+          "1540280361117" : {
+            "score" : 0
+          }
+        },
+        "sita" : {
+          "1539856746433" : {
+            "score" : 1
+          }
+        },
+        "spaceFlight" : {
+          "1539858257027" : {
+            "score" : 18
+          },
+          "1539862256838" : {
+            "score" : 21
+          },
+          "1539862261987" : {
+            "score" : 11
+          },
+          "1539871534028" : {
+            "score" : 12
+          },
+          "1539888587265" : {
+            "score" : 16
+          },
+          "1539942451696" : {
+            "score" : 17
+          },
+          "1540155894457" : {
+            "score" : 14
+          }
+        }
+      },
+      "friends" : {
+        "RxFuMTpEkjgZfH1kkKaDZ5FSixu2" : {
+          "accepted" : true,
+          "pending" : true,
+          "username" : "niknik"
+        }
+      },
+      "isAdmin" : false,
+      "isSeasonModeUnlocked" : false,
+      "profile_picture" : "https://firebasestorage.googleapis.com/v0/b/gamesfirebase.appspot.com/o/def_profile_picture.png?alt=media&token=fb6c2ff5-8efc-4ae9-a477-85393611338b",
+      "username" : "niknikqwe"
+    },
+    "Lfpnoqo6A1VmUheHX7UhyuuZOzZ2" : {
+      "isAdmin" : false,
+      "profile_picture" : "https://firebasestorage.googleapis.com/v0/b/gamesfirebase.appspot.com/o/def_profile_picture.png?alt=media&token=fb6c2ff5-8efc-4ae9-a477-85393611338b",
+      "username" : "test1234"
+    },
+    "RJVJnqjNVIVyVpfGvfukR9kgh053" : {
+      "casualmoderesults" : {
+        "flappyPlane" : {
+          "1542910865107" : {
+            "score" : 2
+          },
+          "1542910896085" : {
+            "score" : 0
+          },
+          "1542910904782" : {
+            "score" : 0
+          },
+          "1542910913316" : {
+            "score" : 0
+          },
+          "1542910922446" : {
+            "score" : 1
+          },
+          "1542910931601" : {
+            "score" : 0
+          },
+          "1542910946051" : {
+            "score" : 2
+          }
+        }
+      },
+      "isAdmin" : false,
+      "profile_picture" : "https://firebasestorage.googleapis.com/v0/b/gamesfirebase.appspot.com/o/def_profile_picture.png?alt=media&token=fb6c2ff5-8efc-4ae9-a477-85393611338b",
+      "username" : "testnik"
+    },
+    "RxFuMTpEkjgZfH1kkKaDZ5FSixu2" : {
+      "casualmoderesults" : {
+        "asteroids" : {
+          "1525026634853" : {
+            "score" : 2
+          },
+          "1525027595522" : {
+            "score" : 14
+          },
+          "1525034732771" : {
+            "score" : 52
+          },
+          "1525777604974" : {
+            "score" : 0
+          },
+          "1526034180383" : {
+            "score" : 16
+          },
+          "1526034260025" : {
+            "score" : 87
+          },
+          "1526036870520" : {
+            "score" : 9
+          },
+          "1540238722848" : {
+            "score" : 0
+          },
+          "1540238860223" : {
+            "score" : 0
+          },
+          "1540240176724" : {
+            "score" : 37
+          },
+          "1540240843106" : {
+            "score" : 7
+          },
+          "1540241038726" : {
+            "score" : 0
+          },
+          "1540242239236" : {
+            "score" : 2
+          },
+          "1542984755989" : {
+            "score" : 135
+          }
+        },
+        "crazyAliens" : {
+          "1525032245684" : {
+            "score" : 100
+          },
+          "1540246818015" : {
+            "score" : 270
+          },
+          "1542207896380" : {
+            "score" : 310
+          }
+        },
+        "flappyPlane" : {
+          "1524860022887" : {
+            "score" : 2
+          },
+          "1524920822303" : {
+            "score" : 8
+          },
+          "1525713777716" : {
+            "score" : 54
+          },
+          "1525715957698" : {
+            "score" : 2
+          },
+          "1525715972767" : {
+            "score" : 3
+          },
+          "1525715983197" : {
+            "score" : 1
+          },
+          "1525715995742" : {
+            "score" : 2
+          },
+          "1525716006967" : {
+            "score" : 1
+          },
+          "1525740399851" : {
+            "score" : 4
+          },
+          "1525740411119" : {
+            "score" : 1
+          },
+          "1540245505000" : {
+            "score" : 1
+          },
+          "1542210692485" : {
+            "score" : 1
+          },
+          "1542210714694" : {
+            "score" : 5
+          },
+          "1542397405259" : {
+            "score" : 1
+          },
+          "1542403147441" : {
+            "score" : 1
+          },
+          "1542409821755" : {
+            "score" : 1
+          },
+          "1543065287163" : {
+            "score" : 1
+          }
+        },
+        "sita" : {
+          "1525033015762" : {
+            "score" : 0
+          },
+          "1540407400756" : {
+            "score" : 3
+          },
+          "1542409744452" : {
+            "score" : 1
+          },
+          "1542409757217" : {
+            "score" : 4
+          },
+          "1542409842912" : {
+            "score" : 3
+          },
+          "1542409851557" : {
+            "score" : 2
+          },
+          "1542409865741" : {
+            "score" : 4
+          }
+        },
+        "spaceFlight" : {
+          "1524865702437" : {
+            "score" : 22
+          },
+          "1524865715532" : {
+            "score" : 22
+          },
+          "1524865725992" : {
+            "score" : 25
+          },
+          "1525740372736" : {
+            "score" : 39
+          },
+          "1542543985787" : {
+            "score" : 24
+          },
+          "1542751785565" : {
+            "score" : 26
+          },
+          "1542751794187" : {
+            "score" : 21
+          },
+          "1542751803458" : {
+            "score" : 24
+          },
+          "1542751814501" : {
+            "score" : 21
+          },
+          "1542751824271" : {
+            "score" : 24
+          },
+          "1542751835043" : {
+            "score" : 30
+          },
+          "1542751845106" : {
+            "score" : 24
+          }
+        }
+      },
+      "challenges" : {
+        "asteroids" : {
+          "GwqbQ56mESRgWMY11FUaiv1Jstq2" : {
+            "score" : 47,
+            "username" : "nikuser123"
+          }
+        },
+        "crazyAliens" : {
+          "4n5Bp5hPjgZyoEiK8X9oWPtG9iI3" : {
+            "score" : 120,
+            "username" : "PreslyBest"
+          }
+        }
+      },
+      "friends" : {
+        "4n5Bp5hPjgZyoEiK8X9oWPtG9iI3" : {
+          "accepted" : true,
+          "pending" : false,
+          "username" : "PreslyBest"
+        },
+        "K5Pzw4T8KUWiUWQOJi0IivY6G6i2" : {
+          "accepted" : false,
+          "pending" : true,
+          "username" : "niknikqwe"
+        },
+        "ecYYZNT20lZbdOOTcsuwWtVnLNV2" : {
+          "accepted" : true,
+          "pending" : false,
+          "username" : "nikuser123"
+        },
+        "hvAEQURA0tdqcHRAvj9htrK97CB2" : {
+          "accepted" : true,
+          "pending" : false,
+          "username" : "nikolay"
+        },
+        "rmiqd8pkFEToGw54met8CiYyR2g1" : {
+          "accepted" : true,
+          "pending" : false,
+          "username" : "nikolay14"
+        }
+      },
+      "isAdmin" : true,
+      "isSeasonModeUnlocked" : true,
+      "profile_picture" : "https://firebasestorage.googleapis.com/v0/b/gamesfirebase.appspot.com/o/users%2Fprofile_pic_uidRxFuMTpEkjgZfH1kkKaDZ5FSixu2.jpeg?alt=media&token=df2fc828-091e-4e1d-8c13-51b705cf74eb",
+      "seasonmoderesults" : {
+        "1525030980662" : {
+          "duration" : 3345,
+          "score" : 14
+        },
+        "1525035768975" : {
+          "duration" : 119779,
+          "score" : 25.685714285714283
+        }
+      },
+      "username" : "niknik"
+    },
+    "Veudxs7PwhP5pQSuxAjObsFQ6Rq2" : {
+      "isAdmin" : false,
+      "isSeasonModeUnlocked" : false,
+      "profile_picture" : "https://firebasestorage.googleapis.com/v0/b/gamesfirebase.appspot.com/o/def_profile_picture.png?alt=media&token=4f698215-13da-4235-84e0-e1668f68df4b",
+      "username" : "testtestnikolai_9391@abv.bg"
+    },
+    "ecYYZNT20lZbdOOTcsuwWtVnLNV2" : {
+      "casualmoderesults" : {
+        "asteroids" : {
+          "1543065106774" : {
+            "score" : 190
+          },
+          "1543065133900" : {
+            "score" : 211
+          }
+        }
+      },
+      "challenges" : {
+        "asteroids" : {
+          "RxFuMTpEkjgZfH1kkKaDZ5FSixu2" : {
+            "score" : 27,
+            "username" : "niknik"
+          }
+        }
+      },
+      "friends" : {
+        "RxFuMTpEkjgZfH1kkKaDZ5FSixu2" : {
+          "accepted" : true,
+          "pending" : false,
+          "username" : "niknik"
+        }
+      },
+      "isAdmin" : false,
+      "isSeasonModeUnlocked" : true,
+      "profile_picture" : "https://firebasestorage.googleapis.com/v0/b/gamesfirebase.appspot.com/o/def_profile_picture.png?alt=media&token=fb6c2ff5-8efc-4ae9-a477-85393611338b",
+      "username" : "nikuser123"
+    },
+    "hvAEQURA0tdqcHRAvj9htrK97CB2" : {
+      "friends" : {
+        "RxFuMTpEkjgZfH1kkKaDZ5FSixu2" : {
+          "accepted" : true,
+          "pending" : false,
+          "username" : "niknik"
+        }
+      },
+      "isAdmin" : false,
+      "isSeasonModeUnlocked" : true,
+      "profile_picture" : "https://firebasestorage.googleapis.com/v0/b/gamesfirebase.appspot.com/o/def_profile_picture.png?alt=media&token=fb6c2ff5-8efc-4ae9-a477-85393611338b",
+      "username" : "nikolay"
+    },
+    "i202sQuvhAfL6muoTT5wSf4Bpuy1" : {
+      "isAdmin" : false,
+      "isSeasonModeUnlocked" : false,
+      "profile_picture" : "https://firebasestorage.googleapis.com/v0/b/gamesfirebase.appspot.com/o/def_profile_picture.png?alt=media&token=fb6c2ff5-8efc-4ae9-a477-85393611338b",
+      "username" : "dani_db"
+    },
+    "rmiqd8pkFEToGw54met8CiYyR2g1" : {
+      "friends" : {
+        "RxFuMTpEkjgZfH1kkKaDZ5FSixu2" : {
+          "accepted" : true,
+          "pending" : false
+        }
+      },
+      "isAdmin" : false,
+      "isSeasonModeUnlocked" : true,
+      "profile_picture" : "https://firebasestorage.googleapis.com/v0/b/gamesfirebase.appspot.com/o/def_profile_picture.png?alt=media&token=fb6c2ff5-8efc-4ae9-a477-85393611338b",
+      "username" : "test"
+    },
+    "uer6uggxLdSIVVLy2nDMCpQaT1u2" : {
+      "isAdmin" : false,
+      "isSeasonModeUnlocked" : false,
+      "profile_picture" : "https://firebasestorage.googleapis.com/v0/b/gamesfirebase.appspot.com/o/def_profile_picture.png?alt=media&token=fb6c2ff5-8efc-4ae9-a477-85393611338b",
+      "username" : "testqwe123443"
+    }
+  }
+}
